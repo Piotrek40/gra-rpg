@@ -162,6 +162,37 @@ export const AssetGenerator = {
             ctx.moveTo(4, 4);
             ctx.lineTo(10, 10);
             ctx.stroke();
+        } else if (type === 'item') {
+            // Przedmiot (skrzynia/worek)
+            // Tło przezroczyste
+            ctx.clearRect(0, 0, size, size);
+
+            // Złoty worek/sakiewka
+            ctx.fillStyle = '#8B4513';
+            ctx.beginPath();
+            ctx.ellipse(16, 20, 10, 8, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Góra worka
+            ctx.fillStyle = '#A0522D';
+            ctx.beginPath();
+            ctx.moveTo(10, 14);
+            ctx.lineTo(16, 8);
+            ctx.lineTo(22, 14);
+            ctx.closePath();
+            ctx.fill();
+
+            // Sznurek
+            ctx.strokeStyle = '#FFD700';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(14, 12);
+            ctx.lineTo(18, 12);
+            ctx.stroke();
+
+            // Błysk
+            ctx.fillStyle = '#FFEB3B';
+            ctx.fillRect(18, 16, 3, 3);
         }
 
         return canvas;
