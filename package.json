@@ -1,0 +1,22 @@
+{
+  "name": "aethelgard",
+  "version": "1.0.0",
+  "description": "Procedural RPG Game",
+  "main": "main_electron.js",
+  "scripts": {
+    "dev": "http-server -c-1",
+    "start:desktop": "electron .",
+    "build": "echo 'No build needed'",
+    "preview": "http-server"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "http-server": "^14.0.0",
+    "electron": "^28.0.0"
+  },
+  "optionalDependencies": {
+    "@rollup/rollup-win32-x64-msvc": "^4.53.3"
+  }
+}
