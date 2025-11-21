@@ -31,6 +31,98 @@ let showingInfo = null; // 'controls' lub 'about'
 let showingInventory = false;
 let inventorySelection = 0;
 
+// System Questów
+const QuestDatabase = {
+    'kill_goblins': {
+        id: 'kill_goblins',
+        name: 'Polowanie na Gobliny',
+        description: 'Zabij 5 goblinów zagrażających wiosce.',
+        giver: 'elder',
+        type: 'kill',
+        target: 'goblin',
+        required: 5,
+        rewards: { xp: 100, gold: 50 },
+        dialogue: {
+            start: 'Gobliny terroryzują okolice! Pomożesz nam się ich pozbyć?',
+            progress: 'Dziękuję za pomoc! Zostało jeszcze {remaining} goblinów.',
+            complete: 'Wspaniale! Ocaliłeś naszą wioskę! Oto twoja nagroda.'
+        }
+    },
+    'kill_orcs': {
+        id: 'kill_orcs',
+        name: 'Zagrożenie Orków',
+        description: 'Pokonaj 3 orki w lochach.',
+        giver: 'elder',
+        type: 'kill',
+        target: 'orc',
+        required: 3,
+        rewards: { xp: 200, gold: 100 },
+        dialogue: {
+            start: 'Orki w lochach stają się coraz silniejsze. Musisz ich powstrzymać!',
+            progress: 'Zostało {remaining} orków do pokonania.',
+            complete: 'Jesteś prawdziwym bohaterem! Przyjmij tę nagrodę.'
+        }
+    },
+    'collect_gold': {
+        id: 'collect_gold',
+        name: 'Zbieracz Złota',
+        description: 'Zbierz 100 złota.',
+        giver: 'merchant',
+        type: 'collect',
+        target: 'gold',
+        required: 100,
+        rewards: { xp: 75, gold: 25 },
+        rewardItem: 'health_potion',
+        dialogue: {
+            start: 'Potrzebuję złota na nowy towar. Przyniesiesz mi 100 sztuk?',
+            progress: 'Masz {current}/{required} złota.',
+            complete: 'Doskonale! Weź tę miksturę jako podziękowanie.'
+        }
+    },
+    'explore_dungeon': {
+        id: 'explore_dungeon',
+        name: 'Odkrywca Lochów',
+        description: 'Wejdź do lochu i przeżyj.',
+        giver: 'blacksmith',
+        type: 'visit',
+        target: 'dungeon',
+        required: 1,
+        rewards: { xp: 50, gold: 30 },
+        rewardItem: 'iron_sword',
+        dialogue: {
+            start: 'Słyszałem o starożytnych lochach. Zbadaj je i wróć cało!',
+            progress: 'Musisz odwiedzić loch.',
+            complete: 'Wróciłeś! Weź ten miecz, przyda ci się.'
+        }
+    }
+};
+
+// NPC Database
+const NPCDatabase = {
+    'elder': { name: 'Starzec Mędrzec', type: 'npc_elder', quests: ['kill_goblins', 'kill_orcs'] },
+    'merchant': { name: 'Kupiec Marcus', type: 'npc_merchant', quests: ['collect_gold'], shop: true },
+    'blacksmith': { name: 'Kowal Thorin', type: 'npc_blacksmith', quests: ['explore_dungeon'], shop: true }
+};
+
+// Stan questów
+let playerQuests = {
+    active: [],      // [{questId, progress}]
+    completed: []    // [questId]
+};
+
+// UI dialogów i questów
+let showingDialog = false;
+let currentNPC = null;
+let currentNPCId = null;
+let dialogState = 'greeting'; // 'greeting', 'quest_offer', 'quest_progress', 'shop'
+let dialogOptions = [];
+let dialogSelection = 0;
+let showingQuestLog = false;
+
+// Wioska
+let villageSpawned = false;
+let villageCenter = { x: 0, y: 0 };
+
 // Definicje przedmiotów
 const ItemDatabase = {
     // Bronie
@@ -124,11 +216,11 @@ function MenuSystem(ecs, dt) {
                 'Enter                  - Wejdź do lochu',
                 'E                      - Wyjdź z lochu',
                 'I                      - Ekwipunek',
+                'J                      - Dziennik questów',
+                'F                      - Rozmawiaj z NPC',
                 'ESC                    - Zamknij menu',
                 '',
-                'Walka odbywa się automatycznie',
-                'przy kontakcie z wrogiem.',
-                'Zbieraj przedmioty chodząc po nich.'
+                'Znajdź wioskę i rozmawiaj z NPC!'
             ];
             controls.forEach((line, i) => {
                 ctx.fillText(line, window.innerWidth / 2 - 220, 330 + i * 25);
@@ -218,6 +310,14 @@ function startNewGame() {
     // Reset UI
     showingInventory = false;
     inventorySelection = 0;
+    showingDialog = false;
+    showingQuestLog = false;
+    currentNPC = null;
+    currentNPCId = null;
+
+    // Reset questów
+    playerQuests = { active: [], completed: [] };
+    villageSpawned = false;
 
     // Wyczyść ECS
     engine.ecs.entities = [];
@@ -251,6 +351,7 @@ function startNewGame() {
     });
 
     createPlayer(100, 100);
+    spawnVillage();
     spawnEnemies();
     spawnItems();
 
@@ -258,14 +359,36 @@ function startNewGame() {
     if (GameState.fogOfWar) {
         GameState.fogOfWar.update(100, 100);
     }
+
+    GameState.combatLog.push('Witaj w Aethelgard!');
+    GameState.combatLog.push('Znajdź wioskę [F] aby rozmawiać');
 }
 
 // System Ruchu
 function MovementSystem(ecs, dt) {
     if (GameState.gameState !== 'playing' || GameState.gameOver) return;
 
-    // Nie ruszaj się gdy ekwipunek otwarty
-    if (showingInventory) return;
+    // Nie ruszaj się gdy ekwipunek, dialog lub quest log otwarty
+    if (showingInventory || showingQuestLog) return;
+
+    // Obsługa dialogu
+    if (showingDialog) {
+        if (consumeKey('ArrowUp') || consumeKey('w')) {
+            dialogSelection = Math.max(0, dialogSelection - 1);
+        }
+        if (consumeKey('ArrowDown') || consumeKey('s')) {
+            dialogSelection = Math.min(dialogOptions.length - 1, dialogSelection + 1);
+        }
+        if (consumeKey('Enter')) {
+            handleDialogAction(dialogOptions[dialogSelection].action);
+        }
+        if (consumeKey('Escape')) {
+            showingDialog = false;
+            currentNPC = null;
+            currentNPCId = null;
+        }
+        return;
+    }
 
     const entities = ecs.query(['position', 'player']);
     entities.forEach(entity => {
@@ -346,6 +469,34 @@ function MovementSystem(ecs, dt) {
             showingInventory = !showingInventory;
             inventorySelection = 0;
         }
+
+        // Otwórz/zamknij dziennik questów
+        if (consumeKey('j') || consumeKey('J')) {
+            showingQuestLog = !showingQuestLog;
+        }
+
+        // Interakcja z NPC (F)
+        if (consumeKey('f') || consumeKey('F')) {
+            const npcs = ecs.query(['npc', 'position']);
+            let closestNPC = null;
+            let closestDist = 64; // Maksymalna odległość interakcji
+
+            npcs.forEach(npcId => {
+                const npcPos = ecs.getComponent(npcId, 'position');
+                const dist = Math.sqrt(
+                    Math.pow(npcPos.x - pos.x, 2) +
+                    Math.pow(npcPos.y - pos.y, 2)
+                );
+                if (dist < closestDist) {
+                    closestDist = dist;
+                    closestNPC = npcId;
+                }
+            });
+
+            if (closestNPC) {
+                interactWithNPC(closestNPC);
+            }
+        }
     });
 }
 
@@ -359,6 +510,8 @@ function pickupItem(playerId, itemId) {
     if (item.type === 'treasure') {
         inventory.gold += item.value;
         GameState.combatLog.push(`+${item.value} złota!`);
+        // Aktualizuj postęp questów (collect gold)
+        updateQuestProgress('collect', 'gold', item.value);
     } else {
         // Inne przedmioty do ekwipunku
         inventory.items.push({ ...item });
@@ -490,6 +643,9 @@ function loadDungeon() {
 
     GameState.combatLog.push('Wszedłeś do mrocznego lochu!');
     GameState.combatLog.push('[E] aby wyjść');
+
+    // Aktualizuj postęp questów (visit dungeon)
+    updateQuestProgress('visit', 'dungeon');
 }
 
 function spawnDungeonEnemies() {
@@ -660,7 +816,7 @@ function HUDSystem(ecs, dt) {
 
     // Lokalizacja i podpowiedź
     const locationHint = GameState.location === 'dungeon' ? '[E] Wyjdź' : '[Enter] Loch';
-    ctx.fillText(`Lokacja: ${GameState.location}  |  [I] Ekwipunek  |  ${locationHint}`, 20, 100);
+    ctx.fillText(`Lokacja: ${GameState.location}  |  [I] Ekwip. [J] Questy [F] Rozm.  |  ${locationHint}`, 20, 100);
 
     // Combat Log (prawy górny róg)
     if (GameState.combatLog && GameState.combatLog.length > 0) {
@@ -704,6 +860,12 @@ function HUDSystem(ecs, dt) {
     if (showingInventory) {
         renderInventory(ctx, players[0]);
     }
+
+    // Dialog z NPC
+    renderDialog(ctx);
+
+    // Dziennik questów
+    renderQuestLog(ctx);
 
     ctx.restore();
 }
@@ -840,6 +1002,16 @@ function renderMinimap(ctx) {
         ctx.fillRect(mx - 1, my - 1, 3, 3);
     });
 
+    // NPC na minimapie (niebieskie)
+    const npcs = engine.ecs.query(['npc', 'position']);
+    ctx.fillStyle = '#2196F3';
+    npcs.forEach(id => {
+        const pos = engine.ecs.getComponent(id, 'position');
+        const mx = minimapX + (pos.x / TILE_SIZE) * tileSize;
+        const my = minimapY + (pos.y / TILE_SIZE) * tileSize;
+        ctx.fillRect(mx - 1, my - 1, 4, 4);
+    });
+
     // Gracz na minimapie
     const players = engine.ecs.query(['player', 'position']);
     ctx.fillStyle = '#FFEB3B';
@@ -853,6 +1025,169 @@ function renderMinimap(ctx) {
     // Ramka minimapy
     ctx.strokeStyle = '#fff';
     ctx.strokeRect(minimapX - 5, minimapY - 5, minimapSize + 10, minimapSize + 10);
+}
+
+function renderDialog(ctx) {
+    if (!showingDialog || !currentNPC) return;
+
+    const width = 500;
+    const height = 250;
+    const x = (window.innerWidth - width) / 2;
+    const y = window.innerHeight - height - 50;
+
+    // Tło dialogu
+    ctx.fillStyle = 'rgba(20, 20, 40, 0.95)';
+    ctx.fillRect(x, y, width, height);
+    ctx.strokeStyle = '#FFD700';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(x, y, width, height);
+
+    // Imię NPC
+    ctx.fillStyle = '#FFD700';
+    ctx.font = 'bold 18px monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText(currentNPC.name, x + width / 2, y + 30);
+
+    // Tekst dialogu
+    ctx.fillStyle = '#fff';
+    ctx.font = '14px monospace';
+    ctx.textAlign = 'left';
+
+    const dialogText = getDialogText();
+    const words = dialogText.split(' ');
+    let lines = [];
+    let currentLine = '';
+
+    words.forEach(word => {
+        if ((currentLine + word).length > 55) {
+            lines.push(currentLine.trim());
+            currentLine = word + ' ';
+        } else {
+            currentLine += word + ' ';
+        }
+    });
+    if (currentLine.trim()) lines.push(currentLine.trim());
+
+    lines.forEach((line, i) => {
+        ctx.fillText(line, x + 20, y + 60 + i * 20);
+    });
+
+    // Opcje dialogowe
+    const optionsStartY = y + 140;
+    dialogOptions.forEach((option, i) => {
+        const isSelected = i === dialogSelection;
+
+        if (isSelected) {
+            ctx.fillStyle = 'rgba(255, 215, 0, 0.3)';
+            ctx.fillRect(x + 15, optionsStartY + i * 30 - 15, width - 30, 25);
+        }
+
+        ctx.fillStyle = isSelected ? '#FFD700' : '#aaa';
+        ctx.font = isSelected ? 'bold 14px monospace' : '14px monospace';
+        ctx.fillText(`> ${option.text}`, x + 25, optionsStartY + i * 30);
+    });
+
+    // Instrukcje
+    ctx.fillStyle = '#666';
+    ctx.font = '12px monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('↑↓ = wybierz | Enter = potwierdź | ESC = zamknij', x + width / 2, y + height - 15);
+    ctx.textAlign = 'left';
+}
+
+function renderQuestLog(ctx) {
+    if (!showingQuestLog) return;
+
+    const width = 450;
+    const height = 400;
+    const x = (window.innerWidth - width) / 2;
+    const y = (window.innerHeight - height) / 2;
+
+    // Tło
+    ctx.fillStyle = 'rgba(20, 20, 40, 0.95)';
+    ctx.fillRect(x, y, width, height);
+    ctx.strokeStyle = '#FFD700';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(x, y, width, height);
+
+    // Tytuł
+    ctx.fillStyle = '#FFD700';
+    ctx.font = 'bold 24px monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('DZIENNIK QUESTÓW', x + width / 2, y + 35);
+
+    ctx.textAlign = 'left';
+    let currentY = y + 70;
+
+    // Aktywne questy
+    ctx.fillStyle = '#4CAF50';
+    ctx.font = 'bold 16px monospace';
+    ctx.fillText('Aktywne zadania:', x + 20, currentY);
+    currentY += 25;
+
+    if (playerQuests.active.length === 0) {
+        ctx.fillStyle = '#666';
+        ctx.font = '14px monospace';
+        ctx.fillText('Brak aktywnych zadań', x + 30, currentY);
+        currentY += 30;
+    } else {
+        playerQuests.active.forEach(aq => {
+            const quest = QuestDatabase[aq.questId];
+            if (!quest) return;
+
+            ctx.fillStyle = '#fff';
+            ctx.font = 'bold 14px monospace';
+            ctx.fillText(quest.name, x + 30, currentY);
+            currentY += 18;
+
+            ctx.fillStyle = '#aaa';
+            ctx.font = '12px monospace';
+            ctx.fillText(quest.description, x + 30, currentY);
+            currentY += 18;
+
+            // Postęp
+            const progressText = `Postęp: ${aq.progress}/${quest.required}`;
+            const isComplete = aq.progress >= quest.required;
+            ctx.fillStyle = isComplete ? '#4CAF50' : '#FF9800';
+            ctx.fillText(progressText + (isComplete ? ' (Gotowy!)' : ''), x + 30, currentY);
+            currentY += 25;
+        });
+    }
+
+    // Ukończone questy
+    currentY += 10;
+    ctx.fillStyle = '#888';
+    ctx.font = 'bold 16px monospace';
+    ctx.fillText('Ukończone:', x + 20, currentY);
+    currentY += 25;
+
+    if (playerQuests.completed.length === 0) {
+        ctx.fillStyle = '#555';
+        ctx.font = '14px monospace';
+        ctx.fillText('Brak ukończonych zadań', x + 30, currentY);
+    } else {
+        playerQuests.completed.forEach(qId => {
+            const quest = QuestDatabase[qId];
+            if (!quest) return;
+
+            ctx.fillStyle = '#666';
+            ctx.font = '14px monospace';
+            ctx.fillText(`✓ ${quest.name}`, x + 30, currentY);
+            currentY += 20;
+        });
+    }
+
+    // Instrukcje
+    ctx.fillStyle = '#666';
+    ctx.font = '12px monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('J/ESC = zamknij', x + width / 2, y + height - 15);
+    ctx.textAlign = 'left';
+
+    // Obsługa zamknięcia
+    if (consumeKey('Escape') || consumeKey('j') || consumeKey('J')) {
+        showingQuestLog = false;
+    }
 }
 
 // System Renderowania
@@ -938,6 +1273,283 @@ function createItem(x, y, itemId) {
     return id;
 }
 
+function createNPC(x, y, npcKey) {
+    const npcData = NPCDatabase[npcKey];
+    if (!npcData) return null;
+
+    const id = engine.ecs.createEntity();
+    engine.ecs.addComponent(id, 'position', { x: x, y: y });
+    engine.ecs.addComponent(id, 'renderable', { type: npcData.type });
+    engine.ecs.addComponent(id, 'npc', {
+        key: npcKey,
+        name: npcData.name,
+        quests: npcData.quests || [],
+        shop: npcData.shop || false
+    });
+    return id;
+}
+
+function spawnVillage() {
+    // Znajdź odpowiednie miejsce na wioskę (trawa)
+    let villageX, villageY;
+    let attempts = 0;
+
+    do {
+        villageX = 10 + Math.floor(Math.random() * (GameState.mapWidth - 20));
+        villageY = 10 + Math.floor(Math.random() * (GameState.mapHeight - 20));
+        attempts++;
+    } while (
+        (GameState.map[villageY][villageX].type !== 'grass' &&
+         GameState.map[villageY][villageX].type !== 'sand') &&
+        attempts < 100
+    );
+
+    if (attempts >= 100) {
+        villageX = 15;
+        villageY = 15;
+    }
+
+    villageCenter = { x: villageX * TILE_SIZE, y: villageY * TILE_SIZE };
+    villageSpawned = true;
+
+    // Twórz domy wioski (5 domów w okolicy)
+    const housePositions = [
+        { dx: -2, dy: -2 }, { dx: 2, dy: -2 },
+        { dx: 0, dy: 0 },
+        { dx: -2, dy: 2 }, { dx: 2, dy: 2 }
+    ];
+
+    housePositions.forEach(offset => {
+        const hx = villageX + offset.dx;
+        const hy = villageY + offset.dy;
+
+        if (hx >= 0 && hx < GameState.mapWidth && hy >= 0 && hy < GameState.mapHeight) {
+            const houseId = engine.ecs.createEntity();
+            engine.ecs.addComponent(houseId, 'position', { x: hx * TILE_SIZE, y: hy * TILE_SIZE });
+            engine.ecs.addComponent(houseId, 'renderable', { type: 'village_house' });
+        }
+    });
+
+    // Spawn NPC
+    createNPC((villageX - 1) * TILE_SIZE, villageY * TILE_SIZE, 'elder');
+    createNPC((villageX + 1) * TILE_SIZE, villageY * TILE_SIZE, 'merchant');
+    createNPC(villageX * TILE_SIZE, (villageY + 1) * TILE_SIZE, 'blacksmith');
+
+    // Dodaj markery questów dla NPC z questami
+    updateQuestMarkers();
+}
+
+function updateQuestMarkers() {
+    // Usuń istniejące markery
+    const markers = engine.ecs.query(['quest_marker']);
+    markers.forEach(id => engine.ecs.destroyEntity(id));
+
+    // Dodaj markery dla NPC z dostępnymi questami
+    const npcs = engine.ecs.query(['npc', 'position']);
+    npcs.forEach(npcId => {
+        const npc = engine.ecs.getComponent(npcId, 'npc');
+        const pos = engine.ecs.getComponent(npcId, 'position');
+
+        // Sprawdź czy NPC ma quest do dania
+        const availableQuest = npc.quests.find(qId =>
+            !playerQuests.completed.includes(qId) &&
+            !playerQuests.active.find(aq => aq.questId === qId)
+        );
+
+        if (availableQuest) {
+            const markerId = engine.ecs.createEntity();
+            engine.ecs.addComponent(markerId, 'position', { x: pos.x + 8, y: pos.y - 20 });
+            engine.ecs.addComponent(markerId, 'renderable', { type: 'quest_marker' });
+            engine.ecs.addComponent(markerId, 'quest_marker', { npcId: npcId });
+        }
+    });
+}
+
+// System interakcji z NPC
+function interactWithNPC(npcId) {
+    const npc = engine.ecs.getComponent(npcId, 'npc');
+    if (!npc) return;
+
+    currentNPC = npc;
+    currentNPCId = npcId;
+    showingDialog = true;
+    dialogSelection = 0;
+
+    // Sprawdź stan questów dla tego NPC
+    const activeQuest = playerQuests.active.find(aq =>
+        QuestDatabase[aq.questId]?.giver === npc.key
+    );
+
+    if (activeQuest) {
+        const quest = QuestDatabase[activeQuest.questId];
+        // Sprawdź czy quest jest ukończony
+        if (isQuestComplete(activeQuest)) {
+            dialogState = 'quest_complete';
+        } else {
+            dialogState = 'quest_progress';
+        }
+    } else {
+        // Sprawdź czy NPC ma nowy quest
+        const availableQuest = npc.quests.find(qId =>
+            !playerQuests.completed.includes(qId) &&
+            !playerQuests.active.find(aq => aq.questId === qId)
+        );
+
+        if (availableQuest) {
+            dialogState = 'quest_offer';
+        } else {
+            dialogState = 'greeting';
+        }
+    }
+
+    updateDialogOptions();
+}
+
+function updateDialogOptions() {
+    dialogOptions = [];
+
+    if (dialogState === 'greeting') {
+        dialogOptions.push({ text: 'Do widzenia', action: 'close' });
+    } else if (dialogState === 'quest_offer') {
+        dialogOptions.push({ text: 'Przyjmuję zadanie!', action: 'accept_quest' });
+        dialogOptions.push({ text: 'Może później...', action: 'close' });
+    } else if (dialogState === 'quest_progress') {
+        dialogOptions.push({ text: 'Rozumiem', action: 'close' });
+    } else if (dialogState === 'quest_complete') {
+        dialogOptions.push({ text: 'Oddaj nagrodę', action: 'complete_quest' });
+    }
+
+    dialogSelection = 0;
+}
+
+function getDialogText() {
+    if (!currentNPC) return '';
+
+    const activeQuest = playerQuests.active.find(aq =>
+        QuestDatabase[aq.questId]?.giver === currentNPC.key
+    );
+
+    if (dialogState === 'greeting') {
+        return `Witaj, wędrowcze! Jestem ${currentNPC.name}.`;
+    } else if (dialogState === 'quest_offer') {
+        const availableQuestId = currentNPC.quests.find(qId =>
+            !playerQuests.completed.includes(qId) &&
+            !playerQuests.active.find(aq => aq.questId === qId)
+        );
+        const quest = QuestDatabase[availableQuestId];
+        return quest ? quest.dialogue.start : 'Nie mam dla ciebie zadań.';
+    } else if (dialogState === 'quest_progress' && activeQuest) {
+        const quest = QuestDatabase[activeQuest.questId];
+        let text = quest.dialogue.progress;
+        text = text.replace('{remaining}', quest.required - activeQuest.progress);
+        text = text.replace('{current}', activeQuest.progress);
+        text = text.replace('{required}', quest.required);
+        return text;
+    } else if (dialogState === 'quest_complete' && activeQuest) {
+        const quest = QuestDatabase[activeQuest.questId];
+        return quest.dialogue.complete;
+    }
+
+    return 'Nie mam nic do powiedzenia.';
+}
+
+function handleDialogAction(action) {
+    if (action === 'close') {
+        showingDialog = false;
+        currentNPC = null;
+        currentNPCId = null;
+    } else if (action === 'accept_quest') {
+        const availableQuestId = currentNPC.quests.find(qId =>
+            !playerQuests.completed.includes(qId) &&
+            !playerQuests.active.find(aq => aq.questId === qId)
+        );
+
+        if (availableQuestId) {
+            playerQuests.active.push({ questId: availableQuestId, progress: 0 });
+            const quest = QuestDatabase[availableQuestId];
+            GameState.combatLog.push(`Nowy quest: ${quest.name}`);
+            updateQuestMarkers();
+        }
+
+        showingDialog = false;
+        currentNPC = null;
+        currentNPCId = null;
+    } else if (action === 'complete_quest') {
+        const activeQuest = playerQuests.active.find(aq =>
+            QuestDatabase[aq.questId]?.giver === currentNPC.key
+        );
+
+        if (activeQuest && isQuestComplete(activeQuest)) {
+            completeQuest(activeQuest.questId);
+        }
+
+        showingDialog = false;
+        currentNPC = null;
+        currentNPCId = null;
+    }
+}
+
+function isQuestComplete(activeQuest) {
+    const quest = QuestDatabase[activeQuest.questId];
+    if (!quest) return false;
+
+    if (quest.type === 'kill' || quest.type === 'collect' || quest.type === 'visit') {
+        return activeQuest.progress >= quest.required;
+    }
+    return false;
+}
+
+function completeQuest(questId) {
+    const quest = QuestDatabase[questId];
+    if (!quest) return;
+
+    // Usuń z aktywnych
+    playerQuests.active = playerQuests.active.filter(aq => aq.questId !== questId);
+    playerQuests.completed.push(questId);
+
+    // Daj nagrody
+    const players = engine.ecs.query(['player', 'stats']);
+    if (players.length > 0) {
+        const stats = engine.ecs.getComponent(players[0], 'stats');
+        const inventory = engine.ecs.getComponent(players[0], 'inventory');
+
+        if (quest.rewards.xp) {
+            stats.xp += quest.rewards.xp;
+            GameState.combatLog.push(`+${quest.rewards.xp} XP!`);
+            checkLevelUp(players[0]);
+        }
+
+        if (quest.rewards.gold && inventory) {
+            inventory.gold += quest.rewards.gold;
+            GameState.combatLog.push(`+${quest.rewards.gold} złota!`);
+        }
+
+        // Przedmiot nagrody
+        if (quest.rewardItem && inventory) {
+            const item = ItemDatabase[quest.rewardItem];
+            if (item) {
+                inventory.items.push({ ...item, itemId: quest.rewardItem });
+                GameState.combatLog.push(`Otrzymano: ${item.name}`);
+            }
+        }
+    }
+
+    GameState.combatLog.push(`Quest ukończony: ${quest.name}`);
+    updateQuestMarkers();
+}
+
+function updateQuestProgress(type, target, amount = 1) {
+    playerQuests.active.forEach(aq => {
+        const quest = QuestDatabase[aq.questId];
+        if (quest && quest.type === type && quest.target === target) {
+            aq.progress += amount;
+            if (aq.progress >= quest.required) {
+                GameState.combatLog.push(`Quest "${quest.name}" gotowy do oddania!`);
+            }
+        }
+    });
+}
+
 function spawnItems() {
     const itemTypes = ['health_potion', 'health_potion', 'gold_coin', 'gold_coin', 'gold_coin',
                        'rusty_sword', 'leather_armor', 'iron_sword', 'gem'];
@@ -1006,9 +1618,15 @@ function handleCombat(attackerId, defenderId) {
     if (defenderStats.hp <= 0) {
         // Jeśli zginął wróg - daj XP
         if (engine.ecs.hasComponent(defenderId, 'enemy')) {
+            const enemy = engine.ecs.getComponent(defenderId, 'enemy');
             const xpGain = defenderStats.xpReward || 25;
             attackerStats.xp += xpGain;
             GameState.combatLog.push(`+${xpGain} XP!`);
+
+            // Aktualizuj postęp questów (kill)
+            if (enemy && enemy.type) {
+                updateQuestProgress('kill', enemy.type);
+            }
 
             // Sprawdź levelowanie
             checkLevelUp(attackerId);
