@@ -193,6 +193,100 @@ export const AssetGenerator = {
             // Błysk
             ctx.fillStyle = '#FFEB3B';
             ctx.fillRect(18, 16, 3, 3);
+        } else if (type === 'npc_merchant') {
+            // Kupiec - fioletowa szata
+            ctx.fillStyle = '#7B1FA2';
+            ctx.fillRect(10, 12, 12, 14);
+
+            ctx.fillStyle = '#FFCC80'; // Głowa
+            ctx.fillRect(11, 4, 10, 8);
+
+            ctx.fillStyle = '#4A148C'; // Kaptur
+            ctx.fillRect(10, 2, 12, 6);
+
+            ctx.fillStyle = '#424242'; // Nogi
+            ctx.fillRect(11, 26, 4, 6);
+            ctx.fillRect(17, 26, 4, 6);
+
+            // Worek ze złotem
+            ctx.fillStyle = '#FFD700';
+            ctx.beginPath();
+            ctx.arc(24, 20, 5, 0, Math.PI * 2);
+            ctx.fill();
+        } else if (type === 'npc_blacksmith') {
+            // Kowal - brązowy fartuch
+            ctx.fillStyle = '#5D4037';
+            ctx.fillRect(10, 12, 12, 14);
+
+            ctx.fillStyle = '#FFCC80'; // Głowa
+            ctx.fillRect(11, 4, 10, 8);
+
+            ctx.fillStyle = '#3E2723'; // Włosy
+            ctx.fillRect(11, 2, 10, 4);
+
+            ctx.fillStyle = '#424242'; // Nogi
+            ctx.fillRect(11, 26, 4, 6);
+            ctx.fillRect(17, 26, 4, 6);
+
+            // Młot
+            ctx.fillStyle = '#757575';
+            ctx.fillRect(22, 10, 4, 16);
+            ctx.fillStyle = '#9E9E9E';
+            ctx.fillRect(20, 8, 8, 6);
+        } else if (type === 'npc_elder') {
+            // Starzec/Quest giver - biała szata
+            ctx.fillStyle = '#ECEFF1';
+            ctx.fillRect(10, 12, 12, 14);
+
+            ctx.fillStyle = '#FFCC80'; // Głowa
+            ctx.fillRect(11, 4, 10, 8);
+
+            ctx.fillStyle = '#BDBDBD'; // Siwe włosy/broda
+            ctx.fillRect(11, 2, 10, 4);
+            ctx.fillRect(11, 10, 10, 4);
+
+            ctx.fillStyle = '#424242'; // Nogi
+            ctx.fillRect(11, 26, 4, 6);
+            ctx.fillRect(17, 26, 4, 6);
+
+            // Laska
+            ctx.fillStyle = '#8D6E63';
+            ctx.fillRect(24, 8, 3, 22);
+        } else if (type === 'village_house') {
+            // Dom wioski
+            ctx.fillStyle = '#8D6E63'; // Ściany
+            ctx.fillRect(2, 12, 28, 18);
+
+            ctx.fillStyle = '#5D4037'; // Dach
+            ctx.beginPath();
+            ctx.moveTo(0, 14);
+            ctx.lineTo(16, 0);
+            ctx.lineTo(32, 14);
+            ctx.closePath();
+            ctx.fill();
+
+            // Drzwi
+            ctx.fillStyle = '#4E342E';
+            ctx.fillRect(12, 18, 8, 12);
+
+            // Okno
+            ctx.fillStyle = '#FFEB3B';
+            ctx.fillRect(22, 16, 6, 6);
+            ctx.strokeStyle = '#5D4037';
+            ctx.strokeRect(22, 16, 6, 6);
+        } else if (type === 'quest_marker') {
+            // Marker questa (wykrzyknik)
+            ctx.clearRect(0, 0, size, size);
+
+            ctx.fillStyle = '#FFD700';
+            ctx.beginPath();
+            ctx.arc(16, 16, 12, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.fillStyle = '#000';
+            ctx.font = 'bold 20px monospace';
+            ctx.textAlign = 'center';
+            ctx.fillText('!', 16, 23);
         }
 
         return canvas;
