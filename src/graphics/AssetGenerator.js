@@ -1,5 +1,6 @@
 export const AssetGenerator = {
     cache: new Map(),
+    animationFrame: 0,
 
     // Pobierz teksturę (z cache lub wygeneruj)
     getTexture: function (type, params = {}) {
@@ -13,280 +14,905 @@ export const AssetGenerator = {
         return texture;
     },
 
+    // Pobierz animowaną teksturę
+    getAnimatedTexture: function(type, frame) {
+        const key = `${type}_anim_${frame % 4}`;
+        if (this.cache.has(key)) {
+            return this.cache.get(key);
+        }
+        const texture = this.generateAnimated(type, frame % 4);
+        this.cache.set(key, texture);
+        return texture;
+    },
+
+    // Pomocnicze funkcje graficzne
+    drawOutline: function(ctx, x, y, w, h, color = '#000', thickness = 1) {
+        ctx.strokeStyle = color;
+        ctx.lineWidth = thickness;
+        ctx.strokeRect(x, y, w, h);
+    },
+
+    addNoise: function(ctx, size, intensity = 10) {
+        const imageData = ctx.getImageData(0, 0, size, size);
+        const data = imageData.data;
+        for (let i = 0; i < data.length; i += 4) {
+            const noise = (Math.random() - 0.5) * intensity;
+            data[i] = Math.max(0, Math.min(255, data[i] + noise));
+            data[i + 1] = Math.max(0, Math.min(255, data[i + 1] + noise));
+            data[i + 2] = Math.max(0, Math.min(255, data[i + 2] + noise));
+        }
+        ctx.putImageData(imageData, 0, 0);
+    },
+
+    drawShadow: function(ctx, x, y, w, h) {
+        ctx.fillStyle = 'rgba(0,0,0,0.3)';
+        ctx.beginPath();
+        ctx.ellipse(x + w/2, y + h + 2, w/2, 4, 0, 0, Math.PI * 2);
+        ctx.fill();
+    },
+
     generate: function (type, params) {
-        const size = 32;
+        const size = 64;
         const canvas = document.createElement('canvas');
         canvas.width = size;
         canvas.height = size;
         const ctx = canvas.getContext('2d');
 
-        // Funkcja pomocnicza do szumu
-        const noise = () => Math.random() * 20 - 10;
-
         if (type === 'grass') {
-            // Baza
-            const baseColor = { h: 100, s: 60, l: 40 };
+            // Gradient tło
+            const gradient = ctx.createLinearGradient(0, 0, 0, size);
+            gradient.addColorStop(0, '#4a7c31');
+            gradient.addColorStop(1, '#3d6828');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, size, size);
+
+            // Dodaj teksturę szumu
             for (let y = 0; y < size; y++) {
                 for (let x = 0; x < size; x++) {
-                    ctx.fillStyle = `hsl(${baseColor.h}, ${baseColor.s}%, ${baseColor.l + noise()}%)`;
-                    ctx.fillRect(x, y, 1, 1);
+                    if (Math.random() > 0.7) {
+                        const l = 35 + Math.random() * 20;
+                        ctx.fillStyle = `hsl(100, 55%, ${l}%)`;
+                        ctx.fillRect(x, y, 1, 1);
+                    }
                 }
             }
-            // Kępki trawy
-            for (let i = 0; i < 8; i++) {
+
+            // Kępki trawy (więcej szczegółów)
+            for (let i = 0; i < 20; i++) {
                 const x = Math.floor(Math.random() * size);
                 const y = Math.floor(Math.random() * size);
-                ctx.fillStyle = `hsl(${baseColor.h}, ${baseColor.s}%, ${baseColor.l + 15}%)`;
-                ctx.fillRect(x, y, 1, 2);
+                const height = 3 + Math.floor(Math.random() * 5);
+
+                ctx.strokeStyle = `hsl(${95 + Math.random() * 20}, 60%, ${45 + Math.random() * 15}%)`;
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(x, y);
+                ctx.lineTo(x + (Math.random() - 0.5) * 4, y - height);
+                ctx.stroke();
             }
+
+            // Małe kwiatki
+            if (Math.random() > 0.6) {
+                for (let i = 0; i < 3; i++) {
+                    const fx = 10 + Math.random() * 44;
+                    const fy = 10 + Math.random() * 44;
+                    ctx.fillStyle = ['#ff6b6b', '#ffd93d', '#6bcb77', '#4d96ff'][Math.floor(Math.random() * 4)];
+                    ctx.beginPath();
+                    ctx.arc(fx, fy, 2, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
         } else if (type === 'water') {
-            const baseColor = { h: 210, s: 70, l: 50 };
-            for (let y = 0; y < size; y++) {
-                for (let x = 0; x < size; x++) {
-                    let lOffset = 0;
-                    if ((x + y) % 5 === 0) lOffset = 10; // Fale
-                    ctx.fillStyle = `hsl(${baseColor.h}, ${baseColor.s}%, ${baseColor.l + noise() + lOffset}%)`;
-                    ctx.fillRect(x, y, 1, 1);
+            // Statyczna woda - animowana osobno
+            const gradient = ctx.createLinearGradient(0, 0, size, size);
+            gradient.addColorStop(0, '#1e88e5');
+            gradient.addColorStop(0.5, '#2196f3');
+            gradient.addColorStop(1, '#1565c0');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, size, size);
+
+            // Fale
+            ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+            ctx.lineWidth = 2;
+            for (let i = 0; i < 4; i++) {
+                ctx.beginPath();
+                ctx.moveTo(0, 10 + i * 15);
+                for (let x = 0; x < size; x += 8) {
+                    ctx.quadraticCurveTo(x + 4, 6 + i * 15, x + 8, 10 + i * 15);
                 }
+                ctx.stroke();
             }
+
+            // Odblaski
+            ctx.fillStyle = 'rgba(255,255,255,0.2)';
+            ctx.fillRect(20, 25, 8, 3);
+            ctx.fillRect(40, 45, 6, 2);
+
         } else if (type === 'sand') {
-            const baseColor = { h: 40, s: 60, l: 70 };
-            for (let y = 0; y < size; y++) {
-                for (let x = 0; x < size; x++) {
-                    ctx.fillStyle = `hsl(${baseColor.h}, ${baseColor.s}%, ${baseColor.l + noise()}%)`;
-                    ctx.fillRect(x, y, 1, 1);
-                }
+            const gradient = ctx.createRadialGradient(32, 32, 0, 32, 32, 45);
+            gradient.addColorStop(0, '#f4d03f');
+            gradient.addColorStop(1, '#d4a937');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, size, size);
+
+            // Ziarenka piasku
+            for (let i = 0; i < 100; i++) {
+                const x = Math.random() * size;
+                const y = Math.random() * size;
+                ctx.fillStyle = `hsl(45, ${50 + Math.random() * 20}%, ${65 + Math.random() * 20}%)`;
+                ctx.fillRect(x, y, 1, 1);
             }
+
+            // Małe kamyki
+            for (let i = 0; i < 3; i++) {
+                const cx = 10 + Math.random() * 44;
+                const cy = 10 + Math.random() * 44;
+                ctx.fillStyle = '#a0887a';
+                ctx.beginPath();
+                ctx.ellipse(cx, cy, 2 + Math.random() * 2, 1 + Math.random(), 0, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
         } else if (type === 'snow') {
-            const baseColor = { h: 200, s: 20, l: 90 };
-            for (let y = 0; y < size; y++) {
-                for (let x = 0; x < size; x++) {
-                    ctx.fillStyle = `hsl(${baseColor.h}, ${baseColor.s}%, ${baseColor.l + noise()}%)`;
-                    ctx.fillRect(x, y, 1, 1);
-                }
+            const gradient = ctx.createLinearGradient(0, 0, size, size);
+            gradient.addColorStop(0, '#ffffff');
+            gradient.addColorStop(1, '#e3f2fd');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, size, size);
+
+            // Tekstura śniegu
+            for (let i = 0; i < 80; i++) {
+                const x = Math.random() * size;
+                const y = Math.random() * size;
+                ctx.fillStyle = `rgba(200, 220, 255, ${0.3 + Math.random() * 0.3})`;
+                ctx.beginPath();
+                ctx.arc(x, y, 1 + Math.random() * 2, 0, Math.PI * 2);
+                ctx.fill();
             }
+
+            // Cienie w śniegu
+            ctx.fillStyle = 'rgba(150, 180, 220, 0.2)';
+            ctx.beginPath();
+            ctx.ellipse(20, 40, 12, 4, 0.3, 0, Math.PI * 2);
+            ctx.fill();
+
         } else if (type === 'mountain') {
             // Skaliste tło
-            const baseColor = { h: 0, s: 0, l: 40 };
+            ctx.fillStyle = '#5d5d5d';
+            ctx.fillRect(0, 0, size, size);
+
+            // Tekstura kamienia
             for (let y = 0; y < size; y++) {
                 for (let x = 0; x < size; x++) {
-                    ctx.fillStyle = `hsl(${baseColor.h}, ${baseColor.s}%, ${baseColor.l + noise()}%)`;
-                    ctx.fillRect(x, y, 1, 1);
+                    if (Math.random() > 0.5) {
+                        const l = 30 + Math.random() * 25;
+                        ctx.fillStyle = `hsl(0, 0%, ${l}%)`;
+                        ctx.fillRect(x, y, 1, 1);
+                    }
                 }
             }
-            // Szczyt (trójkąt)
-            ctx.fillStyle = '#e0e0e0';
+
+            // Góra 3D
+            ctx.fillStyle = '#7a7a7a';
             ctx.beginPath();
-            ctx.moveTo(size / 2, 2);
-            ctx.lineTo(size - 4, size - 4);
-            ctx.lineTo(4, size - 4);
-            ctx.fill();
-        } else if (type === 'tree') {
-            // Drzewo (większe i bardziej szczegółowe)
-            // Uwaga: tutaj rysujemy na 32x32, ale w demo było 64x64. Dostosujmy skalę.
-            ctx.fillStyle = '#5D4037'; // Pień
-            ctx.fillRect(12, 20, 8, 12);
-
-            // Cieniowanie pnia
-            ctx.fillStyle = '#3E2723';
-            ctx.fillRect(12, 20, 2, 12);
-
-            // Korona (złożona z kółek)
-            ctx.fillStyle = '#2E7D32';
-            const circles = [
-                { x: 16, y: 14, r: 10 },
-                { x: 10, y: 18, r: 8 },
-                { x: 22, y: 18, r: 8 },
-                { x: 16, y: 8, r: 8 }
-            ];
-            circles.forEach(c => {
-                ctx.beginPath();
-                ctx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
-                ctx.fill();
-                // Detale liści
-                for (let i = 0; i < 5; i++) {
-                    ctx.fillStyle = '#1B5E20';
-                    ctx.fillRect(c.x + (Math.random() * 10 - 5), c.y + (Math.random() * 10 - 5), 2, 2);
-                    ctx.fillStyle = '#2E7D32';
-                }
-            });
-        } else if (type === 'player') {
-            // Gracz RPG
-            ctx.fillStyle = '#1565C0'; // Zbroja
-            ctx.fillRect(10, 12, 12, 14);
-
-            ctx.fillStyle = '#FFCC80'; // Głowa
-            ctx.fillRect(11, 4, 10, 8);
-
-            ctx.fillStyle = '#5D4037'; // Włosy
-            ctx.fillRect(11, 2, 10, 4);
-
-            ctx.fillStyle = '#424242'; // Nogi
-            ctx.fillRect(11, 26, 4, 6);
-            ctx.fillRect(17, 26, 4, 6);
-
-            // Miecz
-            ctx.fillStyle = '#BDBDBD';
-            ctx.fillRect(22, 14, 4, 12);
-            ctx.fillStyle = '#8D6E63';
-            ctx.fillRect(22, 26, 4, 4);
-        } else if (type === 'enemy') {
-            // Wróg (Orc/Goblin)
-            ctx.fillStyle = '#2E7D32'; // Skóra
-            ctx.fillRect(8, 8, 16, 20);
-
-            ctx.fillStyle = '#D32F2F'; // Oczy
-            ctx.fillRect(10, 12, 4, 2);
-            ctx.fillRect(18, 12, 4, 2);
-
-            ctx.fillStyle = '#1B5E20'; // Cienie
-            ctx.fillRect(8, 8, 2, 20);
-        } else if (type === 'wall') {
-            // Cegły
-            ctx.fillStyle = '#424242';
-            ctx.fillRect(0, 0, size, size);
-            ctx.fillStyle = '#616161';
-            for (let y = 0; y < size; y += 8) {
-                for (let x = 0; x < size; x += 8) {
-                    if ((x + y) % 16 === 0) ctx.fillRect(x, y, 7, 7);
-                }
-            }
-        } else if (type === 'floor') {
-            // Płytki
-            ctx.fillStyle = '#212121';
-            ctx.fillRect(0, 0, size, size);
-            ctx.strokeStyle = '#424242';
-            ctx.strokeRect(0, 0, size, size);
-            // Pęknięcia
-            ctx.beginPath();
-            ctx.moveTo(4, 4);
-            ctx.lineTo(10, 10);
-            ctx.stroke();
-        } else if (type === 'item') {
-            // Przedmiot (skrzynia/worek)
-            // Tło przezroczyste
-            ctx.clearRect(0, 0, size, size);
-
-            // Złoty worek/sakiewka
-            ctx.fillStyle = '#8B4513';
-            ctx.beginPath();
-            ctx.ellipse(16, 20, 10, 8, 0, 0, Math.PI * 2);
-            ctx.fill();
-
-            // Góra worka
-            ctx.fillStyle = '#A0522D';
-            ctx.beginPath();
-            ctx.moveTo(10, 14);
-            ctx.lineTo(16, 8);
-            ctx.lineTo(22, 14);
+            ctx.moveTo(32, 4);
+            ctx.lineTo(58, 56);
+            ctx.lineTo(6, 56);
             ctx.closePath();
             ctx.fill();
 
-            // Sznurek
-            ctx.strokeStyle = '#FFD700';
+            // Cieniowanie
+            ctx.fillStyle = '#5a5a5a';
+            ctx.beginPath();
+            ctx.moveTo(32, 4);
+            ctx.lineTo(6, 56);
+            ctx.lineTo(32, 56);
+            ctx.closePath();
+            ctx.fill();
+
+            // Śnieżna czapa
+            ctx.fillStyle = '#ffffff';
+            ctx.beginPath();
+            ctx.moveTo(32, 4);
+            ctx.lineTo(42, 20);
+            ctx.lineTo(22, 20);
+            ctx.closePath();
+            ctx.fill();
+
+            // Outline
+            ctx.strokeStyle = '#3d3d3d';
             ctx.lineWidth = 2;
             ctx.beginPath();
-            ctx.moveTo(14, 12);
-            ctx.lineTo(18, 12);
+            ctx.moveTo(32, 4);
+            ctx.lineTo(58, 56);
+            ctx.lineTo(6, 56);
+            ctx.closePath();
             ctx.stroke();
 
-            // Błysk
-            ctx.fillStyle = '#FFEB3B';
-            ctx.fillRect(18, 16, 3, 3);
+        } else if (type === 'tree') {
+            ctx.clearRect(0, 0, size, size);
+
+            // Cień
+            ctx.fillStyle = 'rgba(0,0,0,0.25)';
+            ctx.beginPath();
+            ctx.ellipse(32, 60, 18, 6, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Pień z teksturą
+            const trunkGradient = ctx.createLinearGradient(22, 0, 42, 0);
+            trunkGradient.addColorStop(0, '#3e2723');
+            trunkGradient.addColorStop(0.5, '#6d4c41');
+            trunkGradient.addColorStop(1, '#4e342e');
+            ctx.fillStyle = trunkGradient;
+            ctx.fillRect(26, 38, 12, 24);
+
+            // Kora
+            ctx.strokeStyle = '#2d1b16';
+            ctx.lineWidth = 1;
+            for (let i = 0; i < 4; i++) {
+                ctx.beginPath();
+                ctx.moveTo(28 + i * 3, 40);
+                ctx.lineTo(28 + i * 3, 58);
+                ctx.stroke();
+            }
+
+            // Korona - wiele warstw
+            const crownColors = ['#1b5e20', '#2e7d32', '#388e3c', '#43a047'];
+            const circles = [
+                { x: 32, y: 24, r: 18 },
+                { x: 20, y: 32, r: 14 },
+                { x: 44, y: 32, r: 14 },
+                { x: 32, y: 14, r: 14 },
+                { x: 26, y: 20, r: 12 },
+                { x: 38, y: 20, r: 12 },
+            ];
+
+            circles.forEach((c, idx) => {
+                // Cień liści
+                ctx.fillStyle = '#0d3010';
+                ctx.beginPath();
+                ctx.arc(c.x + 2, c.y + 2, c.r, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Liście
+                ctx.fillStyle = crownColors[idx % crownColors.length];
+                ctx.beginPath();
+                ctx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            // Detale liści
+            for (let i = 0; i < 30; i++) {
+                const lx = 14 + Math.random() * 36;
+                const ly = 6 + Math.random() * 36;
+                ctx.fillStyle = Math.random() > 0.5 ? '#4caf50' : '#1b5e20';
+                ctx.fillRect(lx, ly, 2, 2);
+            }
+
+            // Jabłka/owoce (losowo)
+            if (Math.random() > 0.7) {
+                for (let i = 0; i < 3; i++) {
+                    ctx.fillStyle = '#e53935';
+                    ctx.beginPath();
+                    ctx.arc(20 + Math.random() * 24, 18 + Math.random() * 20, 3, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+        } else if (type === 'player') {
+            ctx.clearRect(0, 0, size, size);
+
+            // Cień
+            this.drawShadow(ctx, 16, 50, 32, 8);
+
+            // Nogi
+            ctx.fillStyle = '#37474f';
+            ctx.fillRect(22, 48, 8, 14);
+            ctx.fillRect(34, 48, 8, 14);
+
+            // Buty
+            ctx.fillStyle = '#5d4037';
+            ctx.fillRect(20, 58, 12, 6);
+            ctx.fillRect(32, 58, 12, 6);
+
+            // Ciało/Zbroja
+            const armorGradient = ctx.createLinearGradient(18, 24, 46, 24);
+            armorGradient.addColorStop(0, '#1565c0');
+            armorGradient.addColorStop(0.5, '#1e88e5');
+            armorGradient.addColorStop(1, '#1565c0');
+            ctx.fillStyle = armorGradient;
+            ctx.fillRect(18, 24, 28, 26);
+
+            // Pas
+            ctx.fillStyle = '#8d6e63';
+            ctx.fillRect(18, 44, 28, 4);
+            ctx.fillStyle = '#ffd700';
+            ctx.fillRect(30, 44, 6, 4);
+
+            // Ręce
+            ctx.fillStyle = '#1e88e5';
+            ctx.fillRect(12, 26, 6, 18);
+            ctx.fillRect(46, 26, 6, 18);
+
+            // Dłonie
+            ctx.fillStyle = '#ffcc80';
+            ctx.fillRect(12, 42, 6, 6);
+            ctx.fillRect(46, 42, 6, 6);
+
+            // Głowa
+            ctx.fillStyle = '#ffcc80';
+            ctx.beginPath();
+            ctx.arc(32, 14, 10, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Włosy
+            ctx.fillStyle = '#5d4037';
+            ctx.beginPath();
+            ctx.arc(32, 10, 10, Math.PI, 2 * Math.PI);
+            ctx.fill();
+            ctx.fillRect(22, 8, 20, 6);
+
+            // Oczy
+            ctx.fillStyle = '#fff';
+            ctx.fillRect(27, 12, 4, 4);
+            ctx.fillRect(35, 12, 4, 4);
+            ctx.fillStyle = '#1a237e';
+            ctx.fillRect(28, 13, 2, 2);
+            ctx.fillRect(36, 13, 2, 2);
+
+            // Miecz
+            ctx.fillStyle = '#b0bec5';
+            ctx.fillRect(52, 16, 6, 32);
+            ctx.fillStyle = '#eceff1';
+            ctx.fillRect(53, 18, 4, 28);
+            // Rękojeść
+            ctx.fillStyle = '#8d6e63';
+            ctx.fillRect(51, 46, 8, 8);
+            ctx.fillStyle = '#ffd700';
+            ctx.fillRect(52, 44, 6, 3);
+
+            // Outline
+            ctx.strokeStyle = '#0d47a1';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(18, 24, 28, 26);
+
+        } else if (type === 'enemy') {
+            ctx.clearRect(0, 0, size, size);
+
+            // Cień
+            this.drawShadow(ctx, 14, 52, 36, 10);
+
+            // Nogi
+            ctx.fillStyle = '#33691e';
+            ctx.fillRect(20, 46, 10, 16);
+            ctx.fillRect(34, 46, 10, 16);
+
+            // Ciało
+            const bodyGradient = ctx.createLinearGradient(14, 20, 50, 20);
+            bodyGradient.addColorStop(0, '#33691e');
+            bodyGradient.addColorStop(0.5, '#558b2f');
+            bodyGradient.addColorStop(1, '#33691e');
+            ctx.fillStyle = bodyGradient;
+            ctx.fillRect(14, 20, 36, 28);
+
+            // Ręce
+            ctx.fillStyle = '#558b2f';
+            ctx.fillRect(6, 22, 10, 20);
+            ctx.fillRect(48, 22, 10, 20);
+
+            // Pazury
+            ctx.fillStyle = '#212121';
+            for (let i = 0; i < 3; i++) {
+                ctx.fillRect(6 + i * 3, 40, 2, 4);
+                ctx.fillRect(50 + i * 3, 40, 2, 4);
+            }
+
+            // Głowa
+            ctx.fillStyle = '#558b2f';
+            ctx.beginPath();
+            ctx.arc(32, 12, 12, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Uszy
+            ctx.fillStyle = '#33691e';
+            ctx.beginPath();
+            ctx.moveTo(18, 8);
+            ctx.lineTo(14, 0);
+            ctx.lineTo(22, 6);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.moveTo(46, 8);
+            ctx.lineTo(50, 0);
+            ctx.lineTo(42, 6);
+            ctx.fill();
+
+            // Oczy (czerwone, groźne)
+            ctx.fillStyle = '#b71c1c';
+            ctx.beginPath();
+            ctx.arc(26, 10, 4, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(38, 10, 4, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Źrenice
+            ctx.fillStyle = '#fff';
+            ctx.fillRect(25, 9, 2, 2);
+            ctx.fillRect(37, 9, 2, 2);
+
+            // Kły
+            ctx.fillStyle = '#fff';
+            ctx.beginPath();
+            ctx.moveTo(26, 18);
+            ctx.lineTo(28, 24);
+            ctx.lineTo(30, 18);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.moveTo(34, 18);
+            ctx.lineTo(36, 24);
+            ctx.lineTo(38, 18);
+            ctx.fill();
+
+            // Outline
+            ctx.strokeStyle = '#1b5e20';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(32, 12, 12, 0, Math.PI * 2);
+            ctx.stroke();
+
+        } else if (type === 'wall') {
+            // Ciemne cegły
+            ctx.fillStyle = '#37474f';
+            ctx.fillRect(0, 0, size, size);
+
+            // Cegły
+            const brickColors = ['#455a64', '#546e7a', '#4a5c66'];
+            for (let row = 0; row < 4; row++) {
+                const offset = row % 2 === 0 ? 0 : 16;
+                for (let col = -1; col < 3; col++) {
+                    ctx.fillStyle = brickColors[Math.floor(Math.random() * brickColors.length)];
+                    ctx.fillRect(col * 32 + offset + 1, row * 16 + 1, 30, 14);
+
+                    // Cieniowanie
+                    ctx.fillStyle = 'rgba(0,0,0,0.2)';
+                    ctx.fillRect(col * 32 + offset + 1, row * 16 + 12, 30, 3);
+
+                    // Highlight
+                    ctx.fillStyle = 'rgba(255,255,255,0.1)';
+                    ctx.fillRect(col * 32 + offset + 1, row * 16 + 1, 30, 2);
+                }
+            }
+
+            // Pęknięcia/mech
+            ctx.fillStyle = '#2e7d32';
+            ctx.fillRect(10, 30, 3, 8);
+            ctx.fillRect(50, 10, 4, 6);
+
+        } else if (type === 'floor') {
+            // Kamienne płytki lochu
+            ctx.fillStyle = '#3e2723';
+            ctx.fillRect(0, 0, size, size);
+
+            // Płytki
+            const tileSize = 32;
+            for (let ty = 0; ty < 2; ty++) {
+                for (let tx = 0; tx < 2; tx++) {
+                    const gradient = ctx.createLinearGradient(tx * tileSize, ty * tileSize, tx * tileSize + tileSize, ty * tileSize + tileSize);
+                    gradient.addColorStop(0, '#5d4037');
+                    gradient.addColorStop(1, '#4e342e');
+                    ctx.fillStyle = gradient;
+                    ctx.fillRect(tx * tileSize + 1, ty * tileSize + 1, tileSize - 2, tileSize - 2);
+                }
+            }
+
+            // Fugi
+            ctx.strokeStyle = '#2d1b16';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(32, 0);
+            ctx.lineTo(32, 64);
+            ctx.moveTo(0, 32);
+            ctx.lineTo(64, 32);
+            ctx.stroke();
+
+            // Pęknięcia
+            ctx.strokeStyle = '#1a1a1a';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(8, 8);
+            ctx.lineTo(18, 20);
+            ctx.lineTo(14, 28);
+            ctx.stroke();
+
+        } else if (type === 'item') {
+            ctx.clearRect(0, 0, size, size);
+
+            // Glow effect
+            const glowGradient = ctx.createRadialGradient(32, 32, 0, 32, 32, 28);
+            glowGradient.addColorStop(0, 'rgba(255, 215, 0, 0.4)');
+            glowGradient.addColorStop(1, 'rgba(255, 215, 0, 0)');
+            ctx.fillStyle = glowGradient;
+            ctx.beginPath();
+            ctx.arc(32, 32, 28, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Cień
+            ctx.fillStyle = 'rgba(0,0,0,0.3)';
+            ctx.beginPath();
+            ctx.ellipse(32, 54, 14, 5, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Worek
+            const bagGradient = ctx.createLinearGradient(16, 20, 48, 20);
+            bagGradient.addColorStop(0, '#6d4c41');
+            bagGradient.addColorStop(0.5, '#8d6e63');
+            bagGradient.addColorStop(1, '#5d4037');
+            ctx.fillStyle = bagGradient;
+            ctx.beginPath();
+            ctx.ellipse(32, 38, 16, 14, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Góra worka
+            ctx.fillStyle = '#8d6e63';
+            ctx.beginPath();
+            ctx.moveTo(18, 28);
+            ctx.quadraticCurveTo(32, 14, 46, 28);
+            ctx.fill();
+
+            // Sznurek
+            ctx.strokeStyle = '#ffd700';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(26, 22);
+            ctx.lineTo(38, 22);
+            ctx.stroke();
+
+            // Węzeł
+            ctx.fillStyle = '#ffd700';
+            ctx.beginPath();
+            ctx.arc(32, 18, 4, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Złote monety wystające
+            ctx.fillStyle = '#ffd700';
+            ctx.beginPath();
+            ctx.arc(28, 20, 5, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = '#ffb300';
+            ctx.beginPath();
+            ctx.arc(36, 18, 4, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Błyski
+            ctx.fillStyle = '#fff';
+            ctx.fillRect(38, 32, 4, 4);
+            ctx.fillRect(24, 40, 3, 3);
+
         } else if (type === 'npc_merchant') {
-            // Kupiec - fioletowa szata
-            ctx.fillStyle = '#7B1FA2';
-            ctx.fillRect(10, 12, 12, 14);
+            ctx.clearRect(0, 0, size, size);
+            this.drawShadow(ctx, 16, 52, 32, 8);
 
-            ctx.fillStyle = '#FFCC80'; // Głowa
-            ctx.fillRect(11, 4, 10, 8);
+            // Nogi
+            ctx.fillStyle = '#4a148c';
+            ctx.fillRect(22, 48, 8, 14);
+            ctx.fillRect(34, 48, 8, 14);
 
-            ctx.fillStyle = '#4A148C'; // Kaptur
-            ctx.fillRect(10, 2, 12, 6);
+            // Szata
+            const robeGradient = ctx.createLinearGradient(16, 24, 48, 24);
+            robeGradient.addColorStop(0, '#6a1b9a');
+            robeGradient.addColorStop(0.5, '#9c27b0');
+            robeGradient.addColorStop(1, '#6a1b9a');
+            ctx.fillStyle = robeGradient;
+            ctx.fillRect(16, 24, 32, 28);
 
-            ctx.fillStyle = '#424242'; // Nogi
-            ctx.fillRect(11, 26, 4, 6);
-            ctx.fillRect(17, 26, 4, 6);
+            // Ozdoby na szacie
+            ctx.fillStyle = '#ffd700';
+            ctx.fillRect(16, 36, 32, 3);
+            ctx.fillRect(30, 28, 4, 20);
+
+            // Ręce
+            ctx.fillStyle = '#7b1fa2';
+            ctx.fillRect(10, 28, 8, 16);
+            ctx.fillRect(46, 28, 8, 16);
+
+            // Głowa
+            ctx.fillStyle = '#ffcc80';
+            ctx.beginPath();
+            ctx.arc(32, 14, 10, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Turban/kapelusz
+            ctx.fillStyle = '#4a148c';
+            ctx.beginPath();
+            ctx.arc(32, 8, 12, Math.PI, 2 * Math.PI);
+            ctx.fill();
+            ctx.fillStyle = '#ffd700';
+            ctx.beginPath();
+            ctx.arc(32, 6, 4, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Twarz
+            ctx.fillStyle = '#5d4037';
+            ctx.fillRect(28, 16, 2, 4); // Wąsy
+            ctx.fillRect(34, 16, 2, 4);
+
+            // Oczy
+            ctx.fillStyle = '#212121';
+            ctx.fillRect(27, 12, 3, 3);
+            ctx.fillRect(35, 12, 3, 3);
 
             // Worek ze złotem
-            ctx.fillStyle = '#FFD700';
+            ctx.fillStyle = '#8d6e63';
             ctx.beginPath();
-            ctx.arc(24, 20, 5, 0, Math.PI * 2);
+            ctx.ellipse(54, 44, 8, 10, 0, 0, Math.PI * 2);
             ctx.fill();
+            ctx.fillStyle = '#ffd700';
+            ctx.beginPath();
+            ctx.arc(54, 40, 4, 0, Math.PI * 2);
+            ctx.fill();
+
         } else if (type === 'npc_blacksmith') {
-            // Kowal - brązowy fartuch
-            ctx.fillStyle = '#5D4037';
-            ctx.fillRect(10, 12, 12, 14);
+            ctx.clearRect(0, 0, size, size);
+            this.drawShadow(ctx, 16, 52, 32, 8);
 
-            ctx.fillStyle = '#FFCC80'; // Głowa
-            ctx.fillRect(11, 4, 10, 8);
+            // Nogi
+            ctx.fillStyle = '#3e2723';
+            ctx.fillRect(22, 48, 8, 14);
+            ctx.fillRect(34, 48, 8, 14);
 
-            ctx.fillStyle = '#3E2723'; // Włosy
-            ctx.fillRect(11, 2, 10, 4);
+            // Fartuch
+            ctx.fillStyle = '#5d4037';
+            ctx.fillRect(18, 30, 28, 22);
 
-            ctx.fillStyle = '#424242'; // Nogi
-            ctx.fillRect(11, 26, 4, 6);
-            ctx.fillRect(17, 26, 4, 6);
+            // Tors (mięśnie)
+            const bodyGradient = ctx.createLinearGradient(16, 20, 48, 20);
+            bodyGradient.addColorStop(0, '#d7a86e');
+            bodyGradient.addColorStop(0.5, '#e8c49b');
+            bodyGradient.addColorStop(1, '#d7a86e');
+            ctx.fillStyle = bodyGradient;
+            ctx.fillRect(18, 20, 28, 14);
 
-            // Młot
+            // Ramiona
+            ctx.fillStyle = '#d7a86e';
+            ctx.fillRect(8, 22, 12, 18);
+            ctx.fillRect(44, 22, 12, 18);
+
+            // Głowa
+            ctx.fillStyle = '#e8c49b';
+            ctx.beginPath();
+            ctx.arc(32, 12, 10, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Broda
+            ctx.fillStyle = '#4e342e';
+            ctx.beginPath();
+            ctx.arc(32, 18, 8, 0, Math.PI);
+            ctx.fill();
+
+            // Oczy
+            ctx.fillStyle = '#212121';
+            ctx.fillRect(27, 10, 3, 3);
+            ctx.fillRect(35, 10, 3, 3);
+
+            // Młot (duży!)
+            ctx.fillStyle = '#616161';
+            ctx.fillRect(52, 8, 10, 48);
+            ctx.fillStyle = '#9e9e9e';
+            ctx.fillRect(48, 4, 18, 14);
             ctx.fillStyle = '#757575';
-            ctx.fillRect(22, 10, 4, 16);
-            ctx.fillStyle = '#9E9E9E';
-            ctx.fillRect(20, 8, 8, 6);
+            ctx.fillRect(48, 4, 4, 14);
+
         } else if (type === 'npc_elder') {
-            // Starzec/Quest giver - biała szata
-            ctx.fillStyle = '#ECEFF1';
-            ctx.fillRect(10, 12, 12, 14);
+            ctx.clearRect(0, 0, size, size);
+            this.drawShadow(ctx, 16, 52, 32, 8);
 
-            ctx.fillStyle = '#FFCC80'; // Głowa
-            ctx.fillRect(11, 4, 10, 8);
+            // Szata
+            const robeGradient = ctx.createLinearGradient(14, 20, 50, 20);
+            robeGradient.addColorStop(0, '#e0e0e0');
+            robeGradient.addColorStop(0.5, '#fafafa');
+            robeGradient.addColorStop(1, '#e0e0e0');
+            ctx.fillStyle = robeGradient;
+            ctx.fillRect(14, 20, 36, 42);
 
-            ctx.fillStyle = '#BDBDBD'; // Siwe włosy/broda
-            ctx.fillRect(11, 2, 10, 4);
-            ctx.fillRect(11, 10, 10, 4);
+            // Pas
+            ctx.fillStyle = '#8d6e63';
+            ctx.fillRect(14, 38, 36, 4);
 
-            ctx.fillStyle = '#424242'; // Nogi
-            ctx.fillRect(11, 26, 4, 6);
-            ctx.fillRect(17, 26, 4, 6);
+            // Rękawy
+            ctx.fillStyle = '#eeeeee';
+            ctx.fillRect(8, 24, 10, 20);
+            ctx.fillRect(46, 24, 10, 20);
+
+            // Dłonie
+            ctx.fillStyle = '#d7ccc8';
+            ctx.fillRect(8, 42, 8, 8);
+            ctx.fillRect(48, 42, 8, 8);
+
+            // Głowa
+            ctx.fillStyle = '#d7ccc8';
+            ctx.beginPath();
+            ctx.arc(32, 12, 10, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Siwa broda (długa)
+            ctx.fillStyle = '#bdbdbd';
+            ctx.beginPath();
+            ctx.moveTo(24, 18);
+            ctx.quadraticCurveTo(32, 36, 40, 18);
+            ctx.fill();
+
+            // Siwe włosy
+            ctx.fillStyle = '#9e9e9e';
+            ctx.beginPath();
+            ctx.arc(32, 6, 10, Math.PI, 2 * Math.PI);
+            ctx.fill();
+
+            // Oczy (mądre)
+            ctx.fillStyle = '#1565c0';
+            ctx.fillRect(27, 10, 3, 3);
+            ctx.fillRect(35, 10, 3, 3);
 
             // Laska
-            ctx.fillStyle = '#8D6E63';
-            ctx.fillRect(24, 8, 3, 22);
-        } else if (type === 'village_house') {
-            // Dom wioski
-            ctx.fillStyle = '#8D6E63'; // Ściany
-            ctx.fillRect(2, 12, 28, 18);
-
-            ctx.fillStyle = '#5D4037'; // Dach
+            ctx.fillStyle = '#6d4c41';
+            ctx.fillRect(56, 6, 4, 56);
+            ctx.fillStyle = '#ffd700';
             ctx.beginPath();
-            ctx.moveTo(0, 14);
-            ctx.lineTo(16, 0);
-            ctx.lineTo(32, 14);
+            ctx.arc(58, 6, 6, 0, Math.PI * 2);
+            ctx.fill();
+
+        } else if (type === 'village_house') {
+            ctx.clearRect(0, 0, size, size);
+
+            // Cień
+            ctx.fillStyle = 'rgba(0,0,0,0.2)';
+            ctx.fillRect(6, 56, 52, 8);
+
+            // Ściany
+            const wallGradient = ctx.createLinearGradient(4, 24, 60, 24);
+            wallGradient.addColorStop(0, '#8d6e63');
+            wallGradient.addColorStop(0.5, '#a1887f');
+            wallGradient.addColorStop(1, '#795548');
+            ctx.fillStyle = wallGradient;
+            ctx.fillRect(4, 24, 56, 38);
+
+            // Drewniane belki
+            ctx.fillStyle = '#5d4037';
+            ctx.fillRect(4, 24, 56, 3);
+            ctx.fillRect(4, 24, 3, 38);
+            ctx.fillRect(57, 24, 3, 38);
+            ctx.fillRect(28, 24, 4, 38);
+
+            // Dach
+            ctx.fillStyle = '#4e342e';
+            ctx.beginPath();
+            ctx.moveTo(0, 26);
+            ctx.lineTo(32, 0);
+            ctx.lineTo(64, 26);
+            ctx.closePath();
+            ctx.fill();
+
+            // Dach - cieniowanie
+            ctx.fillStyle = '#3e2723';
+            ctx.beginPath();
+            ctx.moveTo(0, 26);
+            ctx.lineTo(32, 0);
+            ctx.lineTo(32, 26);
             ctx.closePath();
             ctx.fill();
 
             // Drzwi
-            ctx.fillStyle = '#4E342E';
-            ctx.fillRect(12, 18, 8, 12);
-
-            // Okno
-            ctx.fillStyle = '#FFEB3B';
-            ctx.fillRect(22, 16, 6, 6);
-            ctx.strokeStyle = '#5D4037';
-            ctx.strokeRect(22, 16, 6, 6);
-        } else if (type === 'quest_marker') {
-            // Marker questa (wykrzyknik)
-            ctx.clearRect(0, 0, size, size);
-
-            ctx.fillStyle = '#FFD700';
+            ctx.fillStyle = '#3e2723';
+            ctx.fillRect(24, 38, 16, 24);
+            ctx.fillStyle = '#ffd700';
             ctx.beginPath();
-            ctx.arc(16, 16, 12, 0, Math.PI * 2);
+            ctx.arc(36, 50, 2, 0, Math.PI * 2);
             ctx.fill();
 
+            // Okna (świecące)
+            ctx.fillStyle = '#ffeb3b';
+            ctx.fillRect(8, 32, 12, 12);
+            ctx.fillRect(44, 32, 12, 12);
+
+            // Kraty okien
+            ctx.strokeStyle = '#5d4037';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(14, 32);
+            ctx.lineTo(14, 44);
+            ctx.moveTo(8, 38);
+            ctx.lineTo(20, 38);
+            ctx.moveTo(50, 32);
+            ctx.lineTo(50, 44);
+            ctx.moveTo(44, 38);
+            ctx.lineTo(56, 38);
+            ctx.stroke();
+
+            // Komin
+            ctx.fillStyle = '#795548';
+            ctx.fillRect(46, 4, 8, 14);
+            // Dym (opcjonalny)
+            ctx.fillStyle = 'rgba(150,150,150,0.5)';
+            ctx.beginPath();
+            ctx.arc(50, 0, 4, 0, Math.PI * 2);
+            ctx.fill();
+
+        } else if (type === 'quest_marker') {
+            ctx.clearRect(0, 0, size, size);
+
+            // Animowany glow
+            const glowGradient = ctx.createRadialGradient(32, 32, 0, 32, 32, 24);
+            glowGradient.addColorStop(0, 'rgba(255, 215, 0, 0.8)');
+            glowGradient.addColorStop(0.5, 'rgba(255, 215, 0, 0.3)');
+            glowGradient.addColorStop(1, 'rgba(255, 215, 0, 0)');
+            ctx.fillStyle = glowGradient;
+            ctx.beginPath();
+            ctx.arc(32, 32, 24, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Tło kółka
+            ctx.fillStyle = '#ffd700';
+            ctx.beginPath();
+            ctx.arc(32, 32, 16, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Outline
+            ctx.strokeStyle = '#ff8f00';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.arc(32, 32, 16, 0, Math.PI * 2);
+            ctx.stroke();
+
+            // Wykrzyknik
             ctx.fillStyle = '#000';
-            ctx.font = 'bold 20px monospace';
+            ctx.font = 'bold 28px monospace';
             ctx.textAlign = 'center';
-            ctx.fillText('!', 16, 23);
+            ctx.textBaseline = 'middle';
+            ctx.fillText('!', 32, 32);
+        }
+
+        return canvas;
+    },
+
+    // Animowane tekstury (woda)
+    generateAnimated: function(type, frame) {
+        const size = 64;
+        const canvas = document.createElement('canvas');
+        canvas.width = size;
+        canvas.height = size;
+        const ctx = canvas.getContext('2d');
+
+        if (type === 'water') {
+            // Tło wody
+            const gradient = ctx.createLinearGradient(0, 0, size, size);
+            gradient.addColorStop(0, '#1565c0');
+            gradient.addColorStop(0.5, '#1e88e5');
+            gradient.addColorStop(1, '#1976d2');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, size, size);
+
+            // Animowane fale
+            const waveOffset = frame * 4;
+            ctx.strokeStyle = 'rgba(255,255,255,0.4)';
+            ctx.lineWidth = 2;
+
+            for (let i = 0; i < 5; i++) {
+                ctx.beginPath();
+                const yBase = 8 + i * 12 + (frame % 2) * 2;
+                ctx.moveTo(-8, yBase);
+                for (let x = -8; x <= size + 8; x += 8) {
+                    const y = yBase + Math.sin((x + waveOffset + i * 8) * 0.1) * 3;
+                    ctx.lineTo(x, y);
+                }
+                ctx.stroke();
+            }
+
+            // Odblaski (animowane)
+            ctx.fillStyle = 'rgba(255,255,255,0.3)';
+            const sparkleX = 15 + (frame * 12) % 34;
+            const sparkleY = 20 + (frame * 8) % 24;
+            ctx.fillRect(sparkleX, sparkleY, 6, 3);
+            ctx.fillRect(sparkleX + 20, sparkleY + 15, 4, 2);
         }
 
         return canvas;
