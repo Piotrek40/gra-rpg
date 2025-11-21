@@ -435,14 +435,16 @@ function startNewGame() {
         });
     });
 
-    createPlayer(100, 100);
+    // Znajdź bezpieczne miejsce dla gracza
+    const playerSpawn = findSafeSpawnPosition();
+    createPlayer(playerSpawn.x * TILE_SIZE, playerSpawn.y * TILE_SIZE);
     spawnVillage();
     spawnEnemies();
     spawnItems();
 
     // Inicjalizacja kamery
-    smoothCamera.x = 100 - window.innerWidth / 2;
-    smoothCamera.y = 100 - window.innerHeight / 2;
+    smoothCamera.x = playerSpawn.x * TILE_SIZE - window.innerWidth / 2;
+    smoothCamera.y = playerSpawn.y * TILE_SIZE - window.innerHeight / 2;
     smoothCamera.targetX = smoothCamera.x;
     smoothCamera.targetY = smoothCamera.y;
 
@@ -452,7 +454,7 @@ function startNewGame() {
 
     // Odkryj początkowy obszar wokół gracza
     if (GameState.fogOfWar) {
-        GameState.fogOfWar.update(100, 100);
+        GameState.fogOfWar.update(playerSpawn.x * TILE_SIZE, playerSpawn.y * TILE_SIZE);
     }
 
     GameState.combatLog.push('Witaj w Aethelgard!');
@@ -1416,37 +1418,113 @@ function createNPC(x, y, npcKey) {
     return id;
 }
 
-function spawnVillage() {
-    // Znajdź odpowiednie miejsce na wioskę (trawa)
-    let villageX, villageY;
+// Sprawdź czy teren jest przechodni
+function isWalkableTerrain(x, y) {
+    if (x < 0 || x >= GameState.mapWidth || y < 0 || y >= GameState.mapHeight) {
+        return false;
+    }
+    const tile = GameState.map[y][x];
+    const type = tile.type || tile;
+    return type === 'grass' || type === 'sand' || type === 'floor';
+}
+
+// Znajdź bezpieczne miejsce do spawnu
+function findSafeSpawnPosition() {
     let attempts = 0;
+    let x, y;
 
     do {
-        villageX = 10 + Math.floor(Math.random() * (GameState.mapWidth - 20));
-        villageY = 10 + Math.floor(Math.random() * (GameState.mapHeight - 20));
+        x = 5 + Math.floor(Math.random() * (GameState.mapWidth - 10));
+        y = 5 + Math.floor(Math.random() * (GameState.mapHeight - 10));
         attempts++;
-    } while (
-        (GameState.map[villageY][villageX].type !== 'grass' &&
-         GameState.map[villageY][villageX].type !== 'sand') &&
-        attempts < 100
-    );
+    } while (!isWalkableTerrain(x, y) && attempts < 200);
 
-    if (attempts >= 100) {
-        villageX = 15;
-        villageY = 15;
+    // Fallback - szukaj sekwencyjnie
+    if (attempts >= 200) {
+        for (y = 0; y < GameState.mapHeight; y++) {
+            for (x = 0; x < GameState.mapWidth; x++) {
+                if (isWalkableTerrain(x, y)) {
+                    return { x, y };
+                }
+            }
+        }
     }
 
-    villageCenter = { x: villageX * TILE_SIZE, y: villageY * TILE_SIZE };
-    villageSpawned = true;
+    return { x, y };
+}
 
-    // Twórz domy wioski (5 domów w okolicy)
-    const housePositions = [
+function spawnVillage() {
+    // Znajdź odpowiednie miejsce na wioskę - sprawdź całą okolicę
+    let villageX, villageY;
+    let attempts = 0;
+    let validLocation = false;
+
+    const houseOffsets = [
         { dx: -2, dy: -2 }, { dx: 2, dy: -2 },
         { dx: 0, dy: 0 },
         { dx: -2, dy: 2 }, { dx: 2, dy: 2 }
     ];
 
-    housePositions.forEach(offset => {
+    const npcOffsets = [
+        { dx: -1, dy: 0 },  // elder
+        { dx: 1, dy: 0 },   // merchant
+        { dx: 0, dy: 1 }    // blacksmith
+    ];
+
+    do {
+        villageX = 5 + Math.floor(Math.random() * (GameState.mapWidth - 10));
+        villageY = 5 + Math.floor(Math.random() * (GameState.mapHeight - 10));
+        attempts++;
+
+        // Sprawdź czy wszystkie pozycje domów i NPC są na przechodzialnym terenie
+        validLocation = true;
+
+        // Sprawdź domy
+        for (const offset of houseOffsets) {
+            if (!isWalkableTerrain(villageX + offset.dx, villageY + offset.dy)) {
+                validLocation = false;
+                break;
+            }
+        }
+
+        // Sprawdź NPC
+        if (validLocation) {
+            for (const offset of npcOffsets) {
+                if (!isWalkableTerrain(villageX + offset.dx, villageY + offset.dy)) {
+                    validLocation = false;
+                    break;
+                }
+            }
+        }
+
+    } while (!validLocation && attempts < 300);
+
+    // Fallback - szukaj sekwencyjnie
+    if (!validLocation) {
+        for (let y = 5; y < GameState.mapHeight - 5; y++) {
+            for (let x = 5; x < GameState.mapWidth - 5; x++) {
+                validLocation = true;
+                for (const offset of [...houseOffsets, ...npcOffsets]) {
+                    if (!isWalkableTerrain(x + offset.dx, y + offset.dy)) {
+                        validLocation = false;
+                        break;
+                    }
+                }
+                if (validLocation) {
+                    villageX = x;
+                    villageY = y;
+                    break;
+                }
+            }
+            if (validLocation) break;
+        }
+    }
+
+    villageCenter = { x: villageX * TILE_SIZE, y: villageY * TILE_SIZE };
+    villageSpawned = true;
+
+    // Twórz domy wioski
+    houseOffsets.forEach(offset => {
         const hx = villageX + offset.dx;
         const hy = villageY + offset.dy;
 
@@ -1457,7 +1535,7 @@ function spawnVillage() {
         }
     });
 
-    // Spawn NPC
+    // Spawn NPC na bezpiecznych pozycjach
     createNPC((villageX - 1) * TILE_SIZE, villageY * TILE_SIZE, 'elder');
     createNPC((villageX + 1) * TILE_SIZE, villageY * TILE_SIZE, 'merchant');
     createNPC(villageX * TILE_SIZE, (villageY + 1) * TILE_SIZE, 'blacksmith');
@@ -1683,18 +1761,14 @@ function spawnItems() {
     const itemCount = 12;
 
     for (let i = 0; i < itemCount; i++) {
-        let x, y, tile;
+        let x, y;
         let attempts = 0;
 
         do {
             x = Math.floor(Math.random() * GameState.mapWidth);
             y = Math.floor(Math.random() * GameState.mapHeight);
-            tile = GameState.map[y][x];
             attempts++;
-        } while (
-            (tile.type === 'water' || tile.type === 'mountain') &&
-            attempts < 100
-        );
+        } while (!isWalkableTerrain(x, y) && attempts < 100);
 
         if (attempts < 100) {
             const itemId = itemTypes[Math.floor(Math.random() * itemTypes.length)];
@@ -1824,19 +1898,15 @@ function spawnEnemies() {
     const enemyTypes = ['goblin', 'goblin', 'goblin', 'orc', 'orc', 'troll'];
 
     for (let i = 0; i < enemyCount; i++) {
-        let x, y, tile;
+        let x, y;
         let attempts = 0;
 
-        // Szukaj odpowiedniego miejsca (trawa, piasek - nie woda/góry)
+        // Szukaj odpowiedniego miejsca na przechodzialnym terenie
         do {
             x = Math.floor(Math.random() * GameState.mapWidth);
             y = Math.floor(Math.random() * GameState.mapHeight);
-            tile = GameState.map[y][x];
             attempts++;
-        } while (
-            (tile.type === 'water' || tile.type === 'mountain' || tile.type === 'snow') &&
-            attempts < 100
-        );
+        } while (!isWalkableTerrain(x, y) && attempts < 100);
 
         if (attempts < 100) {
             const type = enemyTypes[Math.floor(Math.random() * enemyTypes.length)];
