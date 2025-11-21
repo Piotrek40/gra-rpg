@@ -118,15 +118,15 @@ function MenuSystem(ecs, dt) {
             ctx.font = '14px monospace';
             ctx.textAlign = 'left';
             const controls = [
-                'W / Strzałka w górę    - Ruch w górę',
-                'S / Strzałka w dół     - Ruch w dół',
-                'A / Strzałka w lewo    - Ruch w lewo',
-                'D / Strzałka w prawo   - Ruch w prawo',
+                'W/A/S/D lub Strzałki   - Ruch',
                 'Enter                  - Wejdź do lochu',
-                'ESC                    - Pauza',
+                'E                      - Wyjdź z lochu',
+                'I                      - Ekwipunek',
+                'ESC                    - Zamknij menu',
                 '',
                 'Walka odbywa się automatycznie',
-                'przy kontakcie z wrogiem.'
+                'przy kontakcie z wrogiem.',
+                'Zbieraj przedmioty chodząc po nich.'
             ];
             controls.forEach((line, i) => {
                 ctx.fillText(line, window.innerWidth / 2 - 220, 330 + i * 25);
@@ -213,6 +213,10 @@ function startNewGame() {
     GameState.gameOver = false;
     GameState.combatLog = [];
 
+    // Reset UI
+    showingInventory = false;
+    inventorySelection = 0;
+
     // Wyczyść ECS
     engine.ecs.entities = [];
     engine.ecs.components = {};
@@ -255,6 +259,9 @@ function startNewGame() {
 // System Ruchu
 function MovementSystem(ecs, dt) {
     if (GameState.gameState !== 'playing' || GameState.gameOver) return;
+
+    // Nie ruszaj się gdy ekwipunek otwarty
+    if (showingInventory) return;
 
     const entities = ecs.query(['position', 'player']);
     entities.forEach(entity => {
@@ -317,9 +324,12 @@ function MovementSystem(ecs, dt) {
             }
         });
 
-        // Wejście do lochu
-        if (keys['Enter'] && GameState.location === 'overworld') {
+        // Wejście do lochu (overworld) lub wyjście z lochu (dungeon)
+        if (consumeKey('Enter') && GameState.location === 'overworld') {
             loadDungeon();
+        }
+        if ((consumeKey('e') || consumeKey('E')) && GameState.location === 'dungeon') {
+            exitDungeon();
         }
 
         // Otwórz/zamknij ekwipunek
@@ -402,17 +412,27 @@ function recalculateStats(playerId) {
 }
 
 function loadDungeon() {
+    // Zachowaj dane gracza przed resetem
+    const players = engine.ecs.query(['player', 'stats']);
+    let savedStats = null;
+    let savedInventory = null;
+
+    if (players.length > 0) {
+        savedStats = { ...engine.ecs.getComponent(players[0], 'stats') };
+        savedInventory = JSON.parse(JSON.stringify(engine.ecs.getComponent(players[0], 'inventory')));
+    }
+
     GameState.location = 'dungeon';
     GameState.mapWidth = 40;
     GameState.mapHeight = 40;
 
-    // Wyczyść stare encje terenu (ale zostaw gracza)
-    // To wymagałoby tagowania encji. Uprośćmy: resetujemy wszystko i tworzymy gracza na nowo.
+    // Wyczyść ECS
     engine.ecs.entities = [];
     engine.ecs.components = {};
+    engine.ecs.nextEntityId = 1;
 
     const dungeonMap = DungeonGenerator.generate(GameState.mapWidth, GameState.mapHeight);
-    GameState.map = dungeonMap; // Zapisz mapę do stanu
+    GameState.map = dungeonMap;
 
     // Tworzenie encji terenu
     dungeonMap.forEach((row, y) => {
@@ -423,8 +443,141 @@ function loadDungeon() {
         });
     });
 
-    // Gracz w środku
-    createPlayer(GameState.mapWidth * TILE_SIZE / 2, GameState.mapHeight * TILE_SIZE / 2);
+    // Gracz w środku z zachowanymi statystykami
+    const playerX = GameState.mapWidth * TILE_SIZE / 2;
+    const playerY = GameState.mapHeight * TILE_SIZE / 2;
+    const playerId = engine.ecs.createEntity();
+    engine.ecs.addComponent(playerId, 'position', { x: playerX, y: playerY });
+    engine.ecs.addComponent(playerId, 'renderable', { type: 'player' });
+    engine.ecs.addComponent(playerId, 'player', {});
+
+    if (savedStats) {
+        engine.ecs.addComponent(playerId, 'stats', savedStats);
+    } else {
+        engine.ecs.addComponent(playerId, 'stats', {
+            hp: 100, maxHp: 100, damage: 15, defense: 5, xp: 0, xpToLevel: 100, level: 1
+        });
+    }
+
+    if (savedInventory) {
+        engine.ecs.addComponent(playerId, 'inventory', savedInventory);
+    } else {
+        engine.ecs.addComponent(playerId, 'inventory', {
+            items: [], gold: 0, equippedWeapon: null, equippedArmor: null
+        });
+    }
+
+    // Spawn wrogów w lochu (więcej i silniejszych)
+    spawnDungeonEnemies();
+
+    // Spawn przedmiotów w lochu
+    spawnDungeonItems();
+
+    GameState.combatLog.push('Wszedłeś do mrocznego lochu!');
+    GameState.combatLog.push('[E] aby wyjść przy wejściu');
+}
+
+function spawnDungeonEnemies() {
+    const enemyCount = 10;
+    const enemyTypes = ['orc', 'orc', 'troll', 'troll'];
+
+    for (let i = 0; i < enemyCount; i++) {
+        let x, y;
+        let attempts = 0;
+
+        do {
+            x = Math.floor(Math.random() * GameState.mapWidth);
+            y = Math.floor(Math.random() * GameState.mapHeight);
+            attempts++;
+        } while (GameState.map[y][x] === 'wall' && attempts < 100);
+
+        if (attempts < 100 && GameState.map[y][x] === 'floor') {
+            const type = enemyTypes[Math.floor(Math.random() * enemyTypes.length)];
+            createEnemy(x * TILE_SIZE, y * TILE_SIZE, type);
+        }
+    }
+}
+
+function spawnDungeonItems() {
+    const itemTypes = ['health_potion', 'greater_health_potion', 'iron_sword', 'steel_sword',
+                       'chain_armor', 'plate_armor', 'gem', 'gem'];
+    const itemCount = 8;
+
+    for (let i = 0; i < itemCount; i++) {
+        let x, y;
+        let attempts = 0;
+
+        do {
+            x = Math.floor(Math.random() * GameState.mapWidth);
+            y = Math.floor(Math.random() * GameState.mapHeight);
+            attempts++;
+        } while (GameState.map[y][x] === 'wall' && attempts < 100);
+
+        if (attempts < 100 && GameState.map[y][x] === 'floor') {
+            const itemId = itemTypes[Math.floor(Math.random() * itemTypes.length)];
+            createItem(x * TILE_SIZE, y * TILE_SIZE, itemId);
+        }
+    }
+}
+
+function exitDungeon() {
+    // Zachowaj dane gracza
+    const players = engine.ecs.query(['player', 'stats']);
+    let savedStats = null;
+    let savedInventory = null;
+
+    if (players.length > 0) {
+        savedStats = { ...engine.ecs.getComponent(players[0], 'stats') };
+        savedInventory = JSON.parse(JSON.stringify(engine.ecs.getComponent(players[0], 'inventory')));
+    }
+
+    GameState.location = 'overworld';
+    GameState.mapWidth = 50;
+    GameState.mapHeight = 40;
+
+    // Wyczyść ECS
+    engine.ecs.entities = [];
+    engine.ecs.components = {};
+    engine.ecs.nextEntityId = 1;
+
+    // Regeneruj świat
+    GameState.map = WorldGenerator.generate(GameState.mapWidth, GameState.mapHeight);
+
+    // Teren
+    GameState.map.forEach((row, y) => {
+        row.forEach((cell, x) => {
+            const id = engine.ecs.createEntity();
+            engine.ecs.addComponent(id, 'position', { x: x * TILE_SIZE, y: y * TILE_SIZE });
+
+            let renderType = cell.type;
+            if (cell.type === 'forest') renderType = 'grass';
+            engine.ecs.addComponent(id, 'renderable', { type: renderType });
+
+            if (cell.type === 'forest') {
+                const treeId = engine.ecs.createEntity();
+                engine.ecs.addComponent(treeId, 'position', { x: x * TILE_SIZE, y: y * TILE_SIZE });
+                engine.ecs.addComponent(treeId, 'renderable', { type: 'tree' });
+            }
+        });
+    });
+
+    // Gracz z zachowanymi statystykami
+    const playerId = engine.ecs.createEntity();
+    engine.ecs.addComponent(playerId, 'position', { x: 100, y: 100 });
+    engine.ecs.addComponent(playerId, 'renderable', { type: 'player' });
+    engine.ecs.addComponent(playerId, 'player', {});
+
+    if (savedStats) {
+        engine.ecs.addComponent(playerId, 'stats', savedStats);
+    }
+    if (savedInventory) {
+        engine.ecs.addComponent(playerId, 'inventory', savedInventory);
+    }
+
+    spawnEnemies();
+    spawnItems();
+
+    GameState.combatLog.push('Wróciłeś na powierzchnię!');
 }
 
 // System Środowiska (Czas, Cząsteczki)
@@ -451,7 +604,7 @@ function HUDSystem(ecs, dt) {
 
     // Tło HUD
     ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-    ctx.fillRect(10, 10, 220, 100);
+    ctx.fillRect(10, 10, 320, 100);
 
     // Pasek HP
     ctx.fillStyle = '#333';
@@ -485,7 +638,8 @@ function HUDSystem(ecs, dt) {
     ctx.fillText(`DMG: ${stats.damage}  DEF: ${stats.defense}  Złoto: ${gold}`, 20, 85);
 
     // Lokalizacja i podpowiedź
-    ctx.fillText(`Lokacja: ${GameState.location}  |  [I] Ekwipunek`, 20, 100);
+    const locationHint = GameState.location === 'dungeon' ? '[E] Wyjdź' : '[Enter] Loch';
+    ctx.fillText(`Lokacja: ${GameState.location}  |  [I] Ekwipunek  |  ${locationHint}`, 20, 100);
 
     // Combat Log (prawy górny róg)
     if (GameState.combatLog && GameState.combatLog.length > 0) {
