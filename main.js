@@ -4,6 +4,7 @@ import { WorldGenerator } from './src/world/WorldGenerator.js';
 import { DungeonGenerator } from './src/world/DungeonGenerator.js';
 import { LightingSystem } from './src/graphics/LightingSystem.js';
 import { ParticleSystem } from './src/graphics/ParticleSystem.js';
+import { FogOfWar } from './src/graphics/FogOfWar.js';
 
 const engine = new Engine('gameCanvas');
 const TILE_SIZE = 32;
@@ -17,6 +18,7 @@ const GameState = {
     camera: { x: 0, y: 0 },
     lighting: null,
     particles: null,
+    fogOfWar: null,
     gameState: 'menu', // 'menu', 'playing', 'paused', 'gameover'
     menuSelection: 0,
     combatLog: [],
@@ -225,13 +227,10 @@ function startNewGame() {
     // Generuj świat
     GameState.map = WorldGenerator.generate(GameState.mapWidth, GameState.mapHeight);
 
-    // Inicjalizacja systemów graficznych (jeśli nie istnieją)
-    if (!GameState.lighting) {
-        GameState.lighting = new LightingSystem(window.innerWidth, window.innerHeight);
-    }
-    if (!GameState.particles) {
-        GameState.particles = new ParticleSystem();
-    }
+    // Inicjalizacja systemów graficznych
+    GameState.lighting = new LightingSystem(window.innerWidth, window.innerHeight);
+    GameState.particles = new ParticleSystem();
+    GameState.fogOfWar = new FogOfWar(GameState.mapWidth, GameState.mapHeight, TILE_SIZE);
 
     // Teren
     GameState.map.forEach((row, y) => {
@@ -254,6 +253,11 @@ function startNewGame() {
     createPlayer(100, 100);
     spawnEnemies();
     spawnItems();
+
+    // Odkryj początkowy obszar wokół gracza
+    if (GameState.fogOfWar) {
+        GameState.fogOfWar.update(100, 100);
+    }
 }
 
 // System Ruchu
@@ -314,6 +318,11 @@ function MovementSystem(ecs, dt) {
         // Kamera podąża za graczem
         GameState.camera.x = pos.x - window.innerWidth / 2;
         GameState.camera.y = pos.y - window.innerHeight / 2;
+
+        // Aktualizuj fog of war
+        if (GameState.fogOfWar) {
+            GameState.fogOfWar.update(pos.x, pos.y);
+        }
 
         // Podnoszenie przedmiotów
         const items = ecs.query(['item', 'position']);
@@ -467,6 +476,12 @@ function loadDungeon() {
         });
     }
 
+    // Reset fog of war dla nowej mapy
+    if (GameState.fogOfWar) {
+        GameState.fogOfWar.reset(GameState.mapWidth, GameState.mapHeight);
+        GameState.fogOfWar.update(playerX, playerY); // Odkryj początkową pozycję
+    }
+
     // Spawn wrogów w lochu (więcej i silniejszych)
     spawnDungeonEnemies();
 
@@ -474,7 +489,7 @@ function loadDungeon() {
     spawnDungeonItems();
 
     GameState.combatLog.push('Wszedłeś do mrocznego lochu!');
-    GameState.combatLog.push('[E] aby wyjść przy wejściu');
+    GameState.combatLog.push('[E] aby wyjść');
 }
 
 function spawnDungeonEnemies() {
@@ -576,6 +591,12 @@ function exitDungeon() {
 
     spawnEnemies();
     spawnItems();
+
+    // Reset fog of war dla nowej mapy
+    if (GameState.fogOfWar) {
+        GameState.fogOfWar.reset(GameState.mapWidth, GameState.mapHeight);
+        GameState.fogOfWar.update(100, 100); // Odkryj początkową pozycję
+    }
 
     GameState.combatLog.push('Wróciłeś na powierzchnię!');
 }
@@ -873,9 +894,14 @@ function RenderSystem(ecs, dt) {
         GameState.particles.render(ctx, GameState.camera);
     }
 
-    // Renderowanie Oświetlenia (Overlay)
+    // Renderowanie Oświetlenia (Overlay) - tylko w nocy
     if (GameState.lighting) {
         GameState.lighting.render(ctx, GameState.camera, entities, ecs);
+    }
+
+    // Renderowanie Fog of War
+    if (GameState.fogOfWar) {
+        GameState.fogOfWar.render(ctx, GameState.camera, window.innerWidth, window.innerHeight);
     }
 }
 
