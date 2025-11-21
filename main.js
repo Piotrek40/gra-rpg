@@ -7,7 +7,92 @@ import { ParticleSystem } from './src/graphics/ParticleSystem.js';
 import { FogOfWar } from './src/graphics/FogOfWar.js';
 
 const engine = new Engine('gameCanvas');
-const TILE_SIZE = 32;
+const TILE_SIZE = 64;
+
+// Płynna kamera
+const smoothCamera = {
+    x: 0,
+    y: 0,
+    targetX: 0,
+    targetY: 0,
+    lerp: function(current, target, factor) {
+        return current + (target - current) * factor;
+    },
+    update: function(dt) {
+        const lerpFactor = Math.min(1, dt * 8); // Płynność
+        this.x = this.lerp(this.x, this.targetX, lerpFactor);
+        this.y = this.lerp(this.y, this.targetY, lerpFactor);
+    }
+};
+
+// System pogody
+const WeatherSystem = {
+    type: 'clear', // 'clear', 'rain', 'snow'
+    particles: [],
+    intensity: 100,
+
+    init: function() {
+        // Losowa pogoda
+        const rand = Math.random();
+        if (rand < 0.2) this.type = 'rain';
+        else if (rand < 0.3) this.type = 'snow';
+        else this.type = 'clear';
+    },
+
+    update: function(dt) {
+        if (this.type === 'clear') return;
+
+        // Dodaj nowe cząsteczki
+        while (this.particles.length < this.intensity) {
+            this.particles.push({
+                x: Math.random() * window.innerWidth,
+                y: -10,
+                speed: this.type === 'rain' ? 400 + Math.random() * 200 : 50 + Math.random() * 50,
+                size: this.type === 'rain' ? 2 : 3 + Math.random() * 2,
+                drift: this.type === 'snow' ? (Math.random() - 0.5) * 30 : 0
+            });
+        }
+
+        // Aktualizuj cząsteczki
+        this.particles.forEach(p => {
+            p.y += p.speed * dt;
+            p.x += p.drift * dt;
+
+            if (p.y > window.innerHeight) {
+                p.y = -10;
+                p.x = Math.random() * window.innerWidth;
+            }
+        });
+    },
+
+    render: function(ctx) {
+        if (this.type === 'clear') return;
+
+        ctx.save();
+        if (this.type === 'rain') {
+            ctx.strokeStyle = 'rgba(150, 200, 255, 0.6)';
+            ctx.lineWidth = 1;
+            this.particles.forEach(p => {
+                ctx.beginPath();
+                ctx.moveTo(p.x, p.y);
+                ctx.lineTo(p.x, p.y + 10);
+                ctx.stroke();
+            });
+        } else if (this.type === 'snow') {
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+            this.particles.forEach(p => {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fill();
+            });
+        }
+        ctx.restore();
+    }
+};
+
+// Animacja wody
+let waterAnimationFrame = 0;
+let waterAnimationTimer = 0;
 
 // Stan Gry
 const GameState = {
@@ -355,6 +440,16 @@ function startNewGame() {
     spawnEnemies();
     spawnItems();
 
+    // Inicjalizacja kamery
+    smoothCamera.x = 100 - window.innerWidth / 2;
+    smoothCamera.y = 100 - window.innerHeight / 2;
+    smoothCamera.targetX = smoothCamera.x;
+    smoothCamera.targetY = smoothCamera.y;
+
+    // Inicjalizacja pogody
+    WeatherSystem.init();
+    WeatherSystem.particles = [];
+
     // Odkryj początkowy obszar wokół gracza
     if (GameState.fogOfWar) {
         GameState.fogOfWar.update(100, 100);
@@ -362,6 +457,12 @@ function startNewGame() {
 
     GameState.combatLog.push('Witaj w Aethelgard!');
     GameState.combatLog.push('Znajdź wioskę [F] aby rozmawiać');
+
+    // Info o pogodzie
+    if (WeatherSystem.type !== 'clear') {
+        const weatherNames = { rain: 'Pada deszcz', snow: 'Pada śnieg' };
+        GameState.combatLog.push(weatherNames[WeatherSystem.type]);
+    }
 }
 
 // System Ruchu
@@ -438,9 +539,9 @@ function MovementSystem(ecs, dt) {
             }
         }
 
-        // Kamera podąża za graczem
-        GameState.camera.x = pos.x - window.innerWidth / 2;
-        GameState.camera.y = pos.y - window.innerHeight / 2;
+        // Kamera podąża za graczem (płynnie)
+        smoothCamera.targetX = pos.x - window.innerWidth / 2;
+        smoothCamera.targetY = pos.y - window.innerHeight / 2;
 
         // Aktualizuj fog of war
         if (GameState.fogOfWar) {
@@ -757,12 +858,27 @@ function exitDungeon() {
     GameState.combatLog.push('Wróciłeś na powierzchnię!');
 }
 
-// System Środowiska (Czas, Cząsteczki)
+// System Środowiska (Czas, Cząsteczki, Pogoda, Kamera)
 function EnvironmentSystem(ecs, dt) {
     if (GameState.gameState !== 'playing') return;
 
     if (GameState.lighting) GameState.lighting.update(dt);
     if (GameState.particles) GameState.particles.update(dt);
+
+    // Płynna kamera
+    smoothCamera.update(dt);
+    GameState.camera.x = smoothCamera.x;
+    GameState.camera.y = smoothCamera.y;
+
+    // System pogody
+    WeatherSystem.update(dt);
+
+    // Animacja wody
+    waterAnimationTimer += dt;
+    if (waterAnimationTimer > 0.2) { // Co 200ms zmień klatkę
+        waterAnimationTimer = 0;
+        waterAnimationFrame = (waterAnimationFrame + 1) % 4;
+    }
 }
 
 // System HUD
@@ -1204,8 +1320,8 @@ function RenderSystem(ecs, dt) {
         const typeA = ecs.getComponent(a, 'renderable').type;
         const typeB = ecs.getComponent(b, 'renderable').type;
 
-        if (typeA === 'floor' || typeA === 'grass' || typeA === 'sand' || typeA === 'snow') return -1;
-        if (typeB === 'floor' || typeB === 'grass' || typeB === 'sand' || typeB === 'snow') return 1;
+        if (typeA === 'floor' || typeA === 'grass' || typeA === 'sand' || typeA === 'snow' || typeA === 'water') return -1;
+        if (typeB === 'floor' || typeB === 'grass' || typeB === 'sand' || typeB === 'snow' || typeB === 'water') return 1;
 
         return posA.y - posB.y;
     });
@@ -1219,7 +1335,15 @@ function RenderSystem(ecs, dt) {
         const screenY = pos.y - GameState.camera.y;
 
         if (screenX > -TILE_SIZE && screenX < window.innerWidth && screenY > -TILE_SIZE && screenY < window.innerHeight) {
-            const texture = AssetGenerator.getTexture(render.type);
+            let texture;
+
+            // Animowana woda
+            if (render.type === 'water') {
+                texture = AssetGenerator.getAnimatedTexture('water', waterAnimationFrame);
+            } else {
+                texture = AssetGenerator.getTexture(render.type);
+            }
+
             ctx.drawImage(texture, Math.floor(screenX), Math.floor(screenY));
         }
     });
@@ -1238,6 +1362,9 @@ function RenderSystem(ecs, dt) {
     if (GameState.fogOfWar) {
         GameState.fogOfWar.render(ctx, GameState.camera, window.innerWidth, window.innerHeight);
     }
+
+    // Renderowanie Pogody
+    WeatherSystem.render(ctx);
 }
 
 function createPlayer(x, y) {
