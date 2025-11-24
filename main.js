@@ -32,6 +32,9 @@ const WeatherSystem = {
     intensity: 100,
 
     init: function() {
+        // Wyczyść poprzednie cząsteczki (zapobiega memory leak)
+        this.particles = [];
+
         // Losowa pogoda
         const rand = Math.random();
         if (rand < 0.2) this.type = 'rain';
@@ -480,7 +483,7 @@ function MovementSystem(ecs, dt) {
         if (consumeKey('ArrowDown') || consumeKey('s')) {
             dialogSelection = Math.min(dialogOptions.length - 1, dialogSelection + 1);
         }
-        if (consumeKey('Enter')) {
+        if (consumeKey('Enter') && dialogOptions.length > 0 && dialogOptions[dialogSelection]) {
             handleDialogAction(dialogOptions[dialogSelection].action);
         }
         if (consumeKey('Escape')) {
@@ -846,6 +849,10 @@ function exitDungeon() {
         engine.ecs.addComponent(playerId, 'inventory', savedInventory);
     }
 
+    // Przywróć wioskę (resetuj flagę i spawn)
+    villageSpawned = false;
+    spawnVillage();
+
     spawnEnemies();
     spawnItems();
 
@@ -1063,17 +1070,22 @@ function renderInventory(ctx, playerId) {
     ctx.textAlign = 'left';
 
     // Nawigacja ekwipunku
-    if (consumeKey('ArrowUp') || consumeKey('w')) {
-        inventorySelection = Math.max(0, inventorySelection - 1);
-    }
-    if (consumeKey('ArrowDown') || consumeKey('s')) {
-        inventorySelection = Math.min(inventory.items.length - 1, inventorySelection + 1);
-    }
-    if (consumeKey('Enter') && inventory.items.length > 0) {
-        useItem(playerId, inventorySelection);
-        if (inventorySelection >= inventory.items.length) {
-            inventorySelection = Math.max(0, inventory.items.length - 1);
+    if (inventory.items.length > 0) {
+        if (consumeKey('ArrowUp') || consumeKey('w')) {
+            inventorySelection = Math.max(0, inventorySelection - 1);
         }
+        if (consumeKey('ArrowDown') || consumeKey('s')) {
+            inventorySelection = Math.min(inventory.items.length - 1, inventorySelection + 1);
+        }
+        if (consumeKey('Enter')) {
+            useItem(playerId, inventorySelection);
+            // Po użyciu przedmiotu, popraw selekcję jeśli lista się skróciła
+            if (inventorySelection >= inventory.items.length) {
+                inventorySelection = Math.max(0, inventory.items.length - 1);
+            }
+        }
+    } else {
+        inventorySelection = 0; // Reset gdy lista pusta
     }
     if (consumeKey('Escape')) {
         showingInventory = false;
@@ -1669,9 +1681,22 @@ function updateQuestProgress(type, target, amount = 1) {
     playerQuests.active.forEach(aq => {
         const quest = QuestDatabase[aq.questId];
         if (quest && quest.type === type && quest.target === target) {
-            aq.progress += amount;
-            if (aq.progress >= quest.required) {
+            // Dla questa collect_gold sprawdzamy aktualne złoto gracza
+            if (quest.type === 'collect' && quest.target === 'gold') {
+                const players = engine.ecs.query(['player', 'inventory']);
+                if (players.length > 0) {
+                    const inventory = engine.ecs.getComponent(players[0], 'inventory');
+                    if (inventory) {
+                        aq.progress = inventory.gold; // Ustaw progress na aktualne złoto
+                    }
+                }
+            } else {
+                aq.progress += amount;
+            }
+
+            if (aq.progress >= quest.required && !aq.notified) {
                 GameState.combatLog.push(`Quest "${quest.name}" gotowy do oddania!`);
+                aq.notified = true; // Nie pokazuj komunikatu wielokrotnie
             }
         }
     });
@@ -1706,7 +1731,7 @@ function spawnItems() {
 function createEnemy(x, y, type = 'goblin') {
     const enemyId = engine.ecs.createEntity();
     engine.ecs.addComponent(enemyId, 'position', { x: x, y: y });
-    engine.ecs.addComponent(enemyId, 'renderable', { type: 'enemy' });
+    engine.ecs.addComponent(enemyId, 'renderable', { type: `enemy_${type}` }); // Różne sprite'y dla różnych wrogów
     engine.ecs.addComponent(enemyId, 'enemy', { type: type });
 
     // Statystyki zależne od typu wroga
@@ -1790,14 +1815,15 @@ function checkLevelUp(entityId) {
         stats.level++;
         stats.xpToLevel = Math.floor(stats.xpToLevel * 1.5);
 
-        // Bonusy za level
+        // Bonusy za level (bazowe)
         stats.maxHp += 10;
         stats.hp = stats.maxHp; // Pełne leczenie
-        stats.damage += 3;
-        stats.defense += 1;
 
         GameState.combatLog.push(`LEVEL UP! Poziom ${stats.level}!`);
     }
+
+    // Przelicz statystyki z ekwipunkiem po awansie
+    recalculateStats(entityId);
 }
 
 // Start Gry
@@ -1822,19 +1848,34 @@ function initGame() {
 function spawnEnemies() {
     const enemyCount = 15;
     const enemyTypes = ['goblin', 'goblin', 'goblin', 'orc', 'orc', 'troll'];
+    const villageSafeRadius = 5; // Promień ochrony wioski (w kafelkach)
 
     for (let i = 0; i < enemyCount; i++) {
         let x, y, tile;
         let attempts = 0;
 
-        // Szukaj odpowiedniego miejsca (trawa, piasek - nie woda/góry)
+        // Szukaj odpowiedniego miejsca (trawa, piasek - nie woda/góry, nie w wiosce)
         do {
             x = Math.floor(Math.random() * GameState.mapWidth);
             y = Math.floor(Math.random() * GameState.mapHeight);
             tile = GameState.map[y][x];
             attempts++;
+
+            // Sprawdź odległość od wioski
+            const villageTileX = Math.floor(villageCenter.x / TILE_SIZE);
+            const villageTileY = Math.floor(villageCenter.y / TILE_SIZE);
+            const distToVillage = Math.sqrt(
+                Math.pow(x - villageTileX, 2) + Math.pow(y - villageTileY, 2)
+            );
+            const tooCloseToVillage = distToVillage < villageSafeRadius;
+
         } while (
-            (tile.type === 'water' || tile.type === 'mountain' || tile.type === 'snow') &&
+            ((tile.type === 'water' || tile.type === 'mountain' || tile.type === 'snow') ||
+             (villageSpawned && (() => {
+                 const villageTileX = Math.floor(villageCenter.x / TILE_SIZE);
+                 const villageTileY = Math.floor(villageCenter.y / TILE_SIZE);
+                 return Math.sqrt(Math.pow(x - villageTileX, 2) + Math.pow(y - villageTileY, 2)) < villageSafeRadius;
+             })())) &&
             attempts < 100
         );
 
