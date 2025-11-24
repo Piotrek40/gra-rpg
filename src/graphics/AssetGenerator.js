@@ -377,7 +377,8 @@ export const AssetGenerator = {
             ctx.lineWidth = 1;
             ctx.strokeRect(18, 24, 28, 26);
 
-        } else if (type === 'enemy') {
+        } else if (type === 'enemy' || type === 'enemy_goblin') {
+            // GOBLIN - mały, zielony, z dużymi uszami
             ctx.clearRect(0, 0, size, size);
 
             // Cień
@@ -414,7 +415,7 @@ export const AssetGenerator = {
             ctx.arc(32, 12, 12, 0, Math.PI * 2);
             ctx.fill();
 
-            // Uszy
+            // Uszy (duże, charakterystyczne dla goblina)
             ctx.fillStyle = '#33691e';
             ctx.beginPath();
             ctx.moveTo(18, 8);
@@ -460,6 +461,182 @@ export const AssetGenerator = {
             ctx.beginPath();
             ctx.arc(32, 12, 12, 0, Math.PI * 2);
             ctx.stroke();
+
+        } else if (type === 'enemy_orc') {
+            // ORC - większy, szary/brązowy, z kłami i zbroją
+            ctx.clearRect(0, 0, size, size);
+
+            // Cień (większy)
+            this.drawShadow(ctx, 10, 54, 44, 12);
+
+            // Nogi (grubsze)
+            ctx.fillStyle = '#5d4037';
+            ctx.fillRect(18, 44, 12, 18);
+            ctx.fillRect(34, 44, 12, 18);
+
+            // Buty
+            ctx.fillStyle = '#3e2723';
+            ctx.fillRect(16, 58, 16, 6);
+            ctx.fillRect(32, 58, 16, 6);
+
+            // Ciało (większe, szaro-zielone)
+            const orcBodyGradient = ctx.createLinearGradient(10, 18, 54, 18);
+            orcBodyGradient.addColorStop(0, '#455a64');
+            orcBodyGradient.addColorStop(0.5, '#607d8b');
+            orcBodyGradient.addColorStop(1, '#455a64');
+            ctx.fillStyle = orcBodyGradient;
+            ctx.fillRect(10, 18, 44, 28);
+
+            // Zbroja (naramienniki)
+            ctx.fillStyle = '#795548';
+            ctx.fillRect(6, 20, 8, 12);
+            ctx.fillRect(50, 20, 8, 12);
+            ctx.fillStyle = '#5d4037';
+            ctx.fillRect(8, 22, 4, 8);
+            ctx.fillRect(52, 22, 4, 8);
+
+            // Ręce
+            ctx.fillStyle = '#607d8b';
+            ctx.fillRect(4, 30, 10, 16);
+            ctx.fillRect(50, 30, 10, 16);
+
+            // Pięści
+            ctx.fillStyle = '#78909c';
+            ctx.fillRect(4, 44, 10, 8);
+            ctx.fillRect(50, 44, 10, 8);
+
+            // Głowa (większa)
+            ctx.fillStyle = '#607d8b';
+            ctx.beginPath();
+            ctx.arc(32, 10, 14, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Brwi (groźne)
+            ctx.fillStyle = '#37474f';
+            ctx.fillRect(20, 4, 10, 3);
+            ctx.fillRect(34, 4, 10, 3);
+
+            // Oczy (żółte)
+            ctx.fillStyle = '#ffc107';
+            ctx.beginPath();
+            ctx.arc(24, 10, 4, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(40, 10, 4, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Źrenice
+            ctx.fillStyle = '#000';
+            ctx.fillRect(23, 9, 3, 3);
+            ctx.fillRect(39, 9, 3, 3);
+
+            // Kły (większe)
+            ctx.fillStyle = '#fff';
+            ctx.beginPath();
+            ctx.moveTo(22, 18);
+            ctx.lineTo(25, 28);
+            ctx.lineTo(28, 18);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.moveTo(36, 18);
+            ctx.lineTo(39, 28);
+            ctx.lineTo(42, 18);
+            ctx.fill();
+
+            // Topór
+            ctx.fillStyle = '#5d4037';
+            ctx.fillRect(56, 10, 4, 40);
+            ctx.fillStyle = '#78909c';
+            ctx.beginPath();
+            ctx.moveTo(52, 8);
+            ctx.lineTo(64, 16);
+            ctx.lineTo(64, 8);
+            ctx.lineTo(52, 0);
+            ctx.fill();
+
+        } else if (type === 'enemy_troll') {
+            // TROLL - ogromny, niebieskoszary, z maczugą
+            ctx.clearRect(0, 0, size, size);
+
+            // Cień (największy)
+            this.drawShadow(ctx, 6, 56, 52, 14);
+
+            // Nogi (bardzo grube)
+            ctx.fillStyle = '#546e7a';
+            ctx.fillRect(14, 42, 14, 20);
+            ctx.fillRect(36, 42, 14, 20);
+
+            // Stopy
+            ctx.fillStyle = '#455a64';
+            ctx.fillRect(12, 58, 18, 6);
+            ctx.fillRect(34, 58, 18, 6);
+
+            // Ciało (ogromne)
+            const trollBodyGradient = ctx.createLinearGradient(6, 14, 58, 14);
+            trollBodyGradient.addColorStop(0, '#455a64');
+            trollBodyGradient.addColorStop(0.5, '#78909c');
+            trollBodyGradient.addColorStop(1, '#455a64');
+            ctx.fillStyle = trollBodyGradient;
+            ctx.fillRect(6, 14, 52, 32);
+
+            // Brzuch (charakterystyczny dla trolla)
+            ctx.fillStyle = '#90a4ae';
+            ctx.beginPath();
+            ctx.ellipse(32, 34, 16, 12, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Ręce (masywne)
+            ctx.fillStyle = '#78909c';
+            ctx.fillRect(0, 18, 12, 24);
+            ctx.fillRect(52, 18, 12, 24);
+
+            // Pięści
+            ctx.fillStyle = '#90a4ae';
+            ctx.beginPath();
+            ctx.arc(6, 44, 8, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(58, 44, 8, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Głowa (mała w stosunku do ciała)
+            ctx.fillStyle = '#78909c';
+            ctx.beginPath();
+            ctx.arc(32, 8, 10, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Nos (duży)
+            ctx.fillStyle = '#90a4ae';
+            ctx.beginPath();
+            ctx.arc(32, 12, 5, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Oczy (małe, głupie)
+            ctx.fillStyle = '#ffeb3b';
+            ctx.fillRect(24, 4, 4, 4);
+            ctx.fillRect(36, 4, 4, 4);
+            ctx.fillStyle = '#000';
+            ctx.fillRect(25, 5, 2, 2);
+            ctx.fillRect(37, 5, 2, 2);
+
+            // Zęby (krzywe)
+            ctx.fillStyle = '#ffeb3b';
+            ctx.fillRect(28, 16, 3, 4);
+            ctx.fillRect(33, 16, 3, 4);
+            ctx.fillRect(30, 14, 4, 3);
+
+            // Maczuga
+            ctx.fillStyle = '#5d4037';
+            ctx.fillRect(58, 2, 6, 44);
+            ctx.fillStyle = '#4e342e';
+            ctx.beginPath();
+            ctx.arc(61, 4, 8, 0, Math.PI * 2);
+            ctx.fill();
+            // Ćwieki na maczudze
+            ctx.fillStyle = '#9e9e9e';
+            ctx.fillRect(56, 2, 3, 3);
+            ctx.fillRect(64, 6, 3, 3);
+            ctx.fillRect(58, 8, 3, 3);
 
         } else if (type === 'wall') {
             // Ciemne cegły
