@@ -1,6 +1,0 @@
-@echo off
-echo Instalowanie Electrona (jesli brakuje)...
-call npm install
-echo Uruchamianie Aethelgard Desktop...
-call npm run start:desktop
-pause
