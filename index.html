@@ -1,0 +1,1527 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#14110d">
+<title>Odmęt</title>
+<style>
+/* ============================================================
+   ODMĘT — atrament na ciemnym pergaminie
+   Paleta (6 kolorów): tło, pergamin, atrament, złoto pochodni,
+   krew, bagienna zieleń. Ta sama od tytułu po ekran śmierci.
+   ============================================================ */
+:root{
+  --bg:#14110d;
+  --paper:#241d15;
+  --ink:#d8c69c;
+  --gold:#e0a441;
+  --blood:#9a2f2a;
+  --bog:#4e7f7a;
+  --ink-40:rgba(216,198,156,.4);
+  --ink-20:rgba(216,198,156,.2);
+  --ink-10:rgba(216,198,156,.1);
+  --gold-30:rgba(224,164,65,.3);
+  --serif:"Noto Serif","Georgia","Times New Roman",serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0;background:var(--bg);color:var(--ink);font-family:var(--serif);font-size:17px;line-height:1.5;overflow:hidden;overscroll-behavior:none}
+body{user-select:none;-webkit-user-select:none;touch-action:manipulation}
+#paper{position:fixed;inset:0;pointer-events:none;opacity:.07;z-index:0;background-repeat:repeat}
+#vignette{position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(ellipse at 50% 40%,transparent 55%,rgba(0,0,0,.55) 100%)}
+#app{position:fixed;inset:0;display:flex;flex-direction:column;z-index:1;padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}
+.screen{flex:1;display:flex;flex-direction:column;min-height:0}
+.screen.enter{animation:fadeIn .35s ease-out}
+.scroll{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.pad{padding:14px 16px}
+h1,h2,h3{font-weight:normal;margin:0}
+.sc{font-variant-caps:small-caps;letter-spacing:.09em}
+.title{font-size:44px;letter-spacing:.18em;text-align:center;font-variant-caps:small-caps;color:var(--ink);text-shadow:0 0 24px var(--gold-30)}
+.sub{text-align:center;color:var(--ink-40);font-style:italic;font-size:15px}
+.h{font-size:15px;color:var(--gold);text-transform:none;font-variant-caps:small-caps;letter-spacing:.14em;margin:0 0 6px}
+.muted{color:var(--ink-40)}
+.gold{color:var(--gold)}
+.blood{color:#c9443c}
+.bog{color:#7fb3ac}
+.right{text-align:right}
+.center{text-align:center}
+.small{font-size:14px}
+.row{display:flex;align-items:center;gap:10px}
+.grow{flex:1;min-width:0}
+.wrap{flex-wrap:wrap}
+
+/* --- ozdobniki --- */
+.rule{display:flex;align-items:center;gap:10px;color:var(--ink-40);margin:10px 0}
+.rule::before,.rule::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--ink-40),transparent)}
+.rule svg{width:14px;height:14px;fill:none;stroke:var(--gold);stroke-width:1.2}
+
+/* --- przyciski: min. 48 px, tylko dotyk --- */
+.btn{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;min-height:54px;padding:10px 14px;margin:0 0 8px;background:rgba(36,29,21,.75);border:1px solid var(--ink-40);border-radius:4px;color:var(--ink);font:inherit;font-size:17px;text-align:left;line-height:1.3;cursor:pointer;position:relative;overflow:hidden}
+.btn .lbl{font-variant-caps:small-caps;letter-spacing:.06em;flex:1}
+.btn .cost{font-size:13px;color:var(--ink-40);font-style:italic;white-space:nowrap;letter-spacing:0;text-align:right}
+.btn:active{border-color:var(--gold);background:rgba(224,164,65,.12)}
+.btn.primary{border-color:var(--gold);box-shadow:inset 0 0 0 1px var(--gold-30),0 0 18px rgba(224,164,65,.12)}
+.btn.primary .lbl{color:var(--gold)}
+.btn.danger{border-color:rgba(154,47,42,.7)}
+.btn.danger .lbl{color:#c9443c}
+.btn.ghost{background:transparent;border-color:var(--ink-20)}
+.btn.sm{min-height:48px;font-size:15px;padding:8px 12px}
+.btn.m0{margin:0;height:100%}
+.btn:disabled{opacity:.38;pointer-events:none}
+.btn .emb{flex:none}
+.btn-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.btn-grid .btn{margin:0;justify-content:center;text-align:center}
+.btn-grid .btn .lbl{flex:none}
+.actions{padding:10px 16px calc(10px + env(safe-area-inset-bottom));border-top:1px solid var(--ink-10);background:linear-gradient(180deg,rgba(20,17,13,0),rgba(20,17,13,.92) 30%)}
+
+/* --- karty --- */
+.card{border:1px solid var(--ink-20);background:rgba(36,29,21,.65);border-radius:6px;padding:12px 14px;margin:0 0 10px}
+.card.sel{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold-30)}
+.card.dim{opacity:.55}
+.emb{width:56px;height:56px;border-radius:50%;border:1.5px solid var(--ink);display:grid;place-items:center;background:radial-gradient(circle at 50% 40%,rgba(36,29,21,.9),rgba(20,17,13,1));flex:none;position:relative}
+.emb svg{width:70%;height:70%;fill:none;stroke:var(--ink);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.emb.lg{width:76px;height:76px}
+.emb.xl{width:110px;height:110px;border-width:2px}
+.emb.sm{width:44px;height:44px}
+.emb.enemy{border-color:rgba(154,47,42,.8)}
+.emb.enemy svg{stroke:#d9c9a3}
+.emb.god{border-color:var(--gold)}
+.emb.dead{border-color:var(--ink-20);opacity:.5}
+.emb.dead::after{content:"";position:absolute;inset:-2px;border-radius:50%;background:linear-gradient(135deg,transparent 47%,var(--blood) 48%,var(--blood) 52%,transparent 53%)}
+.name{font-variant-caps:small-caps;letter-spacing:.06em;font-size:18px}
+.bars{display:flex;flex-direction:column;gap:4px;margin-top:4px}
+.bar{height:7px;background:rgba(0,0,0,.45);border:1px solid rgba(0,0,0,.6);border-radius:2px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--blood);transition:width .35s ease}
+.bar.mp i{background:var(--bog)}
+.bar.rep i{background:var(--gold)}
+.stat{font-size:13px;color:var(--ink-40);display:flex;justify-content:space-between}
+.tag{display:inline-block;font-size:12px;padding:1px 7px;border:1px solid var(--ink-20);border-radius:10px;color:var(--ink-40);margin:2px 4px 2px 0;font-variant-caps:small-caps;letter-spacing:.06em}
+.tag.st{border-color:var(--bog);color:#7fb3ac}
+.tag.bad{border-color:rgba(154,47,42,.7);color:#c9443c}
+
+/* --- proza --- */
+.prose{font-size:17px;line-height:1.55}
+.prose p{margin:0 0 .9em}
+.prose p.cap::first-letter{float:left;font-size:3.1em;line-height:.82;padding:.08em .12em 0 0;color:var(--gold);font-variant-caps:normal}
+.prose .say{font-style:italic}
+.fx-line{font-size:14px;color:var(--gold);font-variant-caps:small-caps;letter-spacing:.06em;margin:6px 0 10px;padding:8px 10px;border-left:2px solid var(--gold-30);background:rgba(224,164,65,.05)}
+.fx-line.bad{color:#c9443c;border-color:rgba(154,47,42,.6);background:rgba(154,47,42,.06)}
+.place{font-size:13px;color:var(--ink-40);font-variant-caps:small-caps;letter-spacing:.14em;text-align:center}
+
+/* --- scena --- */
+.scene{position:relative;height:36vh;min-height:190px;max-height:330px;overflow:hidden;flex:none;background:var(--bg)}
+.scene .sky{position:absolute;inset:0;transition:background 1.2s}
+.scene svg.sil{position:absolute;left:0;bottom:0;width:100%;height:100%;fill:#0e0c09;stroke:none}
+.scene .water{position:absolute;left:0;right:0;bottom:0;height:28%;background:linear-gradient(180deg,rgba(78,127,122,.0),rgba(78,127,122,.22) 40%,rgba(14,12,9,.9));opacity:.9}
+.scene .water::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(180deg,transparent 0 5px,rgba(216,198,156,.05) 5px 6px)}
+.scene canvas.fx{position:absolute;inset:0;width:100%;height:100%}
+.scene .torch{position:absolute;left:-30%;right:-30%;bottom:-40%;height:120%;background:radial-gradient(ellipse at 50% 100%,rgba(224,164,65,.28),rgba(224,164,65,.08) 35%,transparent 62%);animation:flicker 2.4s infinite steps(1);pointer-events:none;mix-blend-mode:screen}
+.scene .torch.off{display:none}
+.scene .dark{position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,17,13,.1),rgba(20,17,13,.0) 40%,rgba(20,17,13,.75))}
+.scene .head{position:absolute;left:0;right:0;top:10px;text-align:center;text-shadow:0 1px 4px #000}
+.scene .actor{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:4px;text-shadow:0 1px 4px #000}
+.scene .actor .emb{box-shadow:0 0 30px rgba(224,164,65,.25)}
+.enemies{position:absolute;left:0;right:0;bottom:12px;display:flex;justify-content:center;gap:14px;padding:0 10px}
+.eunit{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:96px;padding:6px 6px 8px;border-radius:8px;border:1px solid transparent;position:relative}
+.eunit.target{border-color:var(--gold);background:rgba(224,164,65,.08)}
+.eunit.targetable{border-color:var(--ink-20)}
+.eunit.gone{opacity:.25}
+.eunit .name{font-size:14px;text-shadow:0 1px 4px #000}
+.eunit .bar{width:80px}
+.eunit .tags{min-height:16px;text-align:center}
+.eunit .tag{font-size:11px;padding:0 5px;margin:0 2px}
+
+/* --- walka --- */
+.party{display:flex;gap:8px;padding:10px 12px 0}
+.punit{flex:1;border:1px solid var(--ink-20);background:rgba(36,29,21,.7);border-radius:6px;padding:8px;position:relative;min-width:0}
+.punit.active{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold-30)}
+.punit.dead{opacity:.45}
+.punit .name{font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.punit .row{gap:8px}
+.log{padding:8px 16px;font-size:15px;min-height:64px;max-height:96px;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end}
+.log div{opacity:.45}
+.log div:last-child{opacity:1}
+.float{position:absolute;left:50%;top:0;transform:translateX(-50%);font-size:22px;color:#c9443c;text-shadow:0 1px 6px #000;animation:floatUp .9s ease-out forwards;pointer-events:none;font-variant-caps:small-caps;letter-spacing:.06em;white-space:nowrap;z-index:5}
+.float.heal{color:#7fb3ac}
+.float.gold{color:var(--gold)}
+.float.miss{color:var(--ink-40);font-size:16px;font-style:italic}
+.shake{animation:shake .32s linear}
+.flash{position:fixed;inset:0;pointer-events:none;z-index:9;background:rgba(154,47,42,.35);animation:flash .4s ease-out forwards}
+.flash.fire{background:rgba(224,164,65,.28)}
+
+/* --- mapa --- */
+.mapwrap{flex:1;min-height:0;position:relative;overflow:hidden}
+.mapwrap svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.maphead{display:flex;justify-content:space-between;align-items:center;padding:8px 14px;border-bottom:1px solid var(--ink-10);font-size:14px}
+.maphead .name{font-size:16px}
+.mapfoot{padding:8px 12px calc(8px + env(safe-area-inset-bottom));border-top:1px solid var(--ink-10);background:rgba(20,17,13,.92)}
+.mini{display:flex;gap:8px;margin-bottom:8px}
+.mini .punit{padding:6px 8px}
+.node{cursor:pointer}
+.node .ring{fill:none;stroke:var(--gold);stroke-width:1;stroke-dasharray:3 4;opacity:.9;animation:spin 14s linear infinite;transform-box:fill-box;transform-origin:center}
+.node.cur .core{animation:pulse 1.8s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+.fogblob{animation:drift 9s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:center}
+
+/* --- arkusze / nakładki --- */
+.sheet{position:fixed;inset:0;z-index:20;background:rgba(10,8,6,.82);display:flex;flex-direction:column;justify-content:flex-end;animation:fadeIn .2s}
+.sheet .panel{background:var(--paper);border-top:1px solid var(--ink-40);border-radius:12px 12px 0 0;padding:14px 16px calc(14px + env(safe-area-inset-bottom));max-height:80vh;display:flex;flex-direction:column}
+.sheet .panel .scroll{flex:1}
+.sheet .panel .btn{margin-bottom:8px}
+.confirm{position:fixed;inset:0;z-index:30;background:rgba(10,8,6,.9);display:grid;place-items:center;padding:24px}
+.confirm .box{border:1px solid var(--ink-40);background:var(--paper);padding:18px;max-width:340px;width:100%}
+
+/* --- miasto --- */
+.city-head{padding:12px 16px 6px;text-align:center}
+.city-head .title{font-size:32px}
+.section{margin:0 0 6px}
+.kv{display:flex;justify-content:space-between;gap:8px;font-size:15px;padding:3px 0;border-bottom:1px dashed var(--ink-10)}
+.kv:last-child{border-bottom:0}
+.chron{font-size:15px;padding:6px 0;border-bottom:1px dashed var(--ink-10)}
+.chron b{font-weight:normal;font-variant-caps:small-caps;letter-spacing:.05em;color:var(--gold)}
+.mark{font-size:15px;padding:4px 0;font-style:italic;color:var(--ink)}
+.mark::before{content:"◆ ";color:var(--blood);font-style:normal}
+.know::before{content:"◆ ";color:var(--bog);font-style:normal}
+.empty{font-style:italic;color:var(--ink-40);font-size:15px;padding:4px 0}
+.inv{display:flex;flex-wrap:wrap;gap:6px}
+.inv .item{border:1px solid var(--ink-20);border-radius:4px;padding:4px 10px;font-size:14px;min-height:40px;display:flex;align-items:center;gap:6px}
+.inv .item b{font-weight:normal;color:var(--gold)}
+
+/* --- śmierć --- */
+.death{justify-content:center;text-align:center;padding:24px}
+.death .title{font-size:30px;color:#c9443c;text-shadow:0 0 30px rgba(154,47,42,.4)}
+.death .emb.xl{margin:16px auto}
+.death .prose{text-align:left}
+
+/* --- animacje --- */
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes flicker{0%{opacity:.85}9%{opacity:1}21%{opacity:.8}33%{opacity:.95}47%{opacity:.75}58%{opacity:1}69%{opacity:.86}82%{opacity:.97}93%{opacity:.8}100%{opacity:.9}}
+@keyframes shake{0%,100%{transform:translate(0,0)}20%{transform:translate(-6px,3px)}40%{transform:translate(5px,-4px)}60%{transform:translate(-4px,2px)}80%{transform:translate(3px,-2px)}}
+@keyframes flash{from{opacity:1}to{opacity:0}}
+@keyframes floatUp{0%{opacity:0;transform:translate(-50%,6px)}15%{opacity:1}100%{opacity:0;transform:translate(-50%,-38px)}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.18)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes drift{from{transform:translate(-4px,0) scale(1)}to{transform:translate(5px,2px) scale(1.08)}}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<div id="paper"></div>
+<div id="vignette"></div>
+<div id="app"></div>
+<script>
+'use strict';
+/* ============================================================
+   0. KONFIGURACJA — jedyne miejsce, w którym są liczby skali
+   i treści. Silniki niżej nie znają żadnych nazw z tej sekcji.
+   Dodanie regionu / aktora / wroga / boga = dopisanie wpisu.
+   ============================================================ */
+const CFG = {
+  version: 1,
+  saveKey: 'odmet.save',
+  city: { name: 'Odmęt', districts: ['spod Wagi', 'z Rybnej', 'z Przystani', 'znad Kanału', 'z Solnego Kąta', 'zza Łańcucha'] },
+  phases: [
+    { id: 'świt',     label: 'Świt',     night: false, sky: ['#2a2420', '#5a4634', '#1a1712'] },
+    { id: 'dzień',    label: 'Dzień',    night: false, sky: ['#3a3a33', '#6b6656', '#1a1712'] },
+    { id: 'zmierzch', label: 'Zmierzch', night: false, sky: ['#241a1c', '#7a3f2a', '#14110d'] },
+    { id: 'noc',      label: 'Noc',      night: true,  sky: ['#0b0d12', '#1b2430', '#0a0908'] },
+  ],
+  stepsPerPhase: 2,
+  party: { maxCompanions: 2 },
+  map: { minPerLayer: 2, maxPerLayer: 3, extraEdgeChance: 0.4, restWindow: 3, revealAhead: 1 },
+  contracts: { baseLength: 4, longExtra: 2, maxLength: 9, goldPerLayer: 3, repPerLayer: 1 },
+  advance: { gold: 5, interest: 1 },
+  rep: { goldPerPoint: 5 },
+  rest: { sleepHeal: 0.55, watchHeal: 0.25, watchMana: 0.5 },
+  combat: { fleeBase: 0.5, delay: 520, maxGroup: 3 },
+  balance: { woundedBelow: 0.5, healthyAbove: 0.8, poorBelow: 4, richAbove: 15, favorCap: 6, scarHp: 2, scarFloor: 8 },
+};
+
+/* ---------- archetypy bohatera ---------- */
+const ARCHETYPES = {
+  rebajlo: {
+    id: 'rebajlo', name: 'Rębajło', emblem: 'axe',
+    desc: 'Z Przystani. Umie dwie rzeczy: uderzyć i wstać. Cech ceni pierwszą, bagno sprawdza drugą.',
+    hp: 30, mp: 4, atk: [5, 8], def: 1, spd: 3, kit: { pochodnia: 1, wywar: 1 },
+    ability: { id: 'rozplatanie', name: 'Rozpłatanie', mp: 2, target: 'enemy', desc: 'Cios, przed którym nie da się umknąć. 9–13.',
+      effects: (u, t, rng) => [{ type: 'damage', target: t, amount: rng.int(9, 13), dmgType: 'phys', sure: true }],
+      text: (u, t) => `${u.name} rozpłatuje: ${t.name}.` },
+  },
+  adept: {
+    id: 'adept', name: 'Adept', emblem: 'eye',
+    desc: 'Wyrzucony z wieży za pytania. Nosi ogień w głowie i za mało mięsa na kościach.',
+    hp: 20, mp: 10, atk: [2, 4], def: 0, spd: 4, kit: { wywar: 1, sol: 1 },
+    ability: { id: 'zar', name: 'Żar', mp: 3, target: 'enemy', desc: 'Płomień. 7–10, ogień. Odsłania to, co się chowa.',
+      effects: (u, t, rng) => [{ type: 'damage', target: t, amount: rng.int(7, 10), dmgType: 'fire' }, { type: 'status', target: t, status: 'odsloniety', turns: 2 }],
+      text: (u, t) => `${u.name} ciska żar: ${t.name}.` },
+  },
+};
+
+/* ---------- towarzysze ---------- */
+const COMPANIONS = {
+  ida: {
+    id: 'ida', name: 'Ida Smolna', short: 'Ida', f: true, emblem: 'net',
+    desc: 'Dezerterka ze straży bagiennej Cechu. Zna warty, zna trzciny, nie pije, bo nie ma za co.',
+    hp: 22, mp: 5, atk: [4, 6], def: 1, spd: 5,
+    ability: { id: 'siec', name: 'Sieć', mp: 2, target: 'enemy', desc: 'Rzut siecią. Cel traci następny ruch.',
+      effects: (u, t) => [{ type: 'status', target: t, status: 'stun', turns: 1 }],
+      text: (u, t) => `${u.name} rzuca sieć: ${t.name} zapomina, po co wstał.` },
+    restWard: 0.5,
+    tavern: 'Siedzi tyłem do drzwi, co w Tawernie pod Wagą jest albo odwagą, albo rachunkiem.',
+    deathCause: 'została na Bagnach',
+  },
+};
+
+/* ---------- przeciwnicy: zachowanie wynika z rodzaju ---------- */
+const ENEMIES = {
+  topielec: {
+    id: 'topielec', name: 'Topielec', forms: ['topielec', 'topielce', 'topielców'], emblem: 'drownedHand',
+    hp: 15, atk: [4, 7], def: 1, spd: 1, tags: ['nieumarły', 'woda'], weak: { fire: 1.5 }, resist: {}, evasion: 0,
+    deathCause: 'zabrał topielec',
+    weight(ctx) { let w = 1; if (ctx.mark('obrabowales_topielca')) w *= 2; if (ctx.mark('ograbiles_kaplice')) w *= 2; if (ctx.mark('minales_topielca')) w *= 1.5; if (ctx.place && ctx.place.tags.includes('umarli')) w *= 1.6; return w; },
+    ai(self, cb) {
+      const held = self.grab != null ? cb.party.find(u => u.uid === self.grab && u.hp > 0) : null;
+      if (held) { self.grab = null; return { text: `${self.name} wciąga pod wodę: ${held.name}.`, effects: [{ type: 'damage', target: held, amount: Math.round(cb.rng.int(self.atk[0], self.atk[1]) * 1.5), dmgType: 'phys' }] }; }
+      const t = cb.weakest();
+      return { text: `${self.name} chwyta: ${t.name}.`, effects: [{ type: 'damage', target: t, amount: cb.rng.int(self.atk[0], self.atk[1]), dmgType: 'phys', onHit: () => { self.grab = t.uid; cb.status(t, 'pochwycony', 1); } }] };
+    },
+    onDamaged(self) { self.grab = null; },
+    regen(self, cb) { return cb.placeTags.includes('woda') ? 1 : 0; },
+    intro(ctx, n) {
+      if (n === 1) return `Woda przed wami wstaje. Nie jak fala — jak człowiek, który wstaje z łóżka, powoli, bo wie, że ma czas. Topielec ma jeszcze na szyi ołowiany znak Cechu. Dług spłacony, sprawa niezamknięta.`;
+      return `Woda przed wami wstaje w ${n === 2 ? 'dwóch' : 'kilku'} miejscach naraz. Topielce nie śpieszą się; nikt tu się nie śpieszy, kto ma na szyi ołów. Idą, jakby ktoś ich wezwał z nazwiska.`;
+    },
+    victory(ctx, n) { return n === 1 ? `Topielec opada w wodę tak samo, jak z niej wstał: bez pośpiechu, bez urazy. Ołowiany znak na jego szyi błyska raz i tonie. Zostajecie z mokrym oddechem i pewnością, że nie zrobiliście mu krzywdy — tylko przerwę.` : `Ostatni topielec kładzie się na wodzie i woda go przyjmuje. Nie ma tu zwycięstwa, tylko spokój, który potrwa tyle, ile wasza uwaga.`; },
+    loot(rng) { const l = { gold: rng.int(2, 5) }; if (rng.chance(0.25)) l.items = { wywar: 1 }; return l; },
+    lootText: 'W zanadrzu topielca: mokre monety i flaszka, której nie zdążył wypić.',
+  },
+  ognik: {
+    id: 'ognik', name: 'Ognik', forms: ['ognik', 'ogniki', 'ogników'], emblem: 'wisp',
+    hp: 7, atk: [2, 4], def: 0, spd: 6, tags: ['duch', 'światło'], weak: {}, resist: { phys: 0.5 }, evasion: 0.4,
+    deathCause: 'zwiódł ognik',
+    weight(ctx) { let w = 0.8; if (ctx.night) w *= 2.2; if (ctx.place && ctx.place.tags.includes('trzciny')) w *= 1.5; if (ctx.depth <= 1) w *= 0.5; return w; },
+    ai(self, cb) {
+      if (self.hp <= Math.ceil(self.maxHp * 0.3)) return { flee: true, text: `${self.name} gaśnie i odlatuje w trzciny. Zabiera ze sobą to, co wyssał.` };
+      const t = cb.party.filter(u => u.mp > 0).sort((a, b) => b.mp - a.mp)[0];
+      if (t) { const n = Math.min(t.mp, 2); return { text: `${self.name} wysysa wolę: ${t.name}.`, effects: [{ type: 'drain', target: t, amount: n }] }; }
+      const s = cb.party.filter((u) => !u.status.stun && !u.status.czujny).sort((a, b) => b.atk[1] - a.atk[1])[0];
+      if (s) return { text: `${self.name} tańczy przed oczami: ${s.name} patrzy w złą stronę.`, effects: [{ type: 'status', target: s, status: 'stun', turns: 1 }] };
+      const w = cb.weakest();
+      return { text: `${self.name} parzy: ${w.name}.`, effects: [{ type: 'damage', target: w, amount: cb.rng.int(self.atk[0], self.atk[1]), dmgType: 'fire' }] };
+    },
+    intro(ctx, n) {
+      if (n === 1) return `Światło nad trzcinami. Ciepłe, przyjazne, dokładnie tam, gdzie chcielibyście, żeby był bezpieczny grunt. Ognik nie kłamie — po prostu nie ma pojęcia o gruncie. Chce tylko tego, co macie w głowach, i sięga po to jak dziecko po świecę.`;
+      return `Dwa światła, potem trzy. Ogniki krążą wokół was jak myśli o trzeciej nad ranem: ładne, natrętne, głodne. Ogień i sól pomagają. Rozum nie.`;
+    },
+    victory(ctx, n) { return `Ognik pęka jak bańka na bagnie i przez chwilę pachnie zgaszoną świecą. Trzciny robią się ciemniejsze, ale tylko dlatego, że wreszcie są tym, czym są.`; },
+    loot(rng) { return { gold: rng.int(0, 2) }; },
+    lootText: 'Po ogniku zostaje trochę popiołu i moneta, którą ktoś przed wami zgubił, idąc za światłem.',
+  },
+};
+
+/* ---------- przedmioty ---------- */
+const ITEMS = {
+  pochodnia: { id: 'pochodnia', name: 'Pochodnia', forms: ['pochodnia', 'pochodnie', 'pochodni'], desc: 'Ogień. Topielce go nie lubią, ogniki go nie znoszą, noc go szanuje.',
+    combat: { target: 'enemy', effects: (u, t, rng) => [{ type: 'damage', target: t, amount: rng.int(6, 9), dmgType: 'fire' }, { type: 'status', target: t, status: 'odsloniety', turns: 2 }], text: (u, t) => `${u.name} przypala pochodnią: ${t.name}.` },
+    restWard: 0.5, restText: 'Pochodnia pali się do świtu. Cokolwiek podchodzi, podchodzi, a potem myśli lepiej.' },
+  wywar: { id: 'wywar', name: 'Wywar', forms: ['wywar', 'wywary', 'wywarów'], desc: 'Gorzki, cechowy, leczy 12. Smakuje jak kwit.',
+    anywhere: { effects: (u) => [{ type: 'heal', target: u, amount: 12 }], text: (u) => `${u.name} pije wywar. Smakuje jak zaległość, działa jak spłata.` } },
+  sol: { id: 'sol', name: 'Sól', forms: ['sól', 'sole', 'soli'], desc: 'Garść soli z Solnego Kąta. Parzy umarłych, chroni śpiących.',
+    combat: { target: 'all-enemies', effects: (u, ts, rng) => ts.filter(t => t.tags.includes('nieumarły')).map(t => ({ type: 'damage', target: t, amount: 8, dmgType: 'holy' })), text: (u) => `${u.name} sypie sól. Umarli syczą jak mokre drewno.` },
+    restWard: 1, restText: 'Krąg soli wokół obozu. Nic, co utonęło, nie przekracza soli — to jedyna umowa, której bagno dotrzymuje.' },
+  znak_topielca: { id: 'znak_topielca', name: 'Znak dłużnika', forms: ['znak', 'znaki', 'znaków'], desc: 'Ołowiany znak chłopca utopionego za dług po ojcu. Obiecany kaplicy w Odmęcie. W mieście ma cenę — jak wszystko.', quest: true },
+};
+
+/* ---------- bogowie: odpowiadają mechanicznie ---------- */
+const GODS = {
+  utopiona: {
+    id: 'utopiona', name: 'Utopiona Pani', gen: 'f', emblem: 'moonWaves', tags: ['woda'],
+    desc: 'Bierze, co tonie, i nigdy nie pyta o odsetki. Jedyny uczciwy wierzyciel w kraju, twierdzą heretycy.',
+    answer(ctx, favor, times) {
+      const tired = times > 0;
+      if (favor >= 2) return tired ? { text: `Woda słucha, ale krócej. Pani nie lubi, kiedy się ją woła dwa razy w jedną noc.`, effects: [{ heal: 4, who: 'all' }] }
+        : { text: `Woda podchodzi pod obóz i cofa się, a rany cofają się z nią. Pani przyjmuje was jak swoich — to znaczy: jak dług, który się jeszcze nie przeterminował.`, effects: [{ heal: 'third', who: 'all' }] };
+      if (favor >= 0) return { text: `Woda nie odpowiada. Ale na jej powierzchni przez chwilę widać drogę — jasno, jakby ktoś ją narysował palcem — a potem nic.`, effects: [{ reveal: 'layers', n: 1 }] };
+      return { text: `Woda odpowiada. Sakwa robi się lżejsza; monety same wypadają i toną, jedna po drugiej, powoli, żebyś ${ctx.g('zdążył', 'zdążyła')} policzyć. Pani pamięta, kto rusza jej utopionych.`, effects: [{ gold: -Math.max(2, Math.ceil(ctx.gold * 0.3)) }, { hp: -3 }] };
+    },
+  },
+  rachmistrz: {
+    id: 'rachmistrz', name: 'Rachmistrz', gen: 'm', emblem: 'ledger', tags: ['droga', 'miasto'],
+    desc: 'Bóg ksiąg, wag i przysiąg. Patron Cechu. Nie karze; koryguje.',
+    answer(ctx, favor, times) {
+      if (favor >= 2) return times > 0 ? { text: `Rachmistrz odpowiada suchym stuknięciem pióra: pozycja już zaksięgowana. Nie prosi się dwa razy o tę samą korektę.`, effects: [] }
+        : { text: `W sakwie znajdujesz monety, których tam nie było. Rachmistrz nie daje; Rachmistrz koryguje błędy w księdze świata na twoją korzyść. Z odsetkami.`, effects: [{ gold: 4 }, { rep: { cech_wagi: 1 } }] };
+      if (favor >= 0) {
+        const debts = ctx.cityMarks().map(m => MARKS[m].label).filter(Boolean);
+        return { text: debts.length ? `Rachmistrz odpowiada tak, jak odpowiadają księgi: pokazuje stan konta. ${debts.join(' ')} Nic więcej. Wiedza to też waluta.` : `Rachmistrz odpowiada tak, jak odpowiadają księgi: stan konta. Pusta rubryka. W Odmęcie to rzadkie i nietrwałe.`, effects: [{ mp: 2 }] };
+      }
+      return { text: `Rachmistrz ściąga zaległości. Monety nie znikają — po prostu przestają być twoje, a ty ${ctx.g('czujesz', 'czujesz')} to tak wyraźnie, jakby ktoś wyrwał kartkę z twojego brzucha.`, effects: [{ gold: -Math.max(3, Math.ceil(ctx.gold * 0.4)) }] };
+    },
+  },
+};
+
+/* ---------- gildie ---------- */
+const GUILDS = {
+  cech_wagi: {
+    id: 'cech_wagi', name: 'Cech Wagi', emblem: 'scales',
+    desc: 'Waży złoto, długi i ludzi. Odsyła dłużników na Bagna. Finansuje wyprawy, żeby ktoś z Bagien coś przyniósł.',
+    tiers: [{ min: 0, name: 'Obcy' }, { min: 5, name: 'Petent' }, { min: 12, name: 'Klient' }, { min: 25, name: 'Wspólnik' }, { min: 45, name: 'Rajca' }],
+    charterTier: 2,
+  },
+};
+
+/* ---------- znaki: konsekwencje z zasięgiem ---------- */
+const MARKS = {
+  oszukales_przewoznika: { scope: 'city', label: 'Przewoźnik pamięta kamyki spod znaku Wagi.' },
+  obiecales_przewoznikowi: { scope: 'run', label: 'Niesiesz cudzy znak i cudzą obietnicę.' },
+  okradles_ide: { scope: 'city', label: 'Ida Smolna pamięta cztery monety i suchar.' },
+  zostawiles_ide: { scope: 'city', label: 'Dezerterka Cechu została na pniu. Ktoś ją minął.' },
+  ochrzczony: { scope: 'run', label: 'Bagno cię ochrzciło. Cech ma nosa.', onReturn: (ctx) => ({ text: `Cech wyczuwa bagno na twojej skórze. Nikt nic nie mówi; ktoś robi notatkę. Reputacja spada, jak poziom wody — powoli i na pewno.`, effects: [{ rep: { cech_wagi: -2 } }, { unmark: 'ochrzczony' }] }) },
+  oklamales_poborce: { scope: 'city', label: 'Poborca zapisał zero i czeka.', onReturn: (ctx) => ({ text: `Poborca doniósł. Cech porównuje jego zero z tym, co kładziesz na wadze, i różnica wchodzi do księgi pod twoim nazwiskiem.`, effects: [{ rep: { cech_wagi: -2 } }, { unmark: 'oklamales_poborce' }] }) },
+  dlug: { scope: 'city', label: 'W księdze Cechu stoi wasze nazwisko z długiem.' },
+  obrabowales_topielca: { scope: 'city', label: 'Pani wie, kto rusza sakiewki utopionych.' },
+  ograbiles_kaplice: { scope: 'city', label: 'Kaplica pamięta ręce z Odmętu.' },
+  minales_topielca: { scope: 'run', label: 'Woda za wami przestała być spokojna.' },
+  sprzedales_znak: { scope: 'city', label: 'Znak chłopca poszedł na wagę.' },
+  znak_w_kaplicy: { scope: 'city', label: 'Znak chłopca wisi w kaplicy przy Kanale.' },
+};
+
+/* ---------- wiedza: zostaje w mieście ---------- */
+const KNOWLEDGE = {
+  slowa_dla_utopionych: { name: 'Słowa dla utopionych', desc: 'Trzy zdania z księgi Cechu. Utopieni nie chcą modlitwy — chcą pokwitowania.' },
+  kwity_kaplicy: { name: 'Kwity z Zatopionej Kaplicy', desc: 'Nazwiska i sumy, których Cech Wagi wolałby nie widzieć na wierzchu. Cech zapłacił za nie reputacją.' },
+  sciezki_strazy: { name: 'Ścieżki straży bagiennej', desc: 'Ida narysowała je patykiem. Widzisz szlak o jeden węzeł dalej, niż widzą inni.', revealAhead: 1 },
+};
+
+/* ---------- ulepszenia Cechu ---------- */
+const UPGRADES = {
+  zapas: { id: 'zapas', name: 'Zapas cechowy', cost: 15, tier: 1, desc: 'Każda wyprawa zaczyna się z dodatkowym wywarem.', kit: { wywar: 1 } },
+  lampa: { id: 'lampa', name: 'Lampa cechowa', cost: 20, tier: 1, desc: 'Dwie pochodnie więcej na start. Cech nie lubi, gdy jego ludzie chodzą po ciemku.', kit: { pochodnia: 2 } },
+  sol: { id: 'sol', name: 'Przydział soli', cost: 25, tier: 2, desc: 'Garść soli na każdą wyprawę. Umarli to zauważą.', kit: { sol: 1 } },
+  zaliczka: { id: 'zaliczka', name: 'Większa zaliczka', cost: 30, tier: 2, desc: 'Cech wykłada 10 monet zamiast 5. Odsetki rosną proporcjonalnie, rzecz jasna.', advance: 10 },
+};
+
+/* ---------- napięcia: co aktor chce od drużyny; waga ze stanu ---------- */
+const TENSIONS = {
+  myto:     { name: 'Myto',     affinity: (c) => c.gold >= 4 ? 1 + c.gold / 25 : 0.25 },
+  prosba:   { name: 'Prośba',   affinity: (c) => (c.wounded ? 0.6 : 1.2) * (c.has('wywar') ? 1.3 : 1) },
+  targ:     { name: 'Targ',     affinity: (c) => c.gold >= 7 ? 1 : 0.2 },
+  pokusa:   { name: 'Pokusa',   affinity: (c) => (c.wounded ? 1.7 : 0.6) + (c.poor ? 0.5 : 0) },
+  sad:      { name: 'Sąd',      affinity: () => 3 },
+  skarbiec: { name: 'Skarbiec', affinity: () => 0 },
+};
+
+/* ---------- rodzaje spotkań: waga ze stanu, generator, ekran ---------- */
+const KINDS = {
+  wybor:      { id: 'wybor', name: 'Wybór', icon: 'fork', weight: (depth) => 2.2, gen: (S, node) => genChoice(S, node) },
+  walka:      { id: 'walka', name: 'Walka', icon: 'swords', weight: (depth) => 1 + depth * 0.35, gen: (S, node) => genCombatNode(S, node) },
+  odpoczynek: { id: 'odpoczynek', name: 'Odpoczynek', icon: 'fire', weight: (depth) => 1, gen: (S, node) => genRest(S, node) },
+  miasto:     { id: 'miasto', name: 'Odmęt', icon: 'city', weight: () => 0, gen: null },
+  cel:        { id: 'cel', name: 'Cel wyprawy', icon: 'goal', weight: () => 0, gen: (S, node) => genGoal(S, node) },
+};
+
+/* ============================================================
+   REGIONY — każdy region to jeden wpis: miejsca, aktorzy
+   (z komórkami aktor × napięcie), nocleg, bestiariusz, cel.
+   Komórka: when(ctx) warunek, weight(ctx) waga, text(ctx),
+   choices[] z label/cost/when/resolve(ctx) -> {text, effects}.
+   ============================================================ */
+const REGIONS = {
+  bagna: {
+    id: 'bagna', name: 'Bagna Dłużników', requiresTier: 0, tags: ['woda'],
+    desc: 'Tam Cech odsyła tych, którzy nie zważyli się na jego wadze. Woda przyjmuje wszystkich i nikogo nie oddaje w całości.',
+    weather: (phase, rng) => phase.night ? (rng.chance(0.6) ? 'mist' : 'rain') : (rng.chance(0.45) ? 'rain' : 'mist'),
+    nightDanger: 0.4,
+    bestiary: { topielec: 1, ognik: 1 },
+    groupSize: (depth, rng) => depth <= 2 ? 1 : depth <= 4 ? (rng.chance(0.5) ? 2 : 1) : (rng.chance(0.3) ? 3 : 2),
+    decor: ['reed', 'tree', 'stake'],
+    goal: { place: 'kaplica', actor: 'utopieni', tension: 'skarbiec' },
+    places: [
+      { id: 'grobla', name: 'Grobla Poborców', tags: ['droga', 'woda'], rest: true, sil: ['stones', 'reeds'],
+        beat: (c) => c.night ? `Nocą grobla jest jaśniejsza od wody, jakby kamienie pamiętały słońce. Słupki z wytartą wagą stoją w równych odstępach jak strażnicy, którym nikt nie powiedział, że wojna się skończyła.`
+          : `Grobla jest starsza niż Cech i lepiej od niego zbudowana; kamienie imperium toną sto lat i jeszcze nie dotonęły. Co dwadzieścia kroków słupek z wytartą wagą. Ktoś, dawno, chciał, żeby dłużnicy wiedzieli, dokąd idą.` },
+      { id: 'trzciny', name: 'Trzcinowe Szlaki', tags: ['woda', 'trzciny'], rest: false, sil: ['reeds', 'reeds'],
+        beat: (c) => c.night ? `Nocą trzciny szepczą — nie w przenośni. Wiatr przechodzi przez nie jak przez tłum, który udaje, że nie plotkuje. Światła są tu zawsze; w dzień po prostu ich nie widać.`
+          : `Trzciny wyższe od człowieka i gęstsze od tłumu. Ścieżka istnieje tylko wtedy, gdy się po niej idzie; wystarczy stanąć, a zamyka się za plecami. Gdzieś w środku coś świeci. Wszyscy w Odmęcie wiedzą, żeby nie iść za światłem, i wszyscy kiedyś poszli.` },
+      { id: 'paliki', name: 'Pole Palików', tags: ['woda', 'umarli', 'otwarte'], rest: false, sil: ['stakes', 'reeds'],
+        beat: (c) => c.night ? `Nocą paliki są tylko cieńszymi kawałkami ciemności, ale woda między nimi jest jasna, jakby coś świeciło od spodu. Przypływ idzie. Przypływ zawsze idzie.`
+          : `Płytka woda po horyzont, a z niej paliki — setki, w rzędach, jak sad. Do każdego przywiązywano dłużnika i czekano na przypływ. Cech nazywał to egzekucją, imperium windykacją. Paliki nie nazywają tego wcale. Przy niektórych coś jeszcze wisi.` },
+      { id: 'wierzba', name: 'Wisielcza Wierzba', tags: ['drzewo', 'sucho'], rest: true, sil: ['willow', 'reeds'],
+        beat: (c) => `Jedyne drzewo na trzy mile, więc wszyscy używali go do tego samego. Gałęzie są wytarte w dwóch miejscach. Pod wierzbą jest sucho — jedyny suchy grunt w okolicy — i każdy, kto tędy szedł, spał dokładnie tu, pod tymi gałęziami, z tą wiedzą.` },
+      { id: 'smolarnia', name: 'Stara Smolarnia', tags: ['ruina', 'sucho', 'ogień', 'droga'], rest: true, sil: ['ruin', 'trees'],
+        beat: (c) => `Piec do smoły, dach z połowy dachu, zapach, który przeżył ludzi o pięćdziesiąt lat. Imperium paliło tu smołę do łodzi, którymi wożono dłużników. Ściany trzymają, ogień da się rozpalić. Na belce ktoś wydrapał rachunek — kreski po pięć — i przerwał w pół piątki.` },
+      { id: 'kaplica', name: 'Zatopiona Kaplica', tags: ['święte', 'woda', 'ruina'], rest: false, goal: true, sil: ['chapel', 'reeds'],
+        beat: (c) => `Kaplica tonie od stu lat i jeszcze nie skończyła. Dach jest nad wodą, ołtarz po pas w niej. Ktoś tu wciąż pali świece — pływają po nawie, małe, uparte — i nikt nie chce wiedzieć, kto je stawia.` },
+    ],
+    actors: [
+      /* ---- Przewoźnik: woda należy do Pani, przeprawa do niego ---- */
+      { id: 'przewoznik', name: 'Przewoźnik', emblem: 'ferry', habitat: ['woda'], deathCause: (c) => c.g('wykrwawił', 'wykrwawiła') + ' się dla Przewoźnika',
+        weight: (c) => 1 + (c.favor('utopiona') < 0 ? 0.8 : 0),
+        cells: {
+          myto: {
+            text: (c) => `Łódź płaska jak deska wysuwa się z trzcin bez plusku. Przewoźnik ma twarz koloru starego łoju i uśmiech człowieka, który już raz umarł i uznał, że to przeceniona sprawa.\n\n— Przeprawa — mówi. Nie pyta, dokąd. Tu wszystkie drogi prowadzą przez wodę, a woda należy do Pani. — Płaci się monetą albo krwią. Pani nie robi różnicy. Ja robię: krew mi się nie przelicza.`,
+            choices: [
+              { label: 'Zapłać monetą', cost: '4 monety', when: (c) => c.gold >= 4,
+                resolve: (c) => ({ text: `Moneta znika w jego dłoni jak kamyk w bagnie. Łódź niesie was przez czarną wodę i wysadza na drugim brzegu, nim zdążycie zmoknąć.\n\n— Pani liczy — mówi na odchodne. — Ale ja liczę szybciej.`, effects: [{ gold: -4 }] }) },
+              { label: 'Zapłać krwią', cost: '5 zdrowia',
+                resolve: (c) => ({ text: `Nóż ma tępy; to nie kwestia litości, tylko nawyku. Krew kapie do wody i woda ją bierze bez podziękowania. Coś pod powierzchnią przysuwa się bliżej, żeby popatrzeć.\n\nPrzewoźnik kiwa głową: Pani przyjęła. Wątpisz, czy to dobra wiadomość.`, effects: [{ hp: -5 }, { favor: { utopiona: 1 } }] }) },
+              { label: 'Oszukaj go', cost: 'sakiewka kamyków', when: (c) => !c.mark('oszukales_przewoznika'),
+                resolve: (c) => c.rng.chance(0.6)
+                  ? { text: `Podajesz mu sakiewkę pełną kamyków i słowa pełne szacunku. Bierze jedno i drugie, nie patrząc. Dopiero na drugim brzegu, kiedy łódź odpływa, słyszysz, jak się śmieje — długo, cierpliwie, jak ktoś, kto ma czas.\n\nBędzie pamiętał. Nie ciebie. Miasto.`, effects: [{ mark: 'oszukales_przewoznika' }] }
+                  : { text: `Waży sakiewkę w dłoni, jak waży się rybę.\n\n— Kamyki — mówi bez urazy. Potem bierze monety, a na koniec krew, bo Pani nie lubi, gdy rachunek się nie domyka.`, effects: [{ gold: -4 }, { hp: -6 }] } },
+              { label: 'Odmów i brnij naokoło', cost: 'czas i błoto',
+                resolve: (c) => ({ text: `Idziecie brzegiem, który nie jest brzegiem, tylko obietnicą brzegu. Do zmierzchu jesteście po pas w wodzie, a Przewoźnik płynie obok, nie śpiesząc się, i nuci.\n\nZaoszczędziliście monety. Zapłaciliście czasem, a czas tutaj też ma właściciela.`, effects: [{ hp: -3, who: 'all' }, { time: 2 }] }) },
+            ] },
+          prosba: {
+            when: (c) => !c.mark('oszukales_przewoznika') && !c.has('znak_topielca') && !c.mark('sprzedales_znak') && !c.mark('znak_w_kaplicy'),
+            text: (c) => `Tym razem nie chce zapłaty. Wyciąga z zanadrza rzecz małą i ciężką: ołowiany znak, jaki Cech wiesza na szyi dłużnika przed utopieniem. Imię wytarte.\n\n— Chłopak — mówi. — Piętnaście lat, dług po ojcu. Pani go ma, ale znak powinien wrócić do miasta. Do kaplicy. Żeby ktoś wiedział.\n\nPatrzy na ciebie tak, jakby wiedział, że w Odmęcie znaki dłużników się sprzedaje. Ołów jest ołowiem.`,
+            choices: [
+              { label: 'Weź znak i obiecaj', cost: 'obietnica',
+                resolve: (c) => ({ text: `Znak jest zimniejszy, niż powinien być ołów. Przewoźnik nic nie mówi; umarli nie dziękują, bo im się to nie opłaca. Ale łódź niesie was dalej niż zwykle i przez chwilę bagno pachnie jak morze.`, effects: [{ item: 'znak_topielca', n: 1 }, { mark: 'obiecales_przewoznikowi' }] }) },
+              { label: 'Odmów', cost: 'zły brzeg',
+                resolve: (c) => ({ text: `— Nie noszę cudzych długów — mówisz, i to jest bardzo odmęckie zdanie.\n\nPrzewoźnik chowa znak. Woda pod łodzią robi się ciężka, jakby coś słuchało. Odpływa bez słowa, a wy zostajecie na złym brzegu.`, effects: [{ favor: { utopiona: -1 } }, { hp: -2, who: 'all' }] }) },
+            ] },
+          sad: {
+            when: (c) => c.mark('oszukales_przewoznika') || c.mark('sprzedales_znak'),
+            text: (c) => c.mark('sprzedales_znak')
+              ? `Łódź czeka na was, jakby wiedziała, którędy pójdziecie. Przewoźnik nie wstaje.\n\n— Znak chłopca — mówi — poszedł na wagę. Ktoś spod znaku Wagi obiecał kaplicę, a sprzedał ołów. Nie ty. Ale to samo miasto.\n\nPodnosi rękę i woda wokół łodzi staje. Dosłownie. — Pani nie nosi urazy. Pani nosi rachunki.`
+              : `Łódź czeka na was, jakby wiedziała, którędy pójdziecie. Przewoźnik nie wstaje.\n\n— Ktoś spod znaku Wagi — mówi — zapłacił mi kamykami. Nie ty. Ale kamyki mają ten sam herb, co ty.\n\nPodnosi rękę i woda wokół łodzi staje. Dosłownie. — Pani nie nosi urazy. Pani nosi rachunki.`,
+            choices: [
+              { label: 'Zapłać z nawiązką', cost: '10 monet', when: (c) => c.gold >= 10,
+                resolve: (c) => ({ text: `Waży monety. Kiwa głową.\n\n— Rachunek domknięty. Miasto niech wie, że u mnie się nie kredytuje.\n\nŁódź rusza i po raz pierwszy słyszysz, że woda się o nic nie prosi.`, effects: [{ gold: -10 }, { unmark: 'oszukales_przewoznika' }, { unmark: 'sprzedales_znak' }, { favor: { utopiona: 1 } }] }) },
+              { label: 'Zapłać krwią za cudzy dług', cost: '8 zdrowia',
+                resolve: (c) => ({ text: `Krew jest cenniejsza od monet, bo nie da się jej odzyskać. Pani przyjmuje ją bez ceremonii. Przewoźnik wyciera nóż o rękaw.\n\n— Nie twój dług — mówi prawie łagodnie. — Ale twoja krew. Tak to działa w mieście, w którym mieszkasz.`, effects: [{ hp: -8 }, { unmark: 'oszukales_przewoznika' }, { unmark: 'sprzedales_znak' }] }) },
+              { label: 'Odmów', cost: 'woda wstaje',
+                resolve: (c) => ({ text: `— W takim razie — mówi Przewoźnik i po prostu odpływa.\n\nWoda, która stała, rusza się. Ktoś się z niej podnosi. Kilku.`, effects: [{ combat: { enemies: ['topielec', 'topielec'], ambush: true } }] }) },
+            ] },
+        } },
+      /* ---- Ida Smolna: dezerterka, przyszła towarzyszka ---- */
+      { id: 'ida', name: 'Dezerterka', emblem: 'net', habitat: ['droga', 'sucho', 'trzciny'],
+        weight: (c) => (c.unlocked('ida') || c.companionDead('ida')) ? 0 : 1.4,
+        cells: {
+          prosba: {
+            when: (c) => !c.mark('okradles_ide'),
+            text: (c) => `Siedzi na pniu, z nogą owiniętą szmatą w kolorze, którego szmaty nie powinny mieć. Na ramieniu ma jeszcze naszywkę straży bagiennej Cechu, oderwaną do połowy — tyle, żeby nie kłamać, ale i nie przyznawać się.\n\n— Trzy dni — mówi, patrząc na wasze sakwy, nie na was. — Trzy dni temu poszłam za sierżantem na Pole Palików, bo tak kazał. Wróciłam sama. Cech to nazywa dezercją. Ja nazywam to arytmetyką.\n\nMa nóż, ale trzyma go tak, żebyście widzieli, że nie zamierza.`,
+            choices: [
+              { label: 'Daj jej wywar', cost: '1 wywar', when: (c) => c.has('wywar'),
+                resolve: (c) => ({ text: `Pije, jakby wywar był czymś, co się pamięta z dzieciństwa. Kolor wraca jej do twarzy w dwóch ratach.\n\n— Ida — mówi. — Smolna. W Odmęcie znajdziesz mnie w Tawernie pod Wagą, o ile mnie wcześniej nie powieszą. Znam bagno. Znam warty. Umiem rzucić sieć tak, że topielec zapomina, po co wstał.\n\nTo brzmi jak oferta. Na Bagnach Dłużników wszystko brzmi jak oferta.`, effects: [{ item: 'wywar', n: -1 }, { unlock: 'ida' }] }) },
+              { label: 'Zapłać jej za drogę', cost: '6 monet', when: (c) => c.gold >= 6,
+                resolve: (c) => ({ text: `Bierze monety i przelicza, bo nawyk to nawyk. Potem rysuje patykiem na błocie: grobla, ścieżka przez trzciny, miejsce, gdzie nie wolno stawać po zmroku.\n\n— Jak wrócisz, szukaj mnie w Tawernie pod Wagą. Będę tą, która nie pije, bo nie ma za co.`, effects: [{ gold: -6 }, { unlock: 'ida' }, { know: 'sciezki_strazy' }, { reveal: 'all' }] }) },
+              { label: 'Zostaw ją', cost: 'nic, teraz',
+                resolve: (c) => ({ text: `Nie protestuje. Ludzie, którzy trzy dni siedzą na pniu, nie mają już ochoty na protesty.\n\n— Powiedz w Cechu, że mnie nie ${c.g('widziałeś', 'widziałaś')} — mówi. — Będzie prawdą, jak wystarczająco długo poczekasz.\n\nOdchodzicie. Przez chwilę słyszysz, jak ostrzy nóż. Potem tylko bagno.`, effects: [{ mark: 'zostawiles_ide' }] }) },
+              { label: 'Zabierz jej nóż i sakwę', cost: 'sumienie, na kredyt',
+                resolve: (c) => ({ text: `Broni się krócej, niż byś ${c.g('chciał', 'chciała')}. Nóż jest dobry, sakwa chuda: cztery monety i suchar.\n\n— Cech by cię polubił — mówi, kiedy odchodzicie. Nie krzyczy. To gorsze.`, effects: [{ gold: 4 }, { mark: 'okradles_ide' }] }) },
+            ] },
+          sad: {
+            when: (c) => !!c.mark('okradles_ide'),
+            text: (c) => `Nie widzisz jej. Słyszysz gwizd — krótki, jak sygnał warty. Potem drugi, z innej strony. Straż bagienna uczy, jak zwoływać ludzi. Ida nauczyła się, jak zwoływać coś innego.\n\n— Cztery monety i suchar — niesie się nad trzcinami. — Cech by się śmiał. Ja się nie śmieję.\n\nWoda wstaje.`,
+            choices: [
+              { label: 'Rzuć jej wszystko, co masz', cost: (c) => `${c.gold} monet`, when: (c) => c.gold >= 8,
+                resolve: (c) => ({ text: `Sakiewka ląduje w błocie. Gwizd urywa się. Woda się kładzie.\n\n— Rachunek — mówi z ciemności. — Więcej cię nie znam.`, effects: [{ gold: -c.gold }, { unmark: 'okradles_ide' }] }) },
+              { label: 'Do broni', cost: 'walka z zasadzki',
+                resolve: (c) => ({ text: `Nie ma z kim rozmawiać. Jest tylko woda i to, co z niej wychodzi na gwizd.`, effects: [{ combat: { enemies: c.night ? ['topielec', 'ognik'] : ['topielec', 'topielec'], ambush: true } }] }) },
+            ] },
+        } },
+      /* ---- Kaznodzieja z Grobli: heretyk, który ma rację ---- */
+      { id: 'kaznodzieja', name: 'Kaznodzieja z Grobli', emblem: 'preacher', habitat: ['droga', 'święte', 'woda'],
+        weight: (c) => c.mark('ochrzczony') ? 0.2 : (c.wounded ? 1.6 : 1),
+        cells: {
+          pokusa: {
+            when: (c) => !c.mark('ochrzczony'),
+            text: (c) => `Stoi po kolana w wodzie i mówi do niej, jakby woda była tłumem. W pewnym sensie jest.\n\n— Cech waży — woła, nie odwracając się. — Rachmistrz liczy. A Pani? Pani tylko bierze, co tonie, i nigdy nie pyta o odsetki. Jedyny uczciwy wierzyciel w tym kraju!\n\nOdwraca się. Ma oczy człowieka, który wypłakał wszystko i teraz ma sucho. — ${c.wounded ? 'Jesteś ' + c.g('ranny', 'ranna') + '. Widzę.' : 'Jeszcze cały. Jeszcze.'} Woda to weźmie. Wejdź. Nie zabiera nic, czego byś nie ${c.g('oddał', 'oddała')} i tak.`,
+            choices: [
+              { label: 'Wejdź do wody', cost: 'księga Pani',
+                resolve: (c) => ({ text: `Woda jest ciepła, co jest najgorszą rzeczą, jaką mogła być. Rany zamykają się jak usta. Coś dotyka twojej kostki i puszcza — grzecznie, prawie z szacunkiem.\n\nKiedy wychodzisz, Kaznodzieja nie gratuluje. — Teraz jesteś w jej księdze — mówi. — Cech ma nosa do cudzych ksiąg.`, effects: [{ heal: 'full', who: 'all' }, { mark: 'ochrzczony' }, { favor: { utopiona: 2 } }, { favor: { rachmistrz: -1 } }] }) },
+              { label: 'Odmów, ale rzuć monetę Pani', cost: '1 moneta', when: (c) => c.gold >= 1,
+                resolve: (c) => ({ text: `Moneta tonie bez plusku. Kaznodzieja unosi brwi jak ktoś, kto widzi kompromis i szanuje go mniej niż grzech.\n\n— Skąpo — mówi. — Ale zapisane.`, effects: [{ gold: -1 }, { favor: { utopiona: 1 } }] }) },
+              { label: 'Nazwij go heretykiem i idź', cost: 'niełaska Pani',
+                resolve: (c) => ({ text: `— Heretyk — powtarza z zadowoleniem, jakbyś ${c.g('nadał', 'nadała')} mu tytuł. — Zapisz to w Cechu. Niech Rachmistrz ma rubrykę.\n\nIdziecie dalej. Woda za wami przez dłuższą chwilę się nie uspokaja.`, effects: [{ favor: { rachmistrz: 1 } }, { favor: { utopiona: -1 } }] }) },
+            ] },
+          targ: {
+            when: (c) => !c.know('slowa_dla_utopionych'),
+            text: (c) => `— Nie wiesz, jak się z nimi mówi — stwierdza Kaznodzieja, patrząc na twoje ręce, jakby to one miały rozmawiać. — Wszyscy z Odmętu przychodzicie tu z ogniem i solą, a nikt nie przychodzi ze słowami.\n\n— Utopieni są dłużnikami. Dłużnik chce jednej rzeczy: żeby ktoś powiedział, że rachunek jest zamknięty.\n\nWyciąga rękę. Nawet heretycy jedzą.`,
+            choices: [
+              { label: 'Zapłać za słowa', cost: '7 monet', when: (c) => c.gold >= 7,
+                resolve: (c) => ({ text: `Uczy cię trzech zdań. Są krótkie, urzędowe, brzmią jak formuła z księgi Cechu — bo nią są.\n\n— Utopieni nie chcą modlitwy — mówi. — Chcą pokwitowania.`, effects: [{ gold: -7 }, { know: 'slowa_dla_utopionych' }] }) },
+              { label: 'Odmów', cost: 'czas na sprzeczkę',
+                resolve: (c) => ({ text: `— Sól i ogień — wzdycha. — Jak wszyscy.\n\nKłócicie się jeszcze chwilę, bo Kaznodzieja lubi się kłócić, a ty nie lubisz przegrywać. Słońce tymczasem robi swoje.`, effects: [{ time: 1 }] }) },
+            ] },
+        } },
+      /* ---- Poborca Cechu: sucha władza na mokrej grobli ---- */
+      { id: 'poborca', name: 'Poborca Cechu', emblem: 'scales', habitat: ['droga'], deathCause: (c) => 'zatłukły kije Cechu',
+        weight: (c) => (c.mark('dlug') ? 1.2 : 0) + (c.depth <= 3 ? 1 : 0.4) + (c.gold >= 10 ? 0.6 : 0),
+        cells: {
+          myto: {
+            when: (c) => !c.mark('dlug'),
+            text: (c) => `Trzech ludzi na grobli, suchych — co na Bagnach Dłużników jest samo w sobie oznaką władzy. Środkowy ma na piersi wagę z cyny i minę, która ważyła już wszystko.\n\n— Cło od znalezisk — mówi. — Cech utrzymuje groblę. Grobla utrzymuje was. Piąta część, z góry, bo z dołu wraca mniej ludzi, niż wychodzi.\n\nDwaj pozostali nie sięgają po broń. Nie muszą; to jest ich argument.`,
+            choices: [
+              { label: 'Zapłać piątą część', cost: (c) => `${Math.max(1, Math.ceil(c.gold / 5))} monet`,
+                resolve: (c) => ({ text: `Odlicza, waży, zapisuje. Otrzymujesz kwit — kawałek cyny z odciśniętą wagą. W Odmęcie kwit jest wart więcej niż to, co za niego ${c.g('dałeś', 'dałaś')}: znaczy, że istniejesz.`, effects: [{ gold: -Math.max(1, Math.ceil(c.gold / 5)) }, { rep: { cech_wagi: 1 } }] }) },
+              { label: 'Pokaż glejt Cechu', cost: 'nic — jesteś Klientem', when: (c) => c.tier('cech_wagi') >= GUILDS.cech_wagi.charterTier,
+                resolve: (c) => ({ text: `Patrzy na glejt, potem na ciebie, i przez sekundę widzisz w jego oczach coś, co w Cechu uchodzi za szacunek: rachunek, który się zgadza.\n\n— Przejście — mówi. — Cech pozdrawia.`, effects: [{ favor: { rachmistrz: 1 } }] }) },
+              { label: 'Skłam, że nic nie masz', cost: 'pióro Poborcy', when: (c) => c.gold >= 3,
+                resolve: (c) => c.rng.chance(0.55)
+                  ? { text: `Kiwa głową, zapisuje zero. Nie wierzy ci; po prostu nie opłaca mu się szukać. Gdy odchodzicie, słyszysz jego pióro.\n\nCech nie wierzy i nie zapomina — tylko czeka, aż dług sam się zbierze.`, effects: [{ mark: 'oklamales_poborce' }] }
+                  : { text: `— Sakwa — mówi. Jeden z jego ludzi ją otwiera. Liczy powoli, żeby ci nie umknęła żadna sekunda. Zabierają połowę.\n\n— Za kłamstwo — wyjaśnia, jak nauczyciel.`, effects: [{ gold: -Math.ceil(c.gold / 2) }, { rep: { cech_wagi: -1 } }] } },
+              { label: 'Odmów', cost: 'wpis w księdze',
+                resolve: (c) => ({ text: `— Odmowa — powtarza i zapisuje to słowo tak starannie, jakby było twoim nazwiskiem. W pewnym sensie jest.\n\nNie zatrzymują was. Cech nie zatrzymuje. Cech dopisuje.`, effects: [{ rep: { cech_wagi: -1 } }, { mark: 'dlug' }] }) },
+            ] },
+          sad: {
+            when: (c) => !!c.mark('dlug'),
+            text: (c) => `Ten sam Poborca, ta sama cynowa waga, ale tym razem stoi na środku grobli, a jego ludzie po bokach — układ, w którym nie ma miejsca na „może".\n\n— Dług — mówi i pokazuje ci twoje własne nazwisko w księdze. Nie pamiętasz, żebyś je ${c.g('podawał', 'podawała')}. Cech nie potrzebuje, żeby mu podawać.`,
+            choices: [
+              { label: 'Spłać', cost: '12 monet', when: (c) => c.gold >= 12,
+                resolve: (c) => ({ text: `Waży. Zgadza się. Skreśla.\n\nUczucie, które ci zostaje, przypomina ulgę, ale nią nie jest; to tylko cisza po skreśleniu.`, effects: [{ gold: -12 }, { unmark: 'dlug' }, { rep: { cech_wagi: 1 } }] }) },
+              { label: 'Oddaj przedmiot', cost: (c) => `1 × ${ITEMS[c.firstItem()].name.toLowerCase()}`, when: (c) => !!c.firstItem(),
+                resolve: (c) => ({ text: `Bierze, ogląda, wpisuje wartość, która jest mniejsza, niż myślisz, i większa, niż by ci przyznał.\n\n— Wystarczy — mówi. Dług nie znika z twarzy Poborcy. Znika tylko z księgi, a to w Odmęcie ważniejsze.`, effects: [{ item: c.firstItem(), n: -1 }, { unmark: 'dlug' }] }) },
+              { label: 'Odmów', cost: 'kije Cechu',
+                resolve: (c) => ({ text: `Nie biją długo. Cech nie płaci im za entuzjazm, tylko za dokładność.\n\nZostawiają cię w błocie z nazwiskiem w księdze i jednym słowem dopisanym obok. Nie widzisz jakim.`, effects: [{ hp: -6 }, { rep: { cech_wagi: -2 } }] }) },
+            ] },
+        } },
+      /* ---- Utopieni: miejsce, które ma wolę ---- */
+      { id: 'utopieni', name: 'Utopiony dłużnik', emblem: 'token', habitat: ['woda', 'umarli'],
+        weight: (c) => (c.night ? 1.6 : 1) * (c.depth >= 3 ? 1.4 : 0.8),
+        cells: {
+          pokusa: {
+            text: (c) => `Leży twarzą w dół, w wodzie na tyle płytkiej, żeby nie utonąć, gdyby żył. Nie żyje. Na szyi ma ołowiany znak Cechu, przy pasie sakiewkę, której nikt nie ruszył, bo tutaj wszyscy wiedzą, czyje to.\n\nWoda wokół niego jest zupełnie spokojna, w sposób, w jaki spokojne są rzeczy, które czekają.`,
+            choices: [
+              { label: 'Weź sakiewkę', cost: 'spokój wody',
+                resolve: (c) => { const g = c.rng.int(6, 10); return { text: `Sakiewka puszcza z mokrym trzaskiem. ${g} monet, ciężkich, jakby nasiąkły.\n\nWoda pozostaje spokojna. To nie jest dobra wiadomość; to jest cierpliwość.`, effects: [{ gold: g }, { mark: 'obrabowales_topielca' }, { favor: { utopiona: -2 } }] }; } },
+              { label: 'Rzuć mu monetę', cost: '1 moneta', when: (c) => c.gold >= 1,
+                resolve: (c) => ({ text: `Moneta ląduje obok jego dłoni i tonie. Dłoń — przysięgasz, że tak było — zaciska się. Woda przez chwilę ma zapach soli.\n\nPani zapisała.`, effects: [{ gold: -1 }, { favor: { utopiona: 1 } }] }) },
+              { label: 'Powiedz słowa', cost: 'trzy zdania', when: (c) => c.know('slowa_dla_utopionych'),
+                resolve: (c) => ({ text: `Trzy zdania. Krótkie, urzędowe. Kiedy kończysz, ciało obraca się na plecy, powoli, jak ktoś, kto się budzi. Nie ma twarzy. Ma sakiewkę, którą podsuwa ci ręką.\n\nRachunek zamknięty. Kto by pomyślał, że tak niewiele im trzeba.`, effects: [{ gold: 8 }, { favor: { utopiona: 2 } }] }) },
+              { label: 'Odejdź', cost: 'woda za plecami',
+                resolve: (c) => ({ text: `Odchodzicie, nie odwracając się. Nie trzeba się odwracać, żeby wiedzieć, że woda za wami przestała być spokojna.`, effects: [{ mark: 'minales_topielca' }] }) },
+            ] },
+          skarbiec: {
+            text: (c) => `Na ołtarzu ktoś — wielu ktosiów — odkładał przez dziesięciolecia to, co Cech kazał oddać, a Pani nie chciała: pierścienie, kwity, jedną koronę z cyny. Skarb dłużników.\n\nNikt go nie pilnuje. To znaczy: nikt, kogo widać.${c.mark('ograbiles_kaplice') ? '\n\nWoda w nawie stoi wyżej niż ostatnio. Ktoś już tu był spod znaku Wagi. Ktoś jak ty.' : ''}`,
+            choices: [
+              { label: 'Zabierz wszystko', cost: 'kaplica zapamięta',
+                resolve: (c) => ({ text: `Bierzesz. Woda w kaplicy podnosi się o palec, potem o dwa. Na drugim brzegu ktoś się śmieje — Przewoźnik albo ktoś, kto się od niego nauczył.\n\nDo miasta wracasz ${c.g('bogaty', 'bogata')} i bardzo, bardzo ${c.g('obserwowany', 'obserwowana')}.`, effects: [{ gold: 25 }, { favor: { utopiona: -3 } }, { mark: 'ograbiles_kaplice' }] }) },
+              { label: 'Weź tyle, ile zważysz jedną ręką', cost: 'reszta zostaje',
+                resolve: (c) => ({ text: `Cech uczy: bierz tyle, ile udźwigniesz na wadze. Bierzesz tyle. Woda nie drgnie.\n\nGdzieś pod ołtarzem coś odlicza i wychodzi mu na zero.`, effects: [{ gold: 12 }] }) },
+              { label: 'Zostaw ofiarę, weź kwity', cost: '3 monety', when: (c) => c.gold >= 3 && !c.know('kwity_kaplicy'),
+                resolve: (c) => ({ text: `Kwity są miękkie jak liście, ale pieczęcie trzymają. Nazwiska. Sumy. Rzeczy, których Cech Wagi bardzo chciałby nie mieć na wierzchu.\n\nPani pozwala ci je wziąć; Pani lubi, kiedy ktoś inny płaci.`, effects: [{ gold: -3 }, { know: 'kwity_kaplicy' }, { favor: { utopiona: 2 } }] }) },
+            ] },
+        } },
+    ],
+    rest: {
+      state: (c) => {
+        const L = [];
+        if (c.night) L.push(`Jest noc. Na Bagnach noc nie jest porą, tylko właścicielem.`);
+        if (c.wounded) L.push(`Rany otwierają się przy każdym ruchu, jakby chciały zobaczyć, gdzie jesteś.`);
+        if (c.hero.mp < c.hero.maxMp / 3) L.push(`W głowie masz popiół tam, gdzie rano był ogień.`);
+        if (c.companion) L.push(`${c.companion.short} rozstawia warty, zanim ktokolwiek zdąży zapytać. Straż bagienna uczy tego pierwszego dnia, żeby drugiego było komu uczyć dalej.`);
+        if (c.has('znak_topielca')) L.push(`Ołowiany znak w sakwie jest cięższy, niż ważył rano.`);
+        if (c.mark('obrabowales_topielca') || c.mark('ograbiles_kaplice')) L.push(`Woda przy obozie jest zupełnie spokojna. Za spokojna. Coś, czemu się nie podobacie, wie, gdzie śpicie.`);
+        if (!L.length) L.push(`Nic się nie dzieje, co na Bagnach jest zdarzeniem.`);
+        return L.join(' ');
+      },
+      sleep: (c) => `Śpicie. Bagno robi swoje: sen ma smak wody, a sny — dłużników. Świt przychodzi jak poborca, dokładnie o czasie.`,
+      watch: (c) => `Czuwacie na zmianę. Sen na raty leczy na raty, ale nikt nie wstał z wody, żeby sprawdzić, kto śpi.`,
+      ambush: (c) => `Budzi cię woda. Nie plusk — ciężar. Coś stoi nad obozem i czeka, aż otworzysz oczy, bo lubi, jak się patrzy.`,
+      ambushWeights: { topielec: 1.5, ognik: 1 },
+    },
+    ambushChance: (c) => (c.night ? 0.35 : 0.12) * (c.companion && COMPANIONS[c.companion.id].restWard ? COMPANIONS[c.companion.id].restWard : 1) * (c.mark('minales_topielca') ? 1.5 : 1),
+    combat: {
+      ambushLine: (c) => `Nie zdążyliście dobyć broni. Bagno nie ma zwyczaju pukać.`,
+    },
+  },
+};
+
+/* ============================================================
+   1. NARZĘDZIA
+   ============================================================ */
+const $ = (sel, root = document) => root.querySelector(sel);
+const esc = (s) => String(s).replace(/[&<>"]/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]));
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const pl = (n, forms) => { const a = Math.abs(n); if (a === 1) return forms[0]; const m10 = a % 10, m100 = a % 100; return (m10 >= 2 && m10 <= 4 && (m100 < 12 || m100 > 14)) ? forms[1] : forms[2]; };
+const sign = (n) => (n > 0 ? '+' : '−') + Math.abs(n);
+const paras = (t) => String(t).split(/\n\n+/).map((p, i) => `<p class="${i === 0 ? 'cap' : ''}">${esc(p).replace(/\n/g, '<br>')}</p>`).join('');
+
+/* generator losowy z ziarnem: stan zapisywany, więc odświeżenie strony niczego nie przelosowuje */
+function makeRng(seed) {
+  const r = { state: seed >>> 0 };
+  r.next = () => { let t = (r.state = (r.state + 0x6D2B79F5) >>> 0); t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+  r.int = (a, b) => a + Math.floor(r.next() * (b - a + 1));
+  r.chance = (p) => r.next() < p;
+  r.pick = (arr) => arr[Math.floor(r.next() * arr.length)];
+  r.weighted = (items, wfn) => { const ws = items.map(wfn); const tot = ws.reduce((a, b) => a + Math.max(0, b), 0); if (tot <= 0) return null; let x = r.next() * tot; for (let i = 0; i < items.length; i++) { x -= Math.max(0, ws[i]); if (x < 0) return items[i]; } return items[items.length - 1]; };
+  return r;
+}
+const RNG = makeRng((Date.now() ^ (Math.random() * 1e9)) >>> 0);
+
+/* imiona z sylab: reguła, nie lista */
+const NAMEGEN = {
+  onsets: ['b', 'd', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'r', 's', 't', 'w', 'z', 'br', 'dr', 'gr', 'kr', 'sk', 'st', 'tr', 'wr', 'sw'],
+  nuclei: ['a', 'e', 'i', 'o', 'u', 'y', 'a', 'e', 'o'],
+  codas: ['', '', 'n', 'r', 'l', 's', 't', 'k', 'm', 'w', 'sz', 'rn', 'lt', 'st', 'rd', 'nt'],
+};
+function genName(rng) {
+  const f = rng.chance(0.5);
+  const syl = () => rng.pick(NAMEGEN.onsets) + rng.pick(NAMEGEN.nuclei);
+  let n = syl();
+  if (rng.chance(0.55)) n += syl();
+  n = f ? n.replace(/[aeiouy]$/, '') + 'a' : n + rng.pick(NAMEGEN.codas.filter(Boolean));
+  if (n.length < 4) n += f ? 'na' : 'ek';
+  return { name: n[0].toUpperCase() + n.slice(1) + ' ' + rng.pick(CFG.city.districts), f };
+}
+
+/* ============================================================
+   2. STAN — jedna struktura, zapisywana w całości
+   ============================================================ */
+let S = null;
+function newCity() {
+  const rep = {}, favor = {}; for (const g in GUILDS) rep[g] = 0; for (const g in GODS) favor[g] = 0;
+  return { day: 1, gold: 0, rep, favor, knowledge: [], companions: {}, upgrades: [], marks: {}, chronicle: [], heroes: 0, expeditions: 0, delivered: {}, contracts: null };
+}
+function newState() { return { v: CFG.version, rngState: RNG.state, city: newCity(), hero: null, exp: null, combat: null, screen: 'title', reck: null, death: null }; }
+function newHero(archId, name, f) {
+  const a = ARCHETYPES[archId];
+  return { uid: 'hero', id: 'hero', archId, name: name.split(' ')[0], full: name, short: name.split(' ')[0], f, emblem: a.emblem, hp: a.hp, maxHp: a.hp, mp: a.mp, maxMp: a.mp, atk: a.atk.slice(), def: a.def, spd: a.spd, items: {}, gold: 0, marks: {}, status: {} };
+}
+function companionUnit(id, city) {
+  const c = COMPANIONS[id], scars = (city && city.companions[id] && city.companions[id].scars) || 0;
+  const hp = Math.max(CFG.balance.scarFloor, c.hp - scars * CFG.balance.scarHp);
+  return { uid: 'c_' + id, id, name: c.short, full: c.name, short: c.short, f: c.f, emblem: c.emblem, hp, maxHp: hp, mp: c.mp, maxMp: c.mp, atk: c.atk.slice(), def: c.def, spd: c.spd, status: {}, scars };
+}
+function companionScar(S, u) { const rec = S.city.companions[u.id]; rec.scars = (rec.scars || 0) + 1; u.down = false; u.deadNoted = false; u.hp = 1; u.maxHp = Math.max(CFG.balance.scarFloor, u.maxHp - CFG.balance.scarHp); }
+function companionDies(S, u, cause) { const rec = S.city.companions[u.id]; if (!rec || !rec.alive) return; rec.alive = false; S.city.chronicle.push({ name: u.full, arch: 'towarzyszka', cause, place: S.exp && S.exp.encounter ? findPlace(REGIONS[S.exp.regionId], S.exp.encounter.placeId).name : '', day: S.city.day, n: S.city.expeditions, companion: true }); }
+function abilityOf(u) { return u.id === 'hero' ? ARCHETYPES[u.archId].ability : COMPANIONS[u.id].ability; }
+
+function save() {
+  try { S.rngState = RNG.state; localStorage.setItem(CFG.saveKey, JSON.stringify(S)); } catch (e) { /* brak miejsca lub tryb prywatny: gra działa dalej bez zapisu */ }
+}
+function load() {
+  try {
+    const raw = localStorage.getItem(CFG.saveKey); if (!raw) return null;
+    const s = JSON.parse(raw); if (!s || s.v !== CFG.version) return null;
+    RNG.state = s.rngState >>> 0; return s;
+  } catch (e) { return null; }
+}
+function wipe() { try { localStorage.removeItem(CFG.saveKey); } catch (e) { } }
+function hasSave() { try { return !!localStorage.getItem(CFG.saveKey); } catch (e) { return false; } }
+
+/* ---------- pomocnicy stanu ---------- */
+const phaseOf = (step) => CFG.phases[Math.floor(step / CFG.stepsPerPhase) % CFG.phases.length];
+const dayOf = (step) => Math.floor(step / (CFG.stepsPerPhase * CFG.phases.length)) + 1;
+function tierIndex(city, gid) { const t = GUILDS[gid].tiers; let i = 0; for (let k = 0; k < t.length; k++) if (city.rep[gid] >= t[k].min) i = k; return i; }
+function tierName(city, gid) { return GUILDS[gid].tiers[tierIndex(city, gid)].name; }
+function nextTier(city, gid) { const t = GUILDS[gid].tiers, i = tierIndex(city, gid); return i + 1 < t.length ? t[i + 1] : null; }
+function findPlace(region, id) { return region.places.find((p) => p.id === id); }
+function findActor(region, id) { return region.actors.find((a) => a.id === id); }
+function partyAlive(S) { return S.exp ? S.exp.party.filter((u) => u.hp > 0) : [S.hero]; }
+function revealAhead(S) { let n = CFG.map.revealAhead; for (const k of S.city.knowledge) n += KNOWLEDGE[k].revealAhead || 0; return n; }
+
+/* kontekst reguł: wszystko, o co pytają wagi, warunki i teksty */
+function makeCtx(S, extra = {}) {
+  const hero = S.hero, city = S.city, exp = S.exp;
+  const region = extra.region || (exp ? REGIONS[exp.regionId] : null);
+  const phase = exp ? phaseOf(exp.step) : CFG.phases[1];
+  const place = extra.place || (exp && exp.encounter && region ? findPlace(region, exp.encounter.placeId) : null);
+  const party = exp ? exp.party : [hero];
+  const b = CFG.balance;
+  return {
+    S, hero, city, exp, region, phase, night: phase.night, place, party, rng: RNG,
+    depth: exp ? exp.depth : 0,
+    gold: hero ? hero.gold : 0, hp: hero ? hero.hp : 0, maxHp: hero ? hero.maxHp : 1,
+    wounded: hero ? hero.hp < hero.maxHp * b.woundedBelow : false,
+    healthy: hero ? hero.hp >= hero.maxHp * b.healthyAbove : true,
+    poor: hero ? hero.gold < b.poorBelow : true, rich: hero ? hero.gold >= b.richAbove : false,
+    has: (id) => (hero && hero.items[id]) || 0,
+    know: (id) => city.knowledge.includes(id),
+    mark: (id) => ((hero && hero.marks[id]) || 0) + (city.marks[id] || 0),
+    favor: (id) => city.favor[id] || 0,
+    rep: (id) => city.rep[id] || 0,
+    tier: (id) => tierIndex(city, id),
+    unlocked: (id) => !!(city.companions[id] && city.companions[id].alive),
+    companionDead: (id) => !!(city.companions[id] && !city.companions[id].alive),
+    companion: party.find((u) => u.id !== 'hero' && u.hp > 0) || null,
+    g: (m, f) => (hero && hero.f ? f : m),
+    name: hero ? hero.short : '',
+    firstItem: () => (hero ? Object.keys(hero.items).find((id) => hero.items[id] > 0 && !ITEMS[id].quest) : null) || null,
+    cityMarks: () => Object.keys(city.marks).filter((id) => city.marks[id] > 0),
+  };
+}
+
+/* ---------- efekty: dane, które silnik stosuje i streszcza ---------- */
+function applyEffects(S, effects, opts = {}) {
+  const fx = []; const hero = S.hero, city = S.city, exp = S.exp;
+  const units = (who) => (who === 'all' ? partyAlive(S) : [hero]);
+  for (const e of effects || []) {
+    if (e.gold != null) { const n = e.gold < 0 ? -Math.min(hero.gold, -e.gold) : e.gold; hero.gold += n; if (n) fx.push(`${sign(n)} ${pl(n, ['moneta', 'monety', 'monet'])}`); }
+    if (e.hp != null) { for (const u of units(e.who)) { u.hp = clamp(u.hp + e.hp, 0, u.maxHp); } fx.push(`${sign(e.hp)} zdrowia${e.who === 'all' ? ' (wszyscy)' : ''}`); if (e.hp < 0) checkDeaths(S, opts.cause || 'zabrały Bagna'); }
+    if (e.heal != null) { for (const u of units(e.who)) { const n = e.heal === 'full' ? u.maxHp : e.heal === 'third' ? Math.ceil(u.maxHp / 3) : e.heal; u.hp = clamp(u.hp + n, 0, u.maxHp); } fx.push(e.heal === 'full' ? 'rany zamknięte' : `+${e.heal === 'third' ? 'trzecia część' : e.heal} zdrowia${e.who === 'all' ? ' (wszyscy)' : ''}`); }
+    if (e.mp != null) { hero.mp = clamp(hero.mp + e.mp, 0, hero.maxMp); fx.push(`${sign(e.mp)} woli`); }
+    if (e.mana === 'full') { for (const u of partyAlive(S)) u.mp = u.maxMp; fx.push('wola odzyskana'); }
+    if (e.item) { const n = e.n || 1; hero.items[e.item] = Math.max(0, (hero.items[e.item] || 0) + n); if (!hero.items[e.item]) delete hero.items[e.item]; fx.push(`${sign(n)} ${ITEMS[e.item].name.toLowerCase()}`); }
+    if (e.mark) { const m = MARKS[e.mark]; const store = m.scope === 'city' ? city.marks : hero.marks; store[e.mark] = (store[e.mark] || 0) + 1; fx.push(`znak: ${m.label}`); }
+    if (e.unmark) { if (city.marks[e.unmark] || hero.marks[e.unmark]) { delete city.marks[e.unmark]; delete hero.marks[e.unmark]; fx.push('znak zmazany'); } }
+    if (e.favor) for (const g in e.favor) { city.favor[g] = clamp((city.favor[g] || 0) + e.favor[g], -CFG.balance.favorCap, CFG.balance.favorCap); fx.push(`${GODS[g].name}: łaska ${sign(e.favor[g])}`); }
+    if (e.rep) for (const g in e.rep) { city.rep[g] = Math.max(0, (city.rep[g] || 0) + e.rep[g]); fx.push(`${GUILDS[g].name}: ${sign(e.rep[g])}`); }
+    if (e.know && !city.knowledge.includes(e.know)) { city.knowledge.push(e.know); fx.push(`wiedza: ${KNOWLEDGE[e.know].name}`); }
+    if (e.unlock) { const c = COMPANIONS[e.unlock]; if (!city.companions[e.unlock]) { city.companions[e.unlock] = { alive: true }; fx.push(`${c.name} czeka w Odmęcie`); } }
+    if (e.time && exp) { exp.step += e.time; fx.push(`mija czas: ${phaseOf(exp.step).label.toLowerCase()}`); }
+    if (e.reveal && exp) { if (e.reveal === 'all') { exp.revealAll = true; fx.push('szlak odsłonięty'); } else { exp.revealBonus = (exp.revealBonus || 0) + (e.n || 1); fx.push('widzisz dalej'); } }
+    if (e.treasury != null) { city.gold = Math.max(0, city.gold + e.treasury); fx.push(`skarbiec: ${sign(e.treasury)}`); }
+    if (e.combat) { S.pendingCombat = e.combat; fx.push('walka'); }
+  }
+  return fx;
+}
+function checkDeaths(S, cause) {
+  for (const u of (S.exp ? S.exp.party : [S.hero])) {
+    if (u.hp > 0 || u.deadNoted) continue;
+    u.deadNoted = true;
+    if (u.id === 'hero') { S.pendingDeath = cause; }
+    else { u.down = true; }
+  }
+}
+
+/* ============================================================
+   3. SILNIKI — mapa, spotkania, walka, bogowie, powrót, śmierć.
+   Nie znają żadnych nazw z konfiguracji.
+   ============================================================ */
+const MAP = { W: 360, H: 560, padX: 46, padY: 50 };
+function genMap(rng, length) {
+  const nodes = [], edges = [], layers = [];
+  const yAt = (d) => MAP.H - MAP.padY - d * ((MAP.H - 2 * MAP.padY) / length);
+  const add = (d, kind, x) => { const n = { id: nodes.length, depth: d, kind, x, y: yAt(d) + (d === 0 || d === length ? 0 : rng.int(-9, 9)), visited: false, resolved: false }; nodes.push(n); layers[d].push(n); return n; };
+  layers[0] = []; add(0, 'miasto', MAP.W / 2);
+  const genKinds = Object.values(KINDS).filter((k) => k.gen && k.id !== 'cel');
+  let sinceRest = 0;
+  for (let d = 1; d < length; d++) {
+    layers[d] = [];
+    const k = rng.int(CFG.map.minPerLayer, CFG.map.maxPerLayer);
+    let restHere = false;
+    for (let i = 0; i < k; i++) {
+      const x = MAP.padX + ((MAP.W - 2 * MAP.padX) * (i + 1)) / (k + 1) + rng.int(-16, 16);
+      let kind;
+      if (!restHere && sinceRest >= CFG.map.restWindow - 1 && i === k - 1) kind = 'odpoczynek';
+      else kind = rng.weighted(genKinds, (kk) => (kk.id === 'odpoczynek' && (restHere || d === 1)) ? 0 : kk.weight(d)).id;
+      if (kind === 'odpoczynek') restHere = true;
+      add(d, kind, x);
+    }
+    sinceRest = restHere ? 0 : sinceRest + 1;
+  }
+  layers[length] = []; add(length, 'cel', MAP.W / 2 + rng.int(-28, 28));
+  for (let d = 0; d < length; d++) {
+    const A = layers[d].slice().sort((a, b) => a.x - b.x), B = layers[d + 1].slice().sort((a, b) => a.x - b.x);
+    const has = (a, b) => edges.some((e) => e[0] === a.id && e[1] === b.id);
+    for (const a of A) {
+      const near = B.slice().sort((p, q) => Math.abs(p.x - a.x) - Math.abs(q.x - a.x));
+      edges.push([a.id, near[0].id]);
+      if (near[1] && rng.chance(CFG.map.extraEdgeChance) && !has(a, near[1])) edges.push([a.id, near[1].id]);
+    }
+    for (const b of B) if (!edges.some((e) => e[1] === b.id)) { const near = A.slice().sort((p, q) => Math.abs(p.x - b.x) - Math.abs(q.x - b.x)); edges.push([near[0].id, b.id]); }
+  }
+  return { nodes, edges, length, seed: rng.int(1, 1e9) };
+}
+function nodeKnown(S, n) { const exp = S.exp; if (n.visited || exp.revealAll || n.kind === 'miasto' || n.kind === 'cel') return true; const cur = exp.map.nodes[exp.cur]; return n.depth <= cur.depth + revealAhead(S) + (exp.revealBonus || 0); }
+function nextNodes(S) { const exp = S.exp, cur = exp.map.nodes[exp.cur]; if (!cur.resolved) return []; return exp.map.edges.filter((e) => e[0] === cur.id).map((e) => exp.map.nodes[e[1]]); }
+
+/* ---------- wyprawa ---------- */
+function genContracts(city) {
+  const tier = tierIndex(city, 'cech_wagi');
+  const regions = Object.values(REGIONS).filter((r) => (r.requiresTier || 0) <= tier);
+  const out = [];
+  for (const r of regions) {
+    const base = Math.min(CFG.contracts.maxLength, CFG.contracts.baseLength + Math.floor(tier / 2));
+    const goal = findPlace(r, r.goal.place);
+    out.push({ regionId: r.id, length: base, name: `Zwiad: ${r.name}`, desc: `${base} ${pl(base, ['przejście', 'przejścia', 'przejść'])} do celu: ${goal.name}. Cech płaci za to, co wróci.`, reward: { gold: base * CFG.contracts.goldPerLayer, rep: base * CFG.contracts.repPerLayer } });
+    const long = Math.min(CFG.contracts.maxLength, base + CFG.contracts.longExtra);
+    out.push({ regionId: r.id, length: long, name: `Kontrakt: ${goal.name}`, desc: `${long} ${pl(long, ['przejście', 'przejścia', 'przejść'])}. Dłuższy szlak, głębsze bagno, lepsza zapłata — i więcej okazji, żeby nie wrócić.`, reward: { gold: Math.floor(long * CFG.contracts.goldPerLayer * 1.5), rep: Math.floor(long * CFG.contracts.repPerLayer * 1.5) } });
+  }
+  return out;
+}
+function startExpedition(S, contract, companionIds) {
+  const hero = S.hero, city = S.city;
+  const adv = city.upgrades.reduce((a, id) => Math.max(a, UPGRADES[id].advance || 0), CFG.advance.gold);
+  hero.gold += adv;
+  const kit = Object.assign({}, ARCHETYPES[hero.archId].kit);
+  for (const id of city.upgrades) for (const k in (UPGRADES[id].kit || {})) kit[k] = (kit[k] || 0) + UPGRADES[id].kit[k];
+  for (const k in kit) hero.items[k] = (hero.items[k] || 0) + kit[k];
+  hero.status = {}; hero.deadNoted = false; hero.hp = hero.maxHp; hero.mp = hero.maxMp;
+  const party = [hero, ...companionIds.filter((id) => city.companions[id] && city.companions[id].alive).slice(0, CFG.party.maxCompanions).map((id) => companionUnit(id, city))];
+  city.expeditions++;
+  S.exp = { regionId: contract.regionId, contract, map: genMap(RNG, contract.length), cur: 0, depth: 0, step: 0, party, advance: adv, encounter: null, seenCells: [], lastPlace: null, lastActor: null, prayed: {}, revealAll: false, revealBonus: 0, goalReached: false };
+  S.exp.map.nodes[0].visited = true; S.exp.map.nodes[0].resolved = true;
+  S.screen = 'map'; save();
+}
+function enterNode(S, id) {
+  const exp = S.exp, node = exp.map.nodes[id];
+  if (!nextNodes(S).some((n) => n.id === id)) return;
+  exp.cur = id; exp.depth = node.depth; exp.step++; node.visited = true;
+  exp.encounter = KINDS[node.kind].gen(S, node);
+  S.screen = 'encounter'; save();
+}
+function resolveNode(S) {
+  const exp = S.exp, node = exp.map.nodes[exp.cur];
+  node.resolved = true; if (node.kind === 'cel') exp.goalReached = true;
+  exp.encounter = null; S.screen = 'map'; save();
+}
+
+/* ---------- spotkania: reguły wybierają miejsce × aktora × napięcie ---------- */
+const mode = (arr) => arr.slice().sort((a, b) => arr.filter((v) => v === a).length - arr.filter((v) => v === b).length).pop();
+function pickPlace(S, region, filter) {
+  const exp = S.exp;
+  let c = region.places.filter((p) => !p.goal && filter(p));
+  if (c.length > 1) c = c.filter((p) => p.id !== exp.lastPlace);
+  if (!c.length) c = region.places.filter((p) => !p.goal);
+  const p = RNG.pick(c); exp.lastPlace = p.id; return p;
+}
+function genChoice(S, node) {
+  const region = REGIONS[S.exp.regionId];
+  const ctx = makeCtx(S, { region, place: null });
+  const cands = [];
+  for (const actor of region.actors) {
+    const aw = actor.weight ? actor.weight(ctx) : 1; if (aw <= 0) continue;
+    for (const tid in actor.cells) {
+      const cell = actor.cells[tid], T = TENSIONS[tid];
+      if (cell.when && !cell.when(ctx)) continue;
+      const aff = T.affinity(ctx); if (aff <= 0) continue;
+      const key = actor.id + '/' + tid;
+      let w = aw * aff * (cell.weight ? cell.weight(ctx) : 1);
+      if (S.exp.seenCells.includes(key)) w *= 0.25;
+      if (S.exp.lastActor === actor.id) w *= 0.3;
+      cands.push({ actor, tid, cell, key, w });
+    }
+  }
+  const pick = RNG.weighted(cands, (c) => c.w);
+  if (!pick) return genRest(S, node);
+  const place = pickPlace(S, region, (p) => p.tags.some((t) => pick.actor.habitat.includes(t)));
+  S.exp.seenCells.push(pick.key); S.exp.lastActor = pick.actor.id;
+  const c2 = makeCtx(S, { region, place });
+  return { kind: 'wybor', placeId: place.id, actorId: pick.actor.id, tensionId: pick.tid, text: place.beat(c2) + '\n\n' + pick.cell.text(c2), stage: 'open', weather: region.weather(c2.phase, RNG) };
+}
+function genGoal(S, node) {
+  const region = REGIONS[S.exp.regionId], g = region.goal;
+  const place = findPlace(region, g.place), actor = findActor(region, g.actor), cell = actor.cells[g.tension];
+  const c = makeCtx(S, { region, place }); S.exp.lastPlace = place.id;
+  return { kind: 'wybor', goal: true, placeId: place.id, actorId: actor.id, tensionId: g.tension, text: place.beat(c) + '\n\n' + cell.text(c), stage: 'open', weather: region.weather(c.phase, RNG) };
+}
+function choiceCell(S, enc) { return findActor(REGIONS[S.exp.regionId], enc.actorId).cells[enc.tensionId]; }
+function choiceOptions(S, enc) { const ctx = makeCtx(S); return choiceCell(S, enc).choices.map((ch, i) => ({ ch, i })).filter((o) => !o.ch.when || o.ch.when(ctx)); }
+function chooseOption(S, i) {
+  const enc = S.exp.encounter; if (enc.stage !== 'open') return;
+  const cell = choiceCell(S, enc), ch = cell.choices[i];
+  const actor = findActor(REGIONS[S.exp.regionId], enc.actorId);
+  const ctx = makeCtx(S);
+  if (ch.when && !ch.when(ctx)) return;
+  const res = ch.resolve(ctx);
+  const fx = applyEffects(S, res.effects, { cause: actor.deathCause ? actor.deathCause(ctx) : 'zabrały Bagna' });
+  enc.stage = 'result'; enc.result = { text: res.text, fx };
+  if (S.pendingCombat) { enc.combat = S.pendingCombat; S.pendingCombat = null; }
+  save();
+  if (S.pendingDeath) heroDies(S, S.pendingDeath);
+}
+function pickEnemies(S, region, weights, ctx) {
+  const n = Math.min(CFG.combat.maxGroup, region.groupSize(ctx.depth, RNG));
+  const ids = Object.keys(weights), out = [];
+  for (let i = 0; i < n; i++) out.push(RNG.weighted(ids, (id) => weights[id] * ENEMIES[id].weight(ctx)));
+  return out;
+}
+function genCombatNode(S, node) {
+  const region = REGIONS[S.exp.regionId];
+  const place = pickPlace(S, region, () => true);
+  const ctx = makeCtx(S, { region, place });
+  const enemies = pickEnemies(S, region, region.bestiary, ctx);
+  const ambush = RNG.chance(region.ambushChance(ctx) * (ctx.has('pochodnia') ? 0.6 : 1));
+  const dom = ENEMIES[mode(enemies)];
+  let text = place.beat(ctx) + '\n\n' + dom.intro(ctx, enemies.length);
+  if (ambush) text += '\n\n' + region.combat.ambushLine(ctx);
+  return { kind: 'walka', placeId: place.id, enemies, ambush, text, stage: 'open', weather: region.weather(ctx.phase, RNG) };
+}
+function genRest(S, node) {
+  const region = REGIONS[S.exp.regionId];
+  const place = pickPlace(S, region, (p) => p.rest);
+  const ctx = makeCtx(S, { region, place });
+  return { kind: 'odpoczynek', placeId: place.id, text: place.beat(ctx) + '\n\n' + region.rest.state(ctx), stage: 'open', prayed: {}, weather: region.weather(ctx.phase, RNG) };
+}
+function godsAt(S) { const region = REGIONS[S.exp.regionId], place = findPlace(region, S.exp.encounter.placeId); const tags = new Set([...region.tags, ...place.tags]); return Object.values(GODS).filter((g) => g.tags.some((t) => tags.has(t))); }
+function pray(S, gid) {
+  const exp = S.exp, enc = exp.encounter, god = GODS[gid];
+  if (enc.prayed[gid]) return;
+  const ctx = makeCtx(S), times = exp.prayed[gid] || 0;
+  const ans = god.answer(ctx, ctx.favor(gid), times);
+  exp.prayed[gid] = times + 1; enc.prayed[gid] = true;
+  const fx = applyEffects(S, ans.effects, { cause: `${god.gen === 'f' ? 'wzięła' : 'wziął'} ${god.name}` });
+  enc.lastResult = { text: ans.text, fx, god: gid }; save();
+  if (S.pendingDeath) heroDies(S, S.pendingDeath);
+}
+function stepsToDawn(step) { const cyc = CFG.stepsPerPhase * CFG.phases.length; return Math.ceil((step + 1) / cyc) * cyc - step; }
+function restDo(S, mode_, wardId) {
+  const exp = S.exp, enc = exp.encounter, region = REGIONS[exp.regionId], hero = S.hero;
+  if (enc.stage !== 'open') return;
+  const ctx = makeCtx(S);
+  let ward = 0, wardText = '';
+  if (wardId && hero.items[wardId]) { ward = ITEMS[wardId].restWard || 0; wardText = ITEMS[wardId].restText; applyEffects(S, [{ item: wardId, n: -1 }]); }
+  if (mode_ === 'sleep') {
+    if (RNG.chance(region.ambushChance(ctx) * (1 - ward))) {
+      exp.step += stepsToDawn(exp.step) - 1;
+      const c2 = makeCtx(S);
+      enc.stage = 'ambush'; enc.result = { text: (wardText ? wardText + '\n\n' : '') + region.rest.ambush(c2), fx: [] };
+      enc.combat = { enemies: pickEnemies(S, region, region.rest.ambushWeights, c2), ambush: true, after: 'rest' };
+      save(); return;
+    }
+    for (const u of partyAlive(S)) { u.hp = clamp(u.hp + Math.ceil(u.maxHp * CFG.rest.sleepHeal), 0, u.maxHp); u.mp = u.maxMp; }
+    exp.step += stepsToDawn(exp.step);
+    enc.stage = 'done'; enc.result = { text: (wardText ? wardText + '\n\n' : '') + region.rest.sleep(ctx), fx: [`+${Math.round(CFG.rest.sleepHeal * 100)}% zdrowia`, 'wola odzyskana', 'świt'] };
+  } else {
+    for (const u of partyAlive(S)) { u.hp = clamp(u.hp + Math.ceil(u.maxHp * CFG.rest.watchHeal), 0, u.maxHp); u.mp = clamp(u.mp + Math.ceil(u.maxMp * CFG.rest.watchMana), 0, u.maxMp); }
+    exp.step += stepsToDawn(exp.step);
+    enc.stage = 'done'; enc.result = { text: region.rest.watch(ctx), fx: [`+${Math.round(CFG.rest.watchHeal * 100)}% zdrowia`, 'część woli', 'świt'] };
+  }
+  save();
+}
+function useItem(S, itemId, uid) {
+  const it = ITEMS[itemId]; if (!it.anywhere || !S.hero.items[itemId]) return;
+  const u = uid ? findUnit(S, uid) : S.hero; if (!u || u.hp <= 0) return;
+  applyCombatEffects(S, it.anywhere.effects(u), null);
+  applyEffects(S, [{ item: itemId, n: -1 }]); save();
+}
+
+/* ---------- walka ---------- */
+function startCombat(S, spec) {
+  const region = REGIONS[S.exp.regionId], enc = S.exp.encounter, place = findPlace(region, enc.placeId);
+  const counts = {};
+  const enemies = spec.enemies.map((id, i) => { const e = ENEMIES[id]; counts[id] = (counts[id] || 0) + 1; return { uid: 'e' + i, kind: id, name: e.name, n: counts[id], hp: e.hp, maxHp: e.hp, atk: e.atk, def: e.def, spd: e.spd, tags: e.tags, status: {}, fled: false, grab: null }; });
+  for (const en of enemies) if (counts[en.kind] > 1) en.name = `${ENEMIES[en.kind].name} ${['I', 'II', 'III', 'IV'][en.n - 1]}`;
+  for (const u of S.exp.party) u.status = {};
+  S.combat = { enemies, round: 0, queue: [], phase: 'idle', log: [], ambush: !!spec.ambush, placeTags: place.tags, after: spec.after || 'map', pending: null, turn: null, result: null, how: null };
+  if (spec.ambush) combatLog(S, 'Zasadzka. Wróg uderza pierwszy.');
+  S.screen = 'combat'; save();
+  setTimeout(() => combatStep(S), 350);
+}
+function findUnit(S, uid) { return (S.exp ? S.exp.party.find((u) => u.uid === uid) : null) || (S.combat ? S.combat.enemies.find((e) => e.uid === uid) : null) || (S.hero && S.hero.uid === uid ? S.hero : null); }
+function cbApi(S) {
+  const cb = S.combat;
+  return {
+    party: partyAlive(S), enemies: cb.enemies.filter((e) => e.hp > 0 && !e.fled), rng: RNG, placeTags: cb.placeTags, night: phaseOf(S.exp.step).night,
+    weakest() { return this.party.slice().sort((a, b) => a.hp - b.hp)[0]; },
+    strongest() { return this.party.slice().sort((a, b) => b.atk[1] - a.atk[1])[0]; },
+    status(u, s, t) { u.status[s] = Math.max(u.status[s] || 0, t); },
+  };
+}
+function combatLog(S, t) { S.combat.log.push(t); if (S.combat.log.length > 40) S.combat.log.shift(); }
+function combatStep(S) {
+  const cb = S.combat; if (!cb || cb.phase === 'done' || S.screen !== 'combat') return;
+  if (S.pendingDeath) return finishCombat(S, 'death');
+  const api = cbApi(S);
+  if (!api.enemies.length) return finishCombat(S, 'won');
+  if (!api.party.length) return finishCombat(S, 'death');
+  if (!cb.queue.length) {
+    cb.round++;
+    if (cb.round > 60) { combatLog(S, 'Bagno traci zainteresowanie. Wy też.'); return finishCombat(S, 'fled'); }
+    let units = [...api.party, ...api.enemies];
+    if (cb.round === 1 && cb.ambush) units = api.enemies;
+    units.sort((a, b) => b.spd - a.spd);
+    cb.queue = units.map((u) => u.uid);
+  }
+  const uid = cb.queue.shift(), unit = findUnit(S, uid);
+  if (!unit || unit.hp <= 0 || unit.fled) return combatStep(S);
+  for (const s in unit.status) if (s !== 'stun') { unit.status[s]--; if (unit.status[s] <= 0) delete unit.status[s]; }
+  if (unit.status.stun) { delete unit.status.stun; unit.status.czujny = 1; combatLog(S, `${unit.name} stoi jak wryty.`); cb.turn = null; cb.phase = 'anim'; save(); render(); return setTimeout(() => combatStep(S), CFG.combat.delay); }
+  if (unit.kind) {
+    const E = ENEMIES[unit.kind];
+    if (E.regen) { const r = E.regen(unit, api); if (r && unit.hp < unit.maxHp) { unit.hp = Math.min(unit.maxHp, unit.hp + r); fxFloat(unit.uid, `+${r}`, 'heal'); } }
+    const act = E.ai(unit, api);
+    combatLog(S, act.text);
+    if (act.flee) unit.fled = true; else applyCombatEffects(S, act.effects, unit);
+    cb.turn = null; cb.phase = 'anim'; save(); render();
+    return setTimeout(() => combatStep(S), CFG.combat.delay);
+  }
+  cb.turn = uid; cb.phase = 'player'; cb.pending = null; save(); render();
+}
+function applyCombatEffects(S, effects, source) {
+  for (const e of effects || []) {
+    const t = e.target; if (!t) continue;
+    if (e.type === 'damage') {
+      if (t.hp <= 0) continue;
+      const E = t.kind ? ENEMIES[t.kind] : null;
+      const ev = E ? (t.status.odsloniety ? 0 : (E.evasion || 0)) : 0;
+      if (!e.sure && ev && RNG.chance(ev)) { combatLog(S, `${t.name} — chybione.`); fxFloat(t.uid, 'chybia', 'miss'); continue; }
+      let amt = e.amount;
+      if (E) { amt *= (E.weak && E.weak[e.dmgType]) || 1; amt *= (E.resist && E.resist[e.dmgType]) || 1; }
+      amt = Math.max(1, Math.round(amt) - (t.def || 0));
+      t.hp = Math.max(0, t.hp - amt);
+      fxFloat(t.uid, `−${amt}`, '');
+      if (E && E.onDamaged) E.onDamaged(t, cbApi(S));
+      if (!E) { fxShake(); fxFlash(''); } else if (e.dmgType === 'fire') fxFlash('fire');
+      if (e.onHit) e.onHit();
+      if (t.hp <= 0) combatLog(S, `${t.name} pada.`);
+    } else if (e.type === 'drain') {
+      const n = Math.min(t.mp, e.amount); t.mp -= n; t.hp = Math.max(0, t.hp - n);
+      fxFloat(t.uid, `−${n} woli`, ''); fxShake();
+      if (t.hp <= 0) combatLog(S, `${t.name} pada.`);
+    } else if (e.type === 'status') {
+      if (e.status === 'stun' && (t.status.czujny || t.status.stun)) { combatLog(S, `${t.name} otrząsa się.`); fxFloat(t.uid, 'otrząsa się', 'miss'); continue; }
+      t.status[e.status] = Math.max(t.status[e.status] || 0, e.turns); fxFloat(t.uid, e.status === 'stun' ? 'oszołomienie' : e.status === 'odsloniety' ? 'odsłonięty' : e.status, 'miss'); }
+    else if (e.type === 'heal') { const n = Math.min(e.amount, t.maxHp - t.hp); t.hp += n; fxFloat(t.uid, `+${n}`, 'heal'); }
+  }
+  checkDeaths(S, source && source.kind ? ENEMIES[source.kind].deathCause : 'zabrały Bagna');
+}
+function usableInCombat(S) { return Object.keys(S.hero.items).filter((id) => S.hero.items[id] > 0 && (ITEMS[id].combat || ITEMS[id].anywhere)); }
+function playerAct(S, action, targetUid, itemId) {
+  const cb = S.combat; if (!cb || cb.phase !== 'player') return;
+  const u = findUnit(S, cb.turn), api = cbApi(S), enemies = api.enemies;
+  let effects = [], text = '';
+  const needTarget = () => { if (targetUid) return findUnit(S, targetUid); if (enemies.length === 1) return enemies[0]; cb.pending = { action, itemId }; save(); render(); return null; };
+  if (action === 'atak') { const t = needTarget(); if (!t) return; effects = [{ type: 'damage', target: t, amount: RNG.int(u.atk[0], u.atk[1]), dmgType: 'phys' }]; text = `${u.name} atakuje: ${t.name}.`; }
+  else if (action === 'zdolnosc') { const ab = abilityOf(u); if (u.mp < ab.mp) return; let t = null; if (ab.target === 'enemy') { t = needTarget(); if (!t) return; } u.mp -= ab.mp; effects = ab.effects(u, t, RNG); text = ab.text(u, t); }
+  else if (action === 'przedmiot') {
+    const it = ITEMS[itemId]; if (!it || !S.hero.items[itemId]) return;
+    if (it.combat) { if (it.combat.target === 'enemy') { const t = needTarget(); if (!t) return; effects = it.combat.effects(u, t, RNG); text = it.combat.text(u, t); } else { effects = it.combat.effects(u, enemies, RNG); text = it.combat.text(u); } }
+    else { effects = it.anywhere.effects(u); text = it.anywhere.text(u); }
+    applyEffects(S, [{ item: itemId, n: -1 }]);
+  }
+  else if (action === 'ucieczka') {
+    const maxSpd = Math.max(...enemies.map((e) => e.spd));
+    const p = clamp(CFG.combat.fleeBase + (u.spd - maxSpd) * 0.05 - (u.status.pochwycony ? 0.25 : 0), 0.1, 0.9);
+    cb.pending = null;
+    if (RNG.chance(p)) { combatLog(S, 'Uciekacie. Bagno nie goni; bagno czeka.'); return finishCombat(S, 'fled'); }
+    combatLog(S, `${u.name} próbuje uciec, ale bagno trzyma za kostki.`); cb.phase = 'anim'; cb.turn = null; save(); render();
+    return setTimeout(() => combatStep(S), CFG.combat.delay);
+  } else return;
+  combatLog(S, text); cb.phase = 'anim'; cb.pending = null; cb.turn = null;
+  applyCombatEffects(S, effects, u);
+  save(); render();
+  setTimeout(() => combatStep(S), CFG.combat.delay);
+}
+function finishCombat(S, how) {
+  const cb = S.combat; cb.phase = 'done'; cb.how = how; cb.turn = null; cb.pending = null;
+  if (how === 'death') { save(); render(); return setTimeout(() => heroDies(S, S.pendingDeath), 1000); }
+  const scarred = [];
+  for (const u of S.exp.party) if (u.id !== 'hero' && u.hp <= 0) { companionScar(S, u); scarred.push(u); combatLog(S, `${u.name} wstaje. Z blizną.`); }
+  if (how === 'won') {
+    const loot = { gold: 0, items: {} }, kinds = [];
+    for (const e of cb.enemies) { if (e.fled) continue; kinds.push(e.kind); const l = ENEMIES[e.kind].loot(RNG); loot.gold += l.gold || 0; for (const k in (l.items || {})) loot.items[k] = (loot.items[k] || 0) + l.items[k]; }
+    const fx = applyEffects(S, [...(loot.gold ? [{ gold: loot.gold }] : []), ...Object.keys(loot.items).map((k) => ({ item: k, n: loot.items[k] }))]);
+    const dom = kinds.length ? ENEMIES[mode(kinds)] : null;
+    cb.result = { text: dom ? dom.victory(makeCtx(S), kinds.length) + (fx.length ? '\n\n' + dom.lootText : '') : 'Światła uciekły w trzciny. Zostały trzciny.', fx };
+  } else if (how === 'fled') cb.result = { text: 'Biegniecie, dopóki woda nie zostaje z tyłu. Nie zdobyliście nic oprócz oddechu, a i ten jest na kredyt.', fx: [] };
+  for (const u of scarred) { cb.result.text += `\n\n${u.name} podnosi się z wody, kiedy jest już po wszystkim. Będzie ${u.f ? 'miała' : 'miał'} po tym bliznę — taką, która zostaje.`; cb.result.fx.push(`${u.name}: blizna (−${CFG.balance.scarHp} zdrowia na zawsze)`); }
+  save(); render();
+}
+function afterCombat(S) {
+  const cb = S.combat; if (!cb || cb.phase !== 'done') return;
+  const after = cb.after; S.combat = null;
+  if (after === 'rest') { const enc = S.exp.encounter; enc.stage = 'done'; enc.combat = null; enc.result = { text: 'Świt zastaje was na nogach. Nie wypoczęliście; przeżyliście, a na Bagnach liczy się to jako to samo.', fx: ['świt'] }; S.screen = 'encounter'; }
+  else resolveNode(S);
+  save();
+}
+
+/* ---------- śmierć: bohater odchodzi, miasto zostaje ---------- */
+function heroDies(S, cause) {
+  const hero = S.hero, city = S.city, exp = S.exp; if (!hero) return;
+  const region = exp ? REGIONS[exp.regionId] : null;
+  const place = exp && exp.encounter ? findPlace(region, exp.encounter.placeId).name : (region ? region.name : CFG.city.name);
+  const entry = { name: hero.full, arch: ARCHETYPES[hero.archId].name, cause: cause || 'zabrały Bagna', place, day: city.day + (exp ? dayOf(exp.step) - 1 : 0), n: city.expeditions, f: hero.f };
+  city.chronicle.push(entry);
+  const survivors = exp ? exp.party.filter((u) => u.id !== 'hero' && u.hp > 0).map((u) => u.short) : [];
+  if (exp) for (const u of exp.party) if (u.id !== 'hero' && u.hp <= 0) companionDies(S, u, COMPANIONS[u.id].deathCause);
+  const lost = { gold: hero.gold, items: Object.keys(hero.items).filter((k) => hero.items[k] > 0).map((k) => ITEMS[k].name) };
+  if (exp) city.day += dayOf(exp.step);
+  city.heroes++; city.contracts = null;
+  S.death = { entry, survivors, lost, kept: cityKept(S), emblem: hero.emblem, depth: exp ? exp.depth : 0 };
+  S.hero = null; S.exp = null; S.combat = null; S.pendingDeath = null; S.pendingCombat = null;
+  S.screen = 'death'; save(); render();
+}
+function cityKept(S) {
+  const c = S.city, k = [];
+  for (const g in GUILDS) k.push(`${GUILDS[g].name}: ${tierName(c, g)} (${c.rep[g]})`);
+  for (const g in GODS) k.push(`${GODS[g].name}: łaska ${c.favor[g]}`);
+  for (const id of c.knowledge) k.push(`wiedza: ${KNOWLEDGE[id].name}`);
+  for (const id in c.companions) k.push(`${COMPANIONS[id].name}: ${c.companions[id].alive ? 'czeka w Tawernie' + (c.companions[id].scars ? ` (${c.companions[id].scars} ${pl(c.companions[id].scars, ['blizna', 'blizny', 'blizn'])})` : '') : 'w Kronice'}`);
+  for (const m in c.marks) if (c.marks[m]) k.push(MARKS[m].label);
+  if (c.gold) k.push(`skarbiec: ${c.gold} ${pl(c.gold, ['moneta', 'monety', 'monet'])}`);
+  return k;
+}
+function chronLine(e) { return `${e.name}, ${e.arch} — ${e.cause}. ${e.place}, dzień ${e.day}, ${e.n}. wyprawa.`; }
+
+/* ---------- powrót: rozliczenie w Cechu ---------- */
+function returnToCity(S) {
+  const exp = S.exp, hero = S.hero, city = S.city; if (!exp) return;
+  const ctx = makeCtx(S), E = [], days = dayOf(exp.step), M = ['moneta', 'monety', 'monet'];
+  E.push({ title: 'Powrót', text: ctx.wounded ? `Brama Odmętu otwiera się na trzecie kołatanie. Strażnik patrzy na twoje rany i na twoją sakwę, w tej kolejności, i przepuszcza. Miasto śmierdzi rybą i cyną. Nigdy nie pachniało lepiej.` : `Brama Odmętu otwiera się na drugie kołatanie. Strażnik patrzy na sakwę, potem na ciebie, i przepuszcza. Miasto śmierdzi rybą i cyną. Nigdy nie pachniało lepiej.`, fx: [`${days} ${pl(days, ['dzień', 'dni', 'dni'])} na Bagnach`] });
+  const owed = exp.advance + CFG.advance.interest;
+  if (hero.gold >= owed) { hero.gold -= owed; E.push({ title: 'Zaliczka', text: `Cech odbiera zaliczkę z odsetkami, zanim zdążysz usiąść. Pisarz nie podnosi wzroku; to jest jego forma uprzejmości.`, fx: [`−${owed} ${pl(owed, M)}`] }); }
+  else { const fx = applyEffects(S, [{ gold: -hero.gold }, { mark: 'dlug' }]); E.push({ title: 'Zaliczka', text: `Nie masz z czego oddać zaliczki. Pisarz kiwa głową bez zdziwienia i otwiera inną księgę — tę grubszą.`, fx }); }
+  const delivered = hero.gold;
+  if (delivered > 0) { const rp = Math.floor(delivered / CFG.rep.goldPerPoint); city.gold += delivered; hero.gold = 0; if (rp) city.rep.cech_wagi += rp; E.push({ title: 'Waga', text: `Kładziesz znaleziska na wadze. Cech waży dwa razy: raz dla siebie, raz dla ciebie. Wynik jest ten sam, ale ten drugi zapisują obok twojego nazwiska.`, fx: [`skarbiec +${delivered}`, rp ? `${GUILDS.cech_wagi.name}: +${rp}` : 'za mało na reputację'] }); }
+  else E.push({ title: 'Waga', text: `Nie kładziesz nic na wadze. Pisarz zapisuje to równie starannie, jak zapisałby złoto. W Odmęcie zero też jest liczbą.`, fx: [] });
+  if (exp.goalReached) { const r = exp.contract.reward; const fx = applyEffects(S, [{ treasury: r.gold }, { rep: { cech_wagi: r.rep } }, { favor: { rachmistrz: 1 } }]); E.push({ title: 'Kontrakt', text: `${exp.contract.name} — wykonany. Cech płaci, jak obiecał, co jest w tym mieście rzadsze niż deszcz w lipcu. Rachmistrz notuje dotrzymaną umowę.`, fx }); }
+  else { const left = exp.contract.length - exp.depth; E.push({ title: 'Kontrakt', text: `${exp.contract.name} — niewykonany.${left > 0 ? ` Zabrakło: ${left} ${pl(left, ['przejście', 'przejścia', 'przejść'])}.` : ''} Cech nie karze za zawrócenie. Cech tylko pamięta, ile razy.`, fx: [] }); }
+  for (const id in MARKS) { const m = MARKS[id]; if (!m.onReturn || !((hero.marks[id] || 0) + (city.marks[id] || 0))) continue; const r = m.onReturn(makeCtx(S)); const fx = applyEffects(S, r.effects); E.push({ title: 'Cech się dowiedział', text: r.text, fx }); }
+  if (city.knowledge.includes('kwity_kaplicy') && !city.delivered.kwity_kaplicy) { city.delivered.kwity_kaplicy = true; const fx = applyEffects(S, [{ rep: { cech_wagi: 3 } }, { treasury: 6 }]); E.push({ title: 'Kwity', text: `Kładziesz kwity z kaplicy na stole. Nikt ich nie czyta. Ktoś je bardzo szybko chowa i bardzo szybko wpisuje ci reputację, a potem patrzy, czy ${ctx.g('zrozumiałeś', 'zrozumiałaś')}. ${ctx.g('Zrozumiałeś', 'Zrozumiałaś')}.`, fx }); }
+  if (hero.items.znak_topielca) E.push({ title: 'Znak dłużnika', text: `Ołowiany znak chłopca. Kaplica przy Kanale przyjmuje takie rzeczy za darmo i modli się za nie. Cech przyjmuje takie rzeczy za sześć monet i przetapia na wagi.`, fx: [], choice: [
+    { label: 'Oddaj kaplicy', cost: 'obietnica dotrzymana', effects: [{ item: 'znak_topielca', n: -1 }, { favor: { utopiona: 2 } }, { unmark: 'obiecales_przewoznikowi' }, { mark: 'znak_w_kaplicy' }], text: `Kapłanka bierze znak bez słowa i wiesza go między setką innych. Gdzieś na Bagnach woda robi się na chwilę lżejsza.` },
+    { label: 'Sprzedaj Cechowi', cost: '+6 monet do skarbca', effects: [{ item: 'znak_topielca', n: -1 }, { treasury: 6 }, { mark: 'sprzedales_znak' }, { unmark: 'obiecales_przewoznikowi' }], text: `Ołów jest ołowiem. Sześć monet wpada do skarbca z dźwiękiem, który przez chwilę brzmi jak plusk.` },
+  ] });
+  const comps = exp.party.filter((u) => u.id !== 'hero'), alive = comps.filter((u) => u.hp > 0);
+  if (comps.length) E.push({ title: 'Drużyna', text: alive.length ? `${alive.map((u) => u.short).join(' i ')} ${alive.length > 1 ? 'idą' : 'idzie'} do Tawerny pod Wagą, nie oglądając się. Jutro ${alive.length > 1 ? 'będą' : 'będzie'} tam znowu.` : `Wracasz ${ctx.g('sam', 'sama')}. W Tawernie ktoś zwolni miejsce przy stole i nikt o tym nie wspomni.`, fx: [] });
+  city.day += days; city.contracts = null;
+  hero.marks = {}; hero.status = {}; hero.hp = hero.maxHp; hero.mp = hero.maxMp;
+  S.reck = { entries: E, i: 0 }; S.exp = null; S.screen = 'reckoning'; save();
+}
+function reckChoice(S, k) { const e = S.reck.entries[S.reck.i]; if (!e.choice) return; const ch = e.choice[k]; const fx = applyEffects(S, ch.effects); e.text = ch.text; e.fx = fx; e.choice = null; save(); }
+
+/* ---------- miasto ---------- */
+function buyUpgrade(S, id) { const u = UPGRADES[id]; if (S.city.upgrades.includes(id) || S.city.gold < u.cost || tierIndex(S.city, 'cech_wagi') < u.tier) return; S.city.gold -= u.cost; S.city.upgrades.push(id); save(); }
+function createHero(S, archId, nm) { S.hero = newHero(archId, nm.name, nm.f); S.city.contracts = null; S.screen = 'city'; save(); }
+
+/* ============================================================
+   4. GRAFIKA — wszystko rysowane kodem: pergamin z szumu,
+   emblematy, glify mapy, sylwetki scen z reguł, cząsteczki, efekty.
+   ============================================================ */
+const FXQ = [], FX = { p: null };
+function fxFloat(uid, text, cls) { FXQ.push({ t: 'float', uid, text, cls }); }
+function fxShake() { FXQ.push({ t: 'shake' }); }
+function fxFlash(kind) { FXQ.push({ t: 'flash', kind }); }
+function flushFX() {
+  const seen = {};
+  while (FXQ.length) {
+    const f = FXQ.shift();
+    if (f.t === 'float') { const el = document.querySelector(`[data-uid="${f.uid}"]`); if (!el) continue; const k = (seen[f.uid] = (seen[f.uid] || 0) + 1); const s = document.createElement('span'); s.className = 'float ' + (f.cls || ''); s.textContent = f.text; s.style.top = (k - 1) * 20 + 'px'; el.appendChild(s); setTimeout(() => s.remove(), 1000); }
+    else if (f.t === 'shake') { const el = $('.scene') || $('#app'); if (!el) continue; el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake'); if (FX.p) FX.p.burst(FX.p.w / 2, FX.p.h * 0.65, 14, '#e0a441'); }
+    else if (f.t === 'flash') { const d = document.createElement('div'); d.className = 'flash ' + (f.kind || ''); document.body.appendChild(d); setTimeout(() => d.remove(), 450); }
+  }
+}
+function paperTexture() {
+  const c = document.createElement('canvas'); c.width = c.height = 128; const g = c.getContext('2d');
+  const img = g.createImageData(128, 128), r = makeRng(7);
+  for (let i = 0; i < img.data.length; i += 4) { const v = 150 + r.int(-70, 70); img.data[i] = v; img.data[i + 1] = v * 0.9; img.data[i + 2] = v * 0.72; img.data[i + 3] = 255; }
+  g.putImageData(img, 0, 0); return c.toDataURL();
+}
+
+/* emblematy: stylizowane znaki, nie twarze (viewBox 64) */
+const EMBLEMS = {
+  axe: `<path d="M26 56 L40 12"/><path d="M36 20 C44 12 52 14 56 24 C48 24 44 30 42 36 C38 30 34 26 28 24 Z"/><path d="M22 52 L30 54"/>`,
+  eye: `<path d="M10 32 C20 18 44 18 54 32 C44 46 20 46 10 32 Z"/><circle cx="32" cy="32" r="6"/><path d="M32 26 C34 22 30 19 32 14"/>`,
+  net: `<path d="M14 20 Q32 14 50 20"/><path d="M12 30 Q32 24 52 30"/><path d="M14 40 Q32 34 50 40"/><path d="M20 16 Q18 32 22 46"/><path d="M32 14 Q31 32 32 48"/><path d="M44 16 Q46 32 42 46"/><path d="M50 40 C54 46 50 52 46 50"/>`,
+  drownedHand: `<path d="M8 52 Q14 48 20 52 T32 52 T44 52 T56 52"/><path d="M24 52 L24 34 Q24 30 27 30 L27 20 M31 30 L31 14 M35 30 L35 16 M39 30 L39 22 M39 30 Q42 30 42 34 L42 52"/>`,
+  wisp: `<path d="M32 10 C41 22 45 30 40 40 C38 47 26 47 24 40 C19 30 24 22 32 10 Z"/><path d="M32 40 C30 46 35 51 30 56"/><circle cx="17" cy="24" r="1.4"/><circle cx="49" cy="20" r="1.4"/><circle cx="47" cy="44" r="1.4"/>`,
+  ferry: `<path d="M10 38 L54 38 L48 48 L16 48 Z"/><path d="M40 6 L45 38"/><path d="M8 56 Q16 52 24 56 T40 56 T56 56"/>`,
+  preacher: `<path d="M12 44 L12 18 Q32 26 52 18 L52 44 Q32 52 12 44 Z"/><path d="M32 22 L32 50"/><path d="M32 4 C34 8 36 10 36 12.5 A4 4 0 0 1 28 12.5 C28 10 30 8 32 4 Z"/>`,
+  scales: `<path d="M32 10 L32 54"/><path d="M12 20 L52 20"/><path d="M12 20 L5 36 L19 36 Z"/><path d="M52 20 L45 36 L59 36 Z"/><path d="M22 54 L42 54"/>`,
+  token: `<rect x="20" y="12" width="24" height="36" rx="3"/><circle cx="32" cy="21" r="3"/><path d="M25 33 L39 33 M25 39 L35 39"/><path d="M14 56 Q20 52 26 56 T38 56 T50 56"/>`,
+  moonWaves: `<path d="M38 8 A15 15 0 1 0 38 38 A11 11 0 1 1 38 8 Z"/><path d="M8 50 Q16 44 24 50 T40 50 T56 50"/>`,
+  ledger: `<rect x="14" y="10" width="34" height="44" rx="2"/><path d="M22 20 L40 20 M22 28 L40 28 M22 36 L34 36"/><path d="M38 50 L54 28 L56 33 Z"/>`,
+  city: `<path d="M10 54 L10 26 L18 26 L18 20 L26 20 L26 26 L38 26 L38 14 L46 14 L46 26 L54 26 L54 54 Z"/><path d="M28 54 L28 40 L36 40 L36 54"/>`,
+};
+const emblem = (id, cls = '') => `<div class="emb ${cls}"><svg viewBox="0 0 64 64">${EMBLEMS[id] || EMBLEMS.token}</svg></div>`;
+
+/* glify węzłów mapy (viewBox 24) */
+const ICONS = {
+  fork: `<path d="M12 21 V12 M12 12 L6 5 M12 12 L18 5"/>`,
+  swords: `<path d="M5 19 L19 5 M5 5 L19 19 M4 15 L9 20 M15 4 L20 9"/>`,
+  fire: `<path d="M12 3 C15 8 17 10 16 15 C15 19 9 19 8 15 C7 11 10 8 12 3 Z"/><path d="M5 21 L19 21"/>`,
+  city: `<path d="M4 20 V9 H7 V6 H10 V9 H14 V4 H17 V9 H20 V20 Z"/>`,
+  goal: `<path d="M12 3 L21 12 L12 21 L3 12 Z"/><circle cx="12" cy="12" r="3"/>`,
+  unknown: `<path d="M9 9 a3 3 0 1 1 4 2.8 c-1 .5 -1 1.2 -1 2.2"/><circle cx="12" cy="18" r=".7"/>`,
+};
+const DECOR = {
+  reed: (x, y) => `<g transform="translate(${x} ${y})" fill="none" stroke="#d8c69c" stroke-opacity=".16" stroke-width="1"><path d="M0 0 q-1 -6 1 -12"/><path d="M4 0 q1 -5 -1 -10"/><path d="M-4 0 q-1 -5 0 -9"/></g>`,
+  tree: (x, y) => `<g transform="translate(${x} ${y})" fill="none" stroke="#d8c69c" stroke-opacity=".2" stroke-width="1"><path d="M0 0 v-14 M0 -8 l-5 -4 M0 -11 l4 -5"/></g>`,
+  stake: (x, y) => `<g transform="translate(${x} ${y})" fill="none" stroke="#d8c69c" stroke-opacity=".18" stroke-width="1"><path d="M0 0 v-9 M-2 -6 h4"/></g>`,
+};
+function compass(x, y) { return `<g transform="translate(${x} ${y})" fill="none" stroke="#d8c69c" stroke-opacity=".55" stroke-width="1"><circle r="12"/><path d="M0 -16 L3 0 L0 16 L-3 0 Z" fill="#d8c69c" fill-opacity=".25"/><path d="M-16 0 L0 3 L16 0 L0 -3 Z"/><text y="-20" text-anchor="middle" font-size="8" fill="#d8c69c" stroke="none" style="font-family:var(--serif)">N</text></g>`; }
+const skyCSS = (phase) => `linear-gradient(180deg, ${phase.sky[0]}, ${phase.sky[1]} 62%, ${phase.sky[2]})`;
+
+/* sylwetki scen: reguły regionu, nie ręcznie stawiane obrazki */
+const SIL = {
+  reeds: (r, W, H) => { let s = ''; for (let i = 0; i < 70; i++) { const x = r.next() * W, h = 30 + r.next() * 80, dx = (r.next() - 0.5) * 18; s += `<path fill="none" d="M${x.toFixed(1)} ${H} Q${(x + dx / 2).toFixed(1)} ${(H - h / 2).toFixed(1)} ${(x + dx).toFixed(1)} ${(H - h).toFixed(1)}"/>`; if (r.chance(0.3)) s += `<ellipse cx="${(x + dx).toFixed(1)}" cy="${(H - h - 4).toFixed(1)}" rx="1.6" ry="6"/>`; } return s; },
+  stones: (r, W, H) => { let s = '', x = -10; while (x < W + 10) { const w = 22 + r.next() * 32, h = 10 + r.next() * 10; s += `<rect x="${x.toFixed(1)}" y="${(H - h - 2 + r.next() * 6).toFixed(1)}" width="${w.toFixed(1)}" height="${(h + 10).toFixed(1)}" rx="2"/>`; x += w + 3 + r.next() * 6; } for (let i = 0; i < 4; i++) { const px = 30 + i * (W - 60) / 3 + r.int(-10, 10); s += `<rect x="${px}" y="${H - 70}" width="5" height="70"/><path d="M${px - 6} ${H - 66} L${px + 11} ${H - 66}"/>`; } return s; },
+  stakes: (r, W, H) => { let s = ''; for (let i = 0; i < 16; i++) { const x = 8 + ((W - 16) * i) / 15 + (r.next() - 0.5) * 16, h = 26 + r.next() * 64; s += `<rect x="${x.toFixed(1)}" y="${(H - h).toFixed(1)}" width="3.2" height="${h.toFixed(1)}"/>`; if (r.chance(0.35)) s += `<path d="M${(x + 1.5).toFixed(1)} ${(H - h + 8).toFixed(1)} l-4 8 l1 12 l6 0 l1 -12 z"/>`; } return s; },
+  willow: (r, W, H) => { const x = W * 0.64, top = H - 96; let s = `<path d="M${x - 9} ${H} L${x - 5} ${top} L${x + 7} ${top} L${x + 12} ${H} Z"/>`; for (let i = 0; i < 22; i++) { const a = -1.4 + i * 0.13, len = 50 + r.next() * 60; s += `<path fill="none" stroke-width="1.4" d="M${x} ${top} Q${(x + Math.sin(a) * len * 0.8).toFixed(1)} ${(top - 26).toFixed(1)} ${(x + Math.sin(a) * len).toFixed(1)} ${(top + 20 + Math.abs(Math.cos(a)) * len * 0.6).toFixed(1)}"/>`; } return s; },
+  ruin: (r, W, H) => { let s = ''; let x = 40; const pts = [`${x} ${H}`]; let y = H - 60; while (x < W - 60) { x += 12 + r.next() * 18; y = H - 40 - r.next() * 50; pts.push(`${x.toFixed(1)} ${y.toFixed(1)}`); } pts.push(`${x.toFixed(1)} ${H}`); s += `<path d="M${pts.join(' L')} Z"/>`; s += `<rect x="${W * 0.7}" y="${H - 130}" width="18" height="130"/>`; s += `<rect x="${W * 0.62}" y="${H - 92}" width="10" height="26" fill="#241d15" stroke="none" opacity=".6"/>`; return s; },
+  trees: (r, W, H) => { let s = ''; for (let i = 0; i < 5; i++) { const x = 20 + r.next() * (W - 40), h = 70 + r.next() * 60; s += `<path fill="none" stroke-width="3" d="M${x} ${H} L${x + 2} ${H - h}"/>`; for (let b = 0; b < 4; b++) { const by = H - h * (0.45 + r.next() * 0.5), d = r.chance(0.5) ? -1 : 1, l = 12 + r.next() * 24; s += `<path fill="none" stroke-width="1.6" d="M${x + 1} ${by.toFixed(1)} l${(d * l).toFixed(1)} ${(-l * 0.6).toFixed(1)} l${(d * l * 0.5).toFixed(1)} ${(-l * 0.1).toFixed(1)}"/>`; } } return s; },
+  chapel: (r, W, H) => { const x = W * 0.5, w = 110, top = H - 120; return `<path d="M${x - w / 2} ${H} L${x - w / 2} ${top} L${x} ${top - 40} L${x + w / 2} ${top} L${x + w / 2} ${H} Z"/><rect x="${x - 7}" y="${top - 82}" width="14" height="46"/><path d="M${x} ${top - 96} L${x} ${top - 82} M${x - 6} ${top - 90} L${x + 6} ${top - 90}" stroke-width="2"/><path d="M${x - 10} ${H} L${x - 10} ${H - 34} Q${x} ${H - 48} ${x + 10} ${H - 34} L${x + 10} ${H}" fill="#241d15" stroke="none" opacity=".5"/>`; },
+};
+function sceneSVG(place, seed) {
+  const W = 360, H = 200, r = makeRng(seed);
+  let s = `<svg class="sil" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMax slice">`;
+  place.sil.forEach((id, i) => { const far = i === 0 && place.sil.length > 1; s += `<g opacity="${far ? 0.42 : 0.96}" fill="#0e0c09" stroke="#0e0c09" stroke-width="${far ? 1 : 1.6}" ${far ? 'transform="scale(1 0.72)"' : ''}>${(SIL[id] || SIL.reeds)(r, W, H)}</g>`; });
+  return s + '</svg>';
+}
+function sceneHTML(S, o) {
+  const region = REGIONS[S.exp.regionId], place = findPlace(region, o.placeId), phase = phaseOf(S.exp.step), enc = S.exp.encounter;
+  const weather = (enc && enc.weather) || 'mist', water = place.tags.includes('woda');
+  let seed = S.exp.map.seed + S.exp.cur * 131; for (const ch of place.id) seed += ch.charCodeAt(0);
+  return `<div class="scene"><div class="sky" style="background:${skyCSS(phase)}"></div>${sceneSVG(place, seed)}${water ? '<div class="water"></div>' : ''}<canvas class="fx" data-mode="${weather}" data-night="${phase.night ? 1 : 0}"></canvas><div class="torch"></div><div class="dark"></div><div class="head"><div class="place">${esc(place.name)} · ${phase.label.toLowerCase()}</div>${o.headHTML || ''}</div>${o.actor ? `<div class="actor">${emblem(o.actor.emblem, 'lg')}<div class="name">${esc(o.actor.name)}</div></div>` : ''}${o.overlay || ''}</div>`;
+}
+
+/* cząsteczki: deszcz, mgła, iskry — jeden canvas, DPR ≤ 2 */
+class Particles {
+  constructor(canvas, mode, night) { this.c = canvas; this.g = canvas.getContext('2d'); this.mode = mode; this.night = night; this.ps = []; this.bursts = []; this.run = true; this.last = 0; this.resize(); this.init(); this.tick = this.tick.bind(this); requestAnimationFrame(this.tick); }
+  resize() { const dpr = Math.min(2, window.devicePixelRatio || 1), rect = this.c.getBoundingClientRect(); this.w = Math.max(1, rect.width); this.h = Math.max(1, rect.height); this.c.width = this.w * dpr; this.c.height = this.h * dpr; this.g.setTransform(dpr, 0, 0, dpr, 0, 0); }
+  init() { const n = this.mode === 'rain' ? 64 : this.mode === 'mist' ? 11 : 0; for (let i = 0; i < n; i++) this.ps.push(this.spawn(true)); }
+  spawn(any) {
+    if (this.mode === 'rain') return { x: Math.random() * this.w * 1.2, y: any ? Math.random() * this.h : -12, v: 240 + Math.random() * 160, l: 8 + Math.random() * 10, a: 0.12 + Math.random() * 0.18 };
+    return { x: Math.random() * this.w, y: this.h * (0.4 + Math.random() * 0.55), r: 40 + Math.random() * 70, v: 5 + Math.random() * 9, a: (this.night ? 0.07 : 0.05) + Math.random() * 0.04, d: Math.random() < 0.5 ? 1 : -1 };
+  }
+  burst(x, y, n, color) { for (let i = 0; i < n; i++) this.bursts.push({ x, y, vx: (Math.random() - 0.5) * 240, vy: -60 - Math.random() * 200, life: 0.4 + Math.random() * 0.5, color }); }
+  stop() { this.run = false; }
+  tick(t) {
+    if (!this.run) return;
+    const dt = Math.min(0.05, this.last ? (t - this.last) / 1000 : 0.016); this.last = t; const g = this.g;
+    g.clearRect(0, 0, this.w, this.h);
+    if (this.mode === 'rain') { g.strokeStyle = '#d8c69c'; g.lineWidth = 1; for (const p of this.ps) { p.y += p.v * dt; p.x -= p.v * 0.14 * dt; if (p.y > this.h) Object.assign(p, this.spawn(false)); g.globalAlpha = p.a; g.beginPath(); g.moveTo(p.x, p.y); g.lineTo(p.x + p.l * 0.14, p.y - p.l); g.stroke(); } }
+    else if (this.mode === 'mist') { for (const p of this.ps) { p.x += p.v * p.d * dt; if (p.x < -p.r) p.x = this.w + p.r; if (p.x > this.w + p.r) p.x = -p.r; const gr = g.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r); gr.addColorStop(0, `rgba(140,160,150,${p.a})`); gr.addColorStop(1, 'rgba(140,160,150,0)'); g.globalAlpha = 1; g.fillStyle = gr; g.fillRect(p.x - p.r, p.y - p.r, p.r * 2, p.r * 2); } }
+    for (let i = this.bursts.length - 1; i >= 0; i--) { const b = this.bursts[i]; b.life -= dt; if (b.life <= 0) { this.bursts.splice(i, 1); continue; } b.vy += 420 * dt; b.x += b.vx * dt; b.y += b.vy * dt; g.globalAlpha = Math.min(1, b.life * 2); g.fillStyle = b.color; g.fillRect(b.x, b.y, 2.2, 2.2); }
+    g.globalAlpha = 1;
+    requestAnimationFrame(this.tick);
+  }
+}
+
+/* mapa wyprawy: stara mapa w SVG — kreślony szlak, mgła, ciepłe światło */
+function mapSVG(S) {
+  const exp = S.exp, map = exp.map, r = makeRng(map.seed), region = REGIONS[exp.regionId];
+  const next = nextNodes(S).map((n) => n.id);
+  let s = `<svg viewBox="0 0 ${MAP.W} ${MAP.H}" preserveAspectRatio="xMidYMid meet"><defs>
+<radialGradient id="glow"><stop offset="0" stop-color="#e0a441" stop-opacity=".42"/><stop offset="1" stop-color="#e0a441" stop-opacity="0"/></radialGradient>
+<radialGradient id="fog"><stop offset="0" stop-color="#14110d" stop-opacity=".96"/><stop offset=".55" stop-color="#14110d" stop-opacity=".85"/><stop offset="1" stop-color="#14110d" stop-opacity="0"/></radialGradient>
+<filter id="blur" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="5"/></filter></defs>`;
+  for (let i = 0; i < 30; i++) s += DECOR[r.pick(region.decor)](r.int(12, MAP.W - 12), r.int(24, MAP.H - 16));
+  for (const [a, b] of map.edges) {
+    const A = map.nodes[a], B = map.nodes[b];
+    const mx = (A.x + B.x) / 2 + r.int(-16, 16), my = (A.y + B.y) / 2 + r.int(-8, 8);
+    const lit = A.visited && B.visited, known = A.visited || nodeKnown(S, B);
+    s += `<path d="M${A.x} ${A.y} Q${mx} ${my} ${B.x} ${B.y}" fill="none" stroke="${lit ? '#e0a441' : '#d8c69c'}" stroke-opacity="${lit ? 0.85 : known ? 0.5 : 0.22}" stroke-width="${lit ? 1.8 : 1.2}" ${lit ? '' : 'stroke-dasharray="2 5"'} stroke-linecap="round"/>`;
+  }
+  for (const n of map.nodes) if (!nodeKnown(S, n)) s += `<ellipse class="fogblob" cx="${n.x}" cy="${n.y}" rx="${r.int(48, 64)}" ry="${r.int(26, 36)}" fill="url(#fog)" filter="url(#blur)"/>`;
+  for (const n of map.nodes) {
+    const known = nodeKnown(S, n), isCur = n.id === exp.cur, reach = next.includes(n.id);
+    const col = isCur ? '#e0a441' : known ? '#d8c69c' : '#6a5e48';
+    s += `<g class="node${isCur ? ' cur' : ''}" ${reach ? `data-act="go" data-arg="${n.id}"` : ''}>`;
+    if (n.visited) s += `<circle cx="${n.x}" cy="${n.y}" r="36" fill="url(#glow)"/>`;
+    if (reach) s += `<circle class="ring" cx="${n.x}" cy="${n.y}" r="25"/>`;
+    s += `<g class="core"><circle cx="${n.x}" cy="${n.y}" r="17" fill="#241d15" stroke="${col}" stroke-width="${isCur ? 2 : 1.4}" ${known ? '' : 'stroke-dasharray="2 3"'}/>`;
+    s += `<g transform="translate(${n.x - 11} ${n.y - 11}) scale(0.92)" fill="none" stroke="${col}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">${known ? ICONS[KINDS[n.kind].icon] : ICONS.unknown}</g></g>`;
+    if (reach) s += `<circle cx="${n.x}" cy="${n.y}" r="30" fill="#000" fill-opacity="0.001"/>`;
+    if (reach || isCur) s += `<text x="${n.x}" y="${n.y + 34}" text-anchor="middle" font-size="9.5" fill="#d8c69c" fill-opacity=".85" letter-spacing="1.6" style="font-family:var(--serif)">${esc(KINDS[n.kind].name.toUpperCase())}</text>`;
+    s += '</g>';
+  }
+  s += `<text x="14" y="22" font-size="11" fill="#d8c69c" fill-opacity=".7" letter-spacing="3" style="font-family:var(--serif)">${esc(region.name.toUpperCase())}</text>`;
+  s += compass(MAP.W - 30, 34);
+  return s + '</svg>';
+}
+
+/* ============================================================
+   5. EKRANY — HTML składany ze stanu; zdarzenia przez data-act
+   ============================================================ */
+const UI = { sheet: null, confirm: null, arch: null, name: null, contract: 0, party: [], resume: null };
+const M = ['moneta', 'monety', 'monet'];
+const SCREENS = {};
+function btn(act, arg, label, cost, cls = '', disabled = false, pre = '') { return `<button class="btn ${cls}" data-act="${act}" data-arg="${esc(arg == null ? '' : arg)}"${disabled ? ' disabled' : ''}>${pre}<span class="lbl">${label}</span>${cost ? `<span class="cost">${esc(cost)}</span>` : ''}</button>`; }
+const rule = () => `<div class="rule"><svg viewBox="0 0 14 14"><path d="M7 1 L13 7 L7 13 L1 7 Z"/></svg></div>`;
+const section = (title, inner) => `<div class="section"><h2 class="h">${title}</h2>${inner}</div>${rule()}`;
+function bars(u) { return `<div class="bars"><div class="bar"><i style="width:${Math.round((100 * u.hp) / u.maxHp)}%"></i></div><div class="bar mp"><i style="width:${u.maxMp ? Math.round((100 * u.mp) / u.maxMp) : 0}%"></i></div></div><div class="stat"><span>${u.hp}/${u.maxHp} zdr.</span><span>${u.mp}/${u.maxMp} woli</span></div>`; }
+const fxLines = (fx, bad) => (fx && fx.length ? `<div class="fx-line${bad ? ' bad' : ''}">${fx.map(esc).join(' · ')}</div>` : '');
+function statusTags(u) { const t = []; if (u.status) { if (u.status.stun) t.push('<span class="tag st">oszołomienie</span>'); if (u.status.pochwycony) t.push('<span class="tag bad">pochwycony</span>'); if (u.status.odsloniety) t.push('<span class="tag st">odsłonięty</span>'); } return t.join(''); }
+function unitCard(u, cls) { return `<div class="punit ${cls || ''}${u.hp <= 0 ? ' dead' : ''}" data-uid="${u.uid}"><div class="row">${emblem(u.emblem, 'sm' + (u.hp <= 0 ? ' dead' : ''))}<div class="grow"><div class="name">${esc(u.short)}</div></div></div>${bars(u)}<div>${statusTags(u)}</div></div>`; }
+function invHTML(items) { const ids = Object.keys(items).filter((k) => items[k] > 0); return ids.length ? `<div class="inv">${ids.map((k) => `<span class="item">${esc(ITEMS[k].name)} <b>×${items[k]}</b></span>`).join('')}</div>` : `<div class="empty">Pusta sakwa.</div>`; }
+const favorWord = (f) => (f >= 2 ? 'łaskawość' : f >= 0 ? 'obojętność' : 'gniew');
+
+/* ---------- tytuł ---------- */
+SCREENS.title = (S) => `<div class="screen"><div class="scroll pad" style="display:flex;flex-direction:column"><div class="grow"></div>
+<h1 class="title">Odmęt</h1><div class="sub">kroniki wypraw za mury</div>${rule()}
+<p class="prose center small muted" style="padding:0 8px">Portowe miasto rządzone przez gildie. Za murami — bagna, ruiny, wieże i wszystko, co Cech kazał tam odesłać. Bogowie odpowiadają na modlitwy. To nie zawsze dobra wiadomość.</p>
+${S.city.chronicle.length ? `<p class="center small muted">W Kronice: ${S.city.chronicle.length} ${pl(S.city.chronicle.length, ['wpis', 'wpisy', 'wpisów'])}. Miasto pamięta.</p>` : ''}
+<div class="grow"></div></div>
+<div class="actions">${UI.resume ? btn('continue', '', 'Kontynuuj', S.hero ? S.hero.short : '', 'primary') : ''}${btn('new', '', 'Nowa gra', '', UI.resume ? 'ghost' : 'primary')}</div></div>`;
+
+/* ---------- nowy bohater ---------- */
+SCREENS.create = (S) => {
+  if (!UI.name) UI.name = genName(RNG);
+  const c = S.city;
+  return `<div class="screen"><div class="scroll pad"><h2 class="h">Nowy bohater</h2>
+<p class="prose small muted">${c.heroes ? `Odmęt ma za sobą ${c.expeditions} ${pl(c.expeditions, ['wyprawę', 'wyprawy', 'wypraw'])} i ${c.chronicle.length} ${pl(c.chronicle.length, ['wpis', 'wpisy', 'wpisów'])} w Kronice. Ktoś musi iść następny.` : 'Cech Wagi szuka kogoś, kto pójdzie za mury i wróci z czymś, co da się zważyć. Nie pyta o powody. Powody nic nie ważą.'}</p>
+<div class="card"><div class="row"><div class="grow"><div class="place" style="text-align:left">Imię</div><div class="name" style="font-size:22px">${esc(UI.name.name)}</div></div><button class="btn ghost sm" style="width:auto;margin:0" data-act="reroll"><span class="lbl">Inne</span></button></div></div>
+${Object.values(ARCHETYPES).map((a) => `<div class="card ${UI.arch === a.id ? 'sel' : ''}" data-act="pickArch" data-arg="${a.id}"><div class="row">${emblem(a.emblem, 'lg')}<div class="grow"><div class="name">${esc(a.name)}</div><div class="small muted">${esc(a.desc)}</div></div></div><div class="stat" style="margin-top:8px"><span>zdrowie ${a.hp}</span><span>wola ${a.mp}</span><span>cios ${a.atk[0]}–${a.atk[1]}</span></div><div class="small" style="margin-top:4px"><span class="gold">${esc(a.ability.name)}</span> <span class="muted">— ${esc(a.ability.desc)} (${a.ability.mp} woli)</span></div></div>`).join('')}
+</div><div class="actions">${btn('create', '', 'Do Odmętu', UI.arch ? '' : 'wybierz, kim jesteś', 'primary', !UI.arch)}</div></div>`;
+};
+
+/* ---------- miasto ---------- */
+SCREENS.city = (S) => {
+  const c = S.city, h = S.hero; if (!c.contracts) c.contracts = genContracts(c);
+  const gid = 'cech_wagi', G = GUILDS[gid], ti = tierIndex(c, gid), nt = nextTier(c, gid), tier = G.tiers[ti];
+  const repPct = nt ? Math.round((100 * (c.rep[gid] - tier.min)) / (nt.min - tier.min)) : 100;
+  const comps = Object.keys(c.companions).filter((id) => c.companions[id].alive);
+  UI.party = UI.party.filter((id) => comps.includes(id));
+  if (UI.contract >= c.contracts.length) UI.contract = 0;
+  const contract = c.contracts[UI.contract];
+  const hero = `<div class="card"><div class="row">${emblem(h.emblem, 'lg')}<div class="grow"><div class="name">${esc(h.full)}</div><div class="small muted">${esc(ARCHETYPES[h.archId].name)} · ${esc(abilityOf(h).name)}</div>${bars(h)}</div></div><div style="margin-top:8px">${invHTML(h.items)}</div></div>`;
+  const guild = `<div class="card"><div class="kv"><span>Ranga</span><span class="gold">${esc(tier.name)}</span></div><div class="kv"><span>Reputacja</span><span>${c.rep[gid]}${nt ? ` / ${nt.min} (${esc(nt.name)})` : ''}</span></div><div class="bar rep" style="margin:6px 0 4px"><i style="width:${repPct}%"></i></div><div class="small muted">${esc(G.desc)}</div></div>
+<div class="place" style="margin:8px 0 6px">Kontrakty</div>
+${c.contracts.map((k, i) => `<div class="card ${i === UI.contract ? 'sel' : ''}" data-act="city.contract" data-arg="${i}"><div class="name">${esc(k.name)}</div><div class="small muted">${esc(k.desc)}</div><div class="stat" style="margin-top:4px"><span>zapłata ${k.reward.gold} ${pl(k.reward.gold, M)}</span><span>reputacja +${k.reward.rep}</span></div></div>`).join('')}
+<div class="place" style="margin:8px 0 6px">Przywileje</div>
+${Object.values(UPGRADES).map((u) => { const own = c.upgrades.includes(u.id), locked = ti < u.tier; return `<div class="card ${own ? 'dim' : ''}"><div class="row"><div class="grow"><div class="name">${esc(u.name)}</div><div class="small muted">${esc(u.desc)}</div></div></div>${own ? '<div class="small gold" style="margin-top:6px">w posiadaniu</div>' : locked ? `<div class="small muted" style="margin-top:6px">od rangi: ${esc(G.tiers[u.tier].name)}</div>` : btn('city.buy', u.id, 'Kup', `${u.cost} ${pl(u.cost, M)} ze skarbca`, 'sm', c.gold < u.cost)}</div>`; }).join('')}`;
+  const tavern = comps.length ? comps.map((id) => { const k = COMPANIONS[id], inP = UI.party.includes(id); return `<div class="card ${inP ? 'sel' : ''}" data-act="city.comp" data-arg="${id}"><div class="row">${emblem(k.emblem, 'lg')}<div class="grow"><div class="name">${esc(k.name)}</div><div class="small muted">${esc(k.tavern)}</div></div></div><div class="small" style="margin-top:6px"><span class="gold">${esc(k.ability.name)}</span> <span class="muted">— ${esc(k.ability.desc)}</span></div><div class="stat" style="margin-top:6px"><span>zdrowie ${companionUnit(id, c).maxHp}</span><span>${c.companions[id].scars ? `${c.companions[id].scars} ${pl(c.companions[id].scars, ['blizna', 'blizny', 'blizn'])}` : 'bez blizn'}</span></div><div class="small ${inP ? 'gold' : 'muted'}" style="margin-top:6px">${inP ? '◆ idzie z tobą' : 'dotknij, żeby zabrać'}</div></div>`; }).join('') : `<div class="empty">Nikt tu na ciebie nie czeka. Ludzie z Bagien trafiają do Tawerny dopiero wtedy, gdy ktoś jest im coś winien.</div>`;
+  const gods = `<div class="card">${Object.values(GODS).map((g) => `<div class="kv"><span>${esc(g.name)}</span><span class="${c.favor[g.id] < 0 ? 'blood' : c.favor[g.id] >= 2 ? 'gold' : 'muted'}">${favorWord(c.favor[g.id])} (${c.favor[g.id]})</span></div>`).join('')}</div>`;
+  const marks = Object.keys(c.marks).filter((m) => c.marks[m] > 0);
+  const chron = `<div class="card"><div class="place" style="text-align:left;margin-bottom:4px">Co o was mówią</div>${marks.length ? marks.map((m) => `<div class="mark">${esc(MARKS[m].label)}</div>`).join('') : '<div class="empty">Jeszcze nic. To się zmieni.</div>'}
+<div class="place" style="text-align:left;margin:10px 0 4px">Wiedza</div>${c.knowledge.length ? c.knowledge.map((k) => `<div class="mark know">${esc(KNOWLEDGE[k].name)} <span class="muted small">— ${esc(KNOWLEDGE[k].desc)}</span></div>`).join('') : '<div class="empty">Nikt jeszcze niczego nie przyniósł oprócz błota.</div>'}
+<div class="place" style="text-align:left;margin:10px 0 4px">Polegli</div>${c.chronicle.length ? c.chronicle.slice().reverse().map((e) => `<div class="chron"><b>${esc(e.name)}</b> — ${esc(e.cause)}. ${esc(e.place)}, dzień ${e.day}.</div>`).join('') : '<div class="empty">Kronika jest pusta. Cech uważa to za dobry znak. Cech się myli.</div>'}</div>`;
+  return `<div class="screen"><div class="scroll"><div class="city-head"><h1 class="title">Odmęt</h1><div class="sub">dzień ${c.day} · skarbiec: ${c.gold} ${pl(c.gold, M)} · ${c.expeditions} ${pl(c.expeditions, ['wyprawa', 'wyprawy', 'wypraw'])}</div></div>
+<div class="pad">${section('Bohater', hero)}${section(G.name, guild)}${section('Tawerna pod Wagą', tavern)}${section('Bogowie', gods)}${section('Kronika', chron)}</div></div>
+<div class="actions">${btn('city.go', '', 'Wyrusz', `${esc(contract.name)} · ${contract.length} ${pl(contract.length, ['przejście', 'przejścia', 'przejść'])}${UI.party.length ? ' · z ' + UI.party.map((id) => COMPANIONS[id].short).join(', ') : ''}`, 'primary')}<div class="btn-grid">${btn('inv', '', 'Ekwipunek', '', 'ghost sm')}${btn('menu', '', 'Więcej', '', 'ghost sm')}</div></div></div>`;
+};
+
+/* ---------- mapa ---------- */
+SCREENS.map = (S) => {
+  const exp = S.exp, region = REGIONS[exp.regionId], phase = phaseOf(exp.step), cur = exp.map.nodes[exp.cur], next = nextNodes(S);
+  return `<div class="screen"><div class="maphead"><div><div class="name">${esc(region.name)}</div><div class="muted small">${esc(exp.contract.name)}</div></div><div class="right"><div>dzień ${dayOf(exp.step)} · ${esc(phase.label.toLowerCase())}</div><div class="gold">${S.hero.gold} ${pl(S.hero.gold, M)}</div></div></div>
+<div class="mapwrap">${mapSVG(S)}</div>
+<div class="mapfoot"><div class="mini">${exp.party.map((u) => unitCard(u)).join('')}</div>
+<div class="center small muted" style="margin-bottom:6px">${next.length ? (cur.depth === 0 ? 'Brama za wami. Wybierz węzeł na mapie.' : 'Wybierz następny węzeł — albo zawróć z tym, co masz.') : 'Węzeł nierozstrzygnięty.'}</div>
+<div class="row" style="align-items:stretch"><button class="btn ghost sm" style="width:auto;flex:none;margin:0" data-act="inv"><span class="lbl">Sakwa</span></button><div class="grow">${btn('return', '', 'Wróć do miasta', cur.depth === 0 ? 'najpierw wyjdź' : `łup: ${S.hero.gold} ${pl(S.hero.gold, M)}`, (cur.kind === 'cel' ? 'primary sm' : 'ghost sm') + ' m0', !cur.resolved || cur.depth === 0)}</div></div></div></div>`;
+};
+
+/* ---------- spotkanie: wybór / walka (wstęp) / odpoczynek ---------- */
+SCREENS.encounter = (S) => {
+  const exp = S.exp, enc = exp.encounter, region = REGIONS[exp.regionId];
+  const actor = enc.kind === 'wybor' ? findActor(region, enc.actorId) : null;
+  const ctx = makeCtx(S);
+  let body = '', actions = '';
+  if (enc.stage === 'open') {
+    body = paras(enc.text);
+    if (enc.kind === 'wybor') actions = choiceOptions(S, enc).map((o) => btn('choose', o.i, esc(typeof o.ch.label === 'function' ? o.ch.label(ctx) : o.ch.label), typeof o.ch.cost === 'function' ? o.ch.cost(ctx) : o.ch.cost)).join('');
+    else if (enc.kind === 'walka') actions = btn('fight', '', 'Do broni', `${enc.enemies.length} ${pl(enc.enemies.length, ['przeciwnik', 'przeciwników', 'przeciwników'])}${enc.ambush ? ' · zasadzka' : ''}`, 'danger');
+    else {
+      const gods = godsAt(S).filter((g) => !enc.prayed[g.id]);
+      if (enc.lastResult) body += `<div class="card">${paras(enc.lastResult.text)}${fxLines(enc.lastResult.fx)}</div>`;
+      const risk = region.ambushChance(ctx), rw = (p) => (p < 0.1 ? 'małe' : p < 0.25 ? 'średnie' : 'duże');
+      actions = (gods.length ? `<div class="place" style="margin:0 0 8px">Modlitwa</div>` + gods.map((g) => btn('rest.pray', g.id, esc(g.name), `${favorWord(S.city.favor[g.id])}`, '', false, emblem(g.emblem, 'sm god'))).join('') : '')
+        + `<div class="place" style="margin:6px 0 8px">Nocleg</div>`
+        + (S.hero.items.sol ? btn('rest.sleep', 'sol', 'Śpij w kręgu soli', '1 sól · bez ryzyka') : '')
+        + (S.hero.items.pochodnia ? btn('rest.sleep', 'pochodnia', 'Śpij przy pochodni', `1 pochodnia · ryzyko ${rw(risk * 0.5)}`) : '')
+        + btn('rest.sleep', '', 'Śpij po ciemku', `ryzyko ${rw(risk)}`)
+        + btn('rest.watch', '', 'Czuwaj na zmianę', 'mniej snu, bez ryzyka');
+    }
+  } else {
+    body = paras(enc.result.text) + fxLines(enc.result.fx);
+    actions = enc.combat ? btn('enc.fight', '', 'Do broni', `${enc.combat.enemies.length} ${pl(enc.combat.enemies.length, ['przeciwnik', 'przeciwników', 'przeciwników'])}`, 'danger') : btn('enc.next', '', enc.kind === 'odpoczynek' ? 'Ruszaj dalej' : 'Dalej', '', 'primary');
+  }
+  return `<div class="screen">${sceneHTML(S, { placeId: enc.placeId, actor })}<div class="scroll pad prose">${body}</div><div class="actions">${actions}</div></div>`;
+};
+
+/* ---------- walka ---------- */
+SCREENS.combat = (S) => {
+  const cb = S.combat, exp = S.exp, enc = exp.encounter;
+  const turnUnit = cb.turn ? findUnit(S, cb.turn) : null;
+  const tgt = !!cb.pending;
+  const overlay = `<div class="enemies">${cb.enemies.map((e) => { const gone = e.hp <= 0 || e.fled; return `<div class="eunit${gone ? ' gone' : ''}${tgt && !gone ? ' targetable' : ''}" data-uid="${e.uid}" ${tgt && !gone ? `data-act="cb.target" data-arg="${e.uid}"` : ''}>${emblem(ENEMIES[e.kind].emblem, 'enemy' + (e.hp <= 0 ? ' dead' : ''))}<div class="name">${esc(e.name)}</div><div class="bar"><i style="width:${Math.round((100 * e.hp) / e.maxHp)}%"></i></div><div class="tags">${e.fled ? '<span class="tag">uciekł</span>' : statusTags(e)}</div></div>`; }).join('')}</div>`;
+  let actions = '', extra = '';
+  if (cb.phase === 'done') { if (cb.how !== 'death') { extra = `<div class="pad prose">${paras(cb.result.text)}${fxLines(cb.result.fx)}</div>`; actions = btn('cb.done', '', 'Dalej', '', 'primary'); } else actions = `<div class="center blood sc" style="padding:12px">…</div>`; }
+  else if (cb.phase === 'player' && turnUnit) {
+    if (tgt) actions = `<div class="center small gold" style="margin-bottom:8px">Wskaż cel na scenie.</div>${btn('cb.cancel', '', 'Anuluj', '', 'ghost sm')}`;
+    else { const ab = abilityOf(turnUnit), items = usableInCombat(S); actions = `<div class="center small muted" style="margin-bottom:8px">Ruch: <span class="gold sc">${esc(turnUnit.short)}</span></div><div class="btn-grid">${btn('cb.act', 'atak', 'Atak', `${turnUnit.atk[0]}–${turnUnit.atk[1]}`)}${btn('cb.act', 'zdolnosc', esc(ab.name), `${ab.mp} woli`, '', turnUnit.mp < ab.mp)}${btn('cb.items', '', 'Przedmiot', items.length ? `${items.length} ${pl(items.length, ['rodzaj', 'rodzaje', 'rodzajów'])}` : 'brak', '', !items.length)}${btn('cb.act', 'ucieczka', 'Ucieczka', 'ryzyko')}</div>`; }
+  } else actions = `<div class="center small muted" style="padding:14px">…</div>`;
+  return `<div class="screen">${sceneHTML(S, { placeId: enc.placeId, overlay })}<div class="scroll"><div class="log">${cb.log.slice(-3).map((l) => `<div>${esc(l)}</div>`).join('')}</div><div class="party">${exp.party.map((u) => unitCard(u, u.uid === cb.turn ? 'active' : '')).join('')}</div>${extra}</div><div class="actions">${actions}</div></div>`;
+};
+
+/* ---------- rozliczenie ---------- */
+SCREENS.reckoning = (S) => {
+  const r = S.reck, e = r.entries[r.i], last = r.i === r.entries.length - 1;
+  return `<div class="screen"><div class="scroll pad"><div class="place">Rozliczenie w Cechu · ${r.i + 1} z ${r.entries.length}</div><h2 class="title" style="font-size:28px;margin:8px 0">${esc(e.title)}</h2>${rule()}<div class="prose">${paras(e.text)}${fxLines(e.fx)}</div></div>
+<div class="actions">${e.choice ? e.choice.map((ch, k) => btn('reck.choice', k, esc(ch.label), ch.cost)).join('') : btn('reck.next', '', last ? 'Do miasta' : 'Dalej', '', 'primary')}</div></div>`;
+};
+
+/* ---------- śmierć ---------- */
+SCREENS.death = (S) => {
+  const d = S.death, e = d.entry;
+  return `<div class="screen death"><div class="scroll"><div style="height:24px"></div><h1 class="title">Kronika</h1>${emblem(d.emblem || 'token', 'xl dead')}
+<div class="prose" style="text-align:center;font-size:18px">${esc(e.name)}, ${esc(e.arch)}<br><span class="muted">— ${esc(e.cause)}.</span><br><span class="small muted">${esc(e.place)}, dzień ${e.day}, ${e.n}. wyprawa Odmętu.</span></div>${rule()}
+<div class="prose small" style="text-align:left"><p><span class="sc gold">Przepadło:</span> ${d.lost.gold ? `${d.lost.gold} ${pl(d.lost.gold, M)}` : 'ani monety'}${d.lost.items.length ? ', ' + d.lost.items.map(esc).join(', ').toLowerCase() : ''}. ${d.survivors.length ? `<span class="sc gold">${d.survivors.map(esc).join(' i ')}</span> ${d.survivors.length > 1 ? 'wracają sami' : (e.f ? 'wraca sama' : 'wraca sama')}. Nie mówi, co ${d.survivors.length > 1 ? 'widzieli' : 'widziała'}.` : ''}</p>
+<p class="sc gold" style="margin-bottom:4px">Co zostaje w Odmęcie:</p>${d.kept.map((k) => `<div class="mark know">${esc(k)}</div>`).join('')}</div></div>
+<div class="actions">${btn('death.next', '', 'Wróć do Odmętu', 'ktoś musi iść następny', 'primary')}</div></div>`;
+};
+
+/* ---------- arkusze ---------- */
+function sheetHTML(S) {
+  let inner = '';
+  if (UI.sheet === 'menu') inner = `<h2 class="h">Odmęt</h2><p class="small muted">Zapis jest automatyczny i zostaje w tej przeglądarce. „Nowa gra" wymazuje Kronikę, reputację i ludzi — wszystko, co miasto pamięta.</p>${btn('newgame', '', 'Nowa gra', 'wymazuje pamięć miasta', 'danger')}${btn('sheet.close', '', 'Zamknij', '', 'ghost')}`;
+  else if (UI.sheet === 'inv') {
+    const h = S.hero, ids = Object.keys(h.items).filter((k) => h.items[k] > 0);
+    const party = partyAlive(S);
+    inner = `<h2 class="h">Ekwipunek</h2><div class="scroll">${ids.length ? ids.map((k) => { const it = ITEMS[k]; return `<div class="card"><div class="row"><div class="grow"><div class="name">${esc(it.name)} <span class="gold">×${h.items[k]}</span></div><div class="small muted">${esc(it.desc)}</div></div></div>${it.anywhere && S.screen !== 'combat' ? `<div class="btn-grid" style="margin-top:8px">${party.map((u) => btn('use', `${k}|${u.uid}`, `${esc(it.name)} → ${esc(u.short)}`, '', 'sm', u.hp >= u.maxHp)).join('')}</div>` : ''}</div>`; }).join('') : '<div class="empty">Pusta sakwa. Bagno to zauważy.</div>'}<div class="small muted" style="margin:4px 0 10px">Skarbiec miasta: ${S.city.gold} ${pl(S.city.gold, M)}${h ? ` · przy sobie: ${h.gold} ${pl(h.gold, M)}` : ''}</div></div>${btn('sheet.close', '', 'Zamknij', '', 'ghost')}`;
+  } else if (UI.sheet === 'cbitems') {
+    const ids = usableInCombat(S);
+    inner = `<h2 class="h">Przedmiot</h2>${ids.map((k) => btn('cb.item', k, `${esc(ITEMS[k].name)} <span class="gold">×${S.hero.items[k]}</span>`, ITEMS[k].desc)).join('')}${btn('sheet.close', '', 'Anuluj', '', 'ghost')}`;
+  }
+  return `<div class="sheet" data-act="sheet.close"><div class="panel" data-act="noop">${inner}</div></div>`;
+}
+function confirmHTML() { return `<div class="confirm"><div class="box"><h2 class="h">Zacząć od nowa?</h2><p class="prose small">Odmęt zapomni wszystko: Kronikę, reputację, długi, ludzi. Bagno nie zapomni, ale bagno i tak nikogo nie słucha.</p>${btn('confirm.yes', '', 'Tak, od nowa', '', 'danger')}${btn('confirm.no', '', 'Nie', '', 'ghost')}</div></div>`; }
+
+/* ---------- render ---------- */
+function afterRender() { if (FX.p) { FX.p.stop(); FX.p = null; } const cv = $('.scene canvas.fx'); if (cv) FX.p = new Particles(cv, cv.dataset.mode, cv.dataset.night === '1'); }
+let LAST_SCREEN = null;
+function render() {
+  const app = $('#app'), fn = SCREENS[S.screen] || SCREENS.title;
+  app.innerHTML = fn(S) + (UI.sheet ? sheetHTML(S) : '') + (UI.confirm ? confirmHTML() : '');
+  if (LAST_SCREEN !== S.screen) { const sc = $('.screen'); if (sc) sc.classList.add('enter'); LAST_SCREEN = S.screen; }
+  afterRender(); flushFX();
+}
+function startNewGame() { wipe(); S = newState(); S.screen = 'create'; UI.arch = null; UI.name = genName(RNG); UI.party = []; UI.contract = 0; UI.sheet = null; UI.confirm = null; UI.resume = null; save(); render(); }
+
+/* ---------- zdarzenia ---------- */
+const ACTIONS = {
+  noop: () => {},
+  new: () => { if (S.hero || S.city.expeditions || S.city.heroes) { UI.confirm = 'newgame'; render(); } else startNewGame(); },
+  newgame: () => { UI.confirm = 'newgame'; render(); },
+  continue: () => { S.screen = UI.resume || 'city'; UI.resume = null; if (!S.hero && S.screen !== 'death' && S.screen !== 'create') S.screen = 'create'; if (S.screen === 'create') { UI.arch = null; UI.name = null; } save(); render(); if (S.screen === 'combat' && S.combat && S.combat.phase !== 'player' && S.combat.phase !== 'done') setTimeout(() => combatStep(S), 400); },
+  'confirm.yes': () => startNewGame(),
+  'confirm.no': () => { UI.confirm = null; render(); },
+  pickArch: (id) => { UI.arch = id; render(); },
+  reroll: () => { UI.name = genName(RNG); render(); },
+  create: () => { if (!UI.arch) return; createHero(S, UI.arch, UI.name); UI.arch = null; UI.name = null; render(); },
+  'city.contract': (i) => { UI.contract = +i; render(); },
+  'city.comp': (id) => { const i = UI.party.indexOf(id); if (i >= 0) UI.party.splice(i, 1); else if (UI.party.length < CFG.party.maxCompanions) UI.party.push(id); render(); },
+  'city.go': () => { const c = S.city.contracts[UI.contract] || S.city.contracts[0]; startExpedition(S, c, UI.party); render(); },
+  'city.buy': (id) => { buyUpgrade(S, id); render(); },
+  menu: () => { UI.sheet = 'menu'; render(); },
+  inv: () => { UI.sheet = 'inv'; render(); },
+  'sheet.close': () => { UI.sheet = null; render(); },
+  use: (arg) => { const [id, uid] = arg.split('|'); useItem(S, id, uid); render(); },
+  go: (id) => { enterNode(S, +id); render(); },
+  return: () => { returnToCity(S); render(); },
+  choose: (i) => { chooseOption(S, +i); render(); },
+  'enc.next': () => { resolveNode(S); render(); },
+  'enc.fight': () => { const enc = S.exp.encounter, c = enc.combat; if (!c) return; enc.combat = null; startCombat(S, c); render(); },
+  fight: () => { const enc = S.exp.encounter; if (enc.kind !== 'walka' || enc.stage !== 'open') return; enc.stage = 'fight'; startCombat(S, { enemies: enc.enemies, ambush: enc.ambush, after: 'map' }); render(); },
+  'rest.pray': (gid) => { pray(S, gid); render(); },
+  'rest.sleep': (ward) => { restDo(S, 'sleep', ward || null); render(); },
+  'rest.watch': () => { restDo(S, 'watch'); render(); },
+  'cb.act': (a) => playerAct(S, a),
+  'cb.target': (uid) => { const p = S.combat && S.combat.pending; if (!p) return; playerAct(S, p.action, uid, p.itemId); },
+  'cb.cancel': () => { if (S.combat) S.combat.pending = null; render(); },
+  'cb.items': () => { UI.sheet = 'cbitems'; render(); },
+  'cb.item': (id) => { UI.sheet = null; playerAct(S, 'przedmiot', null, id); render(); },
+  'cb.done': () => { afterCombat(S); render(); },
+  'reck.next': () => { const r = S.reck; if (r.i < r.entries.length - 1) r.i++; else { S.reck = null; S.screen = 'city'; } save(); render(); },
+  'reck.choice': (k) => { reckChoice(S, +k); render(); },
+  'death.next': () => { S.death = null; S.screen = 'create'; UI.arch = null; UI.name = null; save(); render(); },
+};
+
+/* ============================================================
+   6. START
+   ============================================================ */
+function boot() {
+  try { $('#paper').style.backgroundImage = `url(${paperTexture()})`; } catch (e) { }
+  document.addEventListener('click', (ev) => {
+    const el = ev.target.closest('[data-act]'); if (!el) return;
+    if (el.dataset.act === 'noop') { ev.stopPropagation(); return; }
+    ev.preventDefault(); ev.stopPropagation();
+    const fn = ACTIONS[el.dataset.act]; if (fn) fn(el.dataset.arg, el);
+  });
+  const s = load();
+  if (s) { S = s; S.pendingCombat = null; UI.resume = S.screen && S.screen !== 'title' ? S.screen : (S.hero ? 'city' : 'create'); if (S.exp && !S.hero) UI.resume = 'create'; S.screen = 'title'; }
+  else S = newState();
+  document.addEventListener('visibilitychange', () => { if (document.hidden) { if (FX.p) { FX.p.stop(); FX.p = null; } } else afterRender(); });
+  window.addEventListener('resize', () => { if (FX.p) FX.p.resize(); });
+  render();
+}
+boot();
+</script>
+</body>
+</html>
