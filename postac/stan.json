@@ -19,7 +19,7 @@
   "laska": 1,
   "reputacja": 0,
   "znaki": [],
-  "zmian": 14,
+  "zmian": 15,
   "ksiega": {
     "0": [
       {
@@ -186,6 +186,11 @@
       "co": "Kopia dowodowa karty „Cierpliwe Światło” (2 arkusze)",
       "ile": 1,
       "skad": "własnoręczna transkrypcja zwykłym atramentem, sesja 1 — nie da się z niej rzucać"
+    },
+    {
+      "co": "Lista jedenastu imion ręką Sarvina",
+      "ile": 1,
+      "skad": "nisza za atanorem w pracowni przy Ulicy Cynowej, 18 Uktar — nie figuruje w żadnym inwentarzu"
     },
     {
       "co": "Kusza lekka",

@@ -33,9 +33,27 @@ Szukający **nie znalazł niszy** — bo o niszy wie tylko uczeń.
 - W **niszy za atanorem**, przysłoniętej luźną cegłą, leży kartka.
   O niszy wie tylko uczeń — Sarvin trzymał tam pieniądze na wódkę dla tragarzy.
   Dziś leży tam **lista jedenastu imion**, ręką Sarvina, **równą, bez drżenia**,
-  z datami przy każdym. Bez tytułu, bez wyjaśnienia.
-  **Ósme imię na liście to Aelrindel Ilphaeryl.**
-  *(związane z TAJEMNICE T4 — gracz nie ma jak wiedzieć, co ta lista znaczy)*
+  z datami przy każdym. Bez tytułu, bez wyjaśnienia. Pełna treść:
+
+      Perendra Milgrast .......  3 Eleint
+      Onthar Vess ............. 11 Eleint
+      Ilmeth Cazrik ........... 19 Eleint
+      Sabra Yorrun ............ 27 Eleint
+      Dalvath Renn ............  4 Marpenoth
+      Nienna Sarwood ..........  9 Marpenoth
+      Krell Ondamar ........... 12 Marpenoth
+      Aelrindel Ilphaeryl ..... 15 Marpenoth
+      Tesmyra Loakh ........... 15 Marpenoth
+      Bel Corthyn ............. 16 Marpenoth
+      Vaeril Anstruth ......... 17 Marpenoth
+
+  **Sarvin zniknął 18 Marpenoth.** Dziś jest **18 Uktar** — równo trzydzieści dni później.
+  Ostatnie imię na liście nosi datę **dnia poprzedzającego jego zniknięcie.**
+
+  Wszystkie jedenaście osób to nowicjusze Czuwającego Zakonu. Aelrindel kojarzy
+  z widzenia mniej więcej połowę; z nikim z nich nie rozmawiał dłużej niż o pogodzie.
+
+  *(związane z TAJEMNICE T4 — gracz nie ma jak wiedzieć, CO ta lista znaczy)*
 
 ## Kto tam będzie w południe
 Magistra **Yssara Chelm** i skryba Zakonu, **Corlys Thend**. Nikt więcej — dopisek

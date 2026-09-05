@@ -95,3 +95,15 @@ Aelrindel rozpoznaje to po drobiazgach, których obcy by nie zauważył.
 
 **Aelrindel pamięta o niszy za atanorem** — luźna cegła, skrytka, w której Sarvin trzymał
 pieniądze na wódkę dla tragarzy. Wie o niej, bo był uczniem. Nie wie, czy coś w niej jest.
+
+**W niszy za atanorem leżała lista jedenastu nowicjuszy Zakonu**, ręką Sarvina,
+**równą — bez drżenia**, więc pisaną przed zniknięciem. Każde imię z datą, w kolejności.
+Bez tytułu, bez wyjaśnienia.
+
+- **Aelrindel jest ósmy**, data 15 Marpenoth.
+- Ostatnie imię, Vaeril Anstruth, ma datę **17 Marpenoth — dzień przed zniknięciem Sarvina.**
+- Dwa imiona dzielą tę samą datę: Aelrindel i Tesmyra Loakh, 15 Marpenoth.
+- Aelrindel kojarzy z widzenia mniej więcej połowę tych osób. Z żadną nie rozmawiał.
+
+**Czego nie wie:** co ta lista znaczy, dlaczego jest na niej, czy pozostała dziesiątka
+też ma coś w księgach, i dlaczego mistrz nigdy o tym nie wspomniał.

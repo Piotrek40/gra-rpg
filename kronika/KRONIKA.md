@@ -85,3 +85,25 @@ oraz **nisza za atanorem**, o której Aelrindel wie jako uczeń i której szukaj
 (przy sobie / pokój / Dom Cudów / dom rodu / rozdzielić) i czy powiedzieć Zakonowi o karcie.
 **Nauczone mechaniki:** test umiejętności i ST, wykrycie magii w rundach, zużywanie sztuczek,
 branie 20, rzuty nieprzerzucalne.
+
+**Dalszy ciąg sesji 1.** Aelrindel poszedł do **Domu Cudów** i pokazał kartę Naerys Vaeril.
+Kapłanka potwierdziła bez wahania: **Splot Cienia**. Szuka źródła szarpania Splotu nad
+Dzielnicą Morską od pół roku i nie miała twardego dowodu — do dziś. Przyjęła księgę
+na przechowanie („Dom Cudów nie wydaje ksiąg cechom") i wskazała lukę prawną:
+Zakon może spisać pracownię **zmarłego**, nad zaginionym władzy nie ma, a Aelrindel
+ma dowód, że Sarvin żył po dacie zgonu wpisanej w wezwanie. **Łaska Mystry +1.**
+Aelrindel obiecał wrócić jeszcze dziś, jeśli zdąży.
+
+Bez rzutu na Dyplomację — zgodnie z zasadą z `swiat/rozmowy.md`: Naerys i tak by to zrobiła.
+
+**Rozstrzygnięcie R1** (`swiat/rozstrzygniecia.md`) na pytanie gracza o formułę
+„przed dniem dzisiejszym": litera chroni przed procedurą, nie przed świadkiem.
+
+Na Ulicę Cynową dotarł o **11:15**, czterdzieści pięć minut przed czasem, i wszedł kluczem
+z latarni. Rozpoznał, że pracownię wcześniej **starannie przeszukano**. Sięgnął do niszy
+za atanorem — jedynej skrytki, o której wie tylko uczeń — i znalazł **listę jedenastu
+nowicjuszy Zakonu** pisaną równą ręką Sarvina, z datami. Jest na niej **ósmy**.
+Ostatnia data to **dzień przed zniknięciem mistrza**.
+
+**Otwarte:** 11:21, trzydzieści dziewięć minut do przyjścia Yssary Chelm.
+Aelrindel trzyma listę, której nie ma w żadnym inwentarzu.
