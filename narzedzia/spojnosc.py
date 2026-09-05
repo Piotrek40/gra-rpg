@@ -131,8 +131,6 @@ nf = ROOT / 'swiat' / 'nie_postacie.txt'
 if nf.exists():
     NIE_OSOBY = {k(l) for l in nf.read_text(encoding='utf-8').splitlines()
                  if l.strip() and not l.startswith('#')}
-NIE_OSOBY = {k(l) for l in (ROOT / 'swiat' / 'niepostacie.txt').read_text(encoding='utf-8').splitlines()
-             if l.strip() and not l.startswith('#')}
 for m in re.findall(r'\*\*([A-ZŚŻŹĆŃŁÓĄĘ][\w\.\'-]+(?: [A-ZŚŻŹĆŃŁÓĄĘ][\w\.\'-]+)+)\*\*', kronika):
     mm = m.rstrip('.,:;!?')
     if k(mm) not in znane and k(mm) not in NIE_OSOBY and len(mm.split()) == 2:

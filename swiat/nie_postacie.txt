@@ -1,13 +1,28 @@
 # Wyrażenia, które wyglądają jak imię i nazwisko, ale nimi nie są.
 # Kontrola spójności pomija je przy szukaniu postaci bez pliku.
 # Dopisuj tu tylko wtedy, gdy naprawdę nie chodzi o osobę.
-Domu Cudów
-Dom Cudów
-Rozstrzygnięcie R1
-Ulicy Cynowej
-Ulica Cynowa
-Splot Cienia
-Święto Księżyca
+Cierpliwe Światło
 Czuwający Zakon
+Dom Cudów
+Domu Cudów
+Dzielnica Kupiecka
+Dzielnica Morska
+Dzielnica Portowa
 Dzielnicy Morskiej
+Głębia Wodna
+Miasto Umarłych
+Rok Doliny
+Rok Dzikiej Magii
+Rozstrzygnięcie R1
+Splot Cienia
+Straż Miejska
+Ulica Cynowa
+Ulica Diamentowa
+Ulicy Cynowej
+Wieża Czarnolaskiego
+Wybrzeże Mieczy
+Zapomniane Krainy
+Zaułek Węgorzowy
+Ziejący Portal
 Łaska Mystry
+Święto Księżyca
