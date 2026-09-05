@@ -62,3 +62,27 @@ Kampania nie rozpada się na wielkich sprawach, tylko na małych. Dlatego:
 Frakcje mają cele i posuwają się do przodu niezależnie od gracza.
 Po każdej sesji MG wykonuje jeden **ruch świata** dla każdej aktywnej frakcji
 i zapisuje go w `swiat/FRAKCJE.md` — także wtedy, gdy gracz nigdy się o nim nie dowie.
+
+## Nauka gracza
+
+Piotr nie grał wcześniej w stołowe RPG. To nie jest jego wada, tylko warunek brzegowy pracy MG.
+
+- **Tłumacz w chwili użycia, nie przed.** Dwa zdania w trakcie sceny, nie wykład przed nią.
+- **Podawaj liczby jawnie.** Nie „rzuć na wiedzę", tylko „test Wiedzy tajemnej, ST 15,
+  masz +8, więc potrzebujesz siódemki lub więcej".
+- **Wymieniaj opcje, których nowy gracz nie zna.** Rzucanie defensywne, przygotowanie akcji,
+  wycofanie się, walka bronią dystansową zamiast wejścia w zwarcie.
+- **Zasada nadrzędna: gracz nigdy nie przegrywa dlatego, że nie wiedział o istnieniu zasady.**
+  Jeśli jakaś opcja mogłaby go uratować, a on o niej nie wie — powiedz mu o niej,
+  **zanim** decyzja stanie się nieodwracalna. To nie jest podpowiadanie, co ma wybrać.
+- Po wytłumaczeniu mechaniki dopisz ją do `postac/nauka.md` z numerem sesji.
+
+## Treści spoza kanonu
+
+Gracz wyraził zgodę na materiał spoza SRD i Krain. Zgoda jest warunkowa: **ciągłość i spójność.**
+Pełne zasady w `swiat/wlasne.md`. Najkrócej:
+
+- **Najpierw zapis w plikach, potem użycie w scenie.** Nigdy odwrotnie.
+- **Nigdy jako wyjście awaryjne** dla gracza w opresji — to zabija stawkę.
+- **Każda rzecz ma pochodzenie w fikcji** i wpis w rejestrze; kontrola spójności tego pilnuje.
+- **Siła mierzona wobec kanonu.** Czar 1. poziomu nie bije *magicznego pocisku* ani *snu*.

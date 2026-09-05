@@ -68,6 +68,13 @@ if log.exists():
     for l in log.read_text(encoding='utf-8').splitlines()[-5:]:
         print('  ' + l.split('| ', 3)[-1])
 
+naglowek('NAUKA GRACZA — czego jeszcze nie tłumaczyłem')
+nauka = (ROOT / 'postac' / 'nauka.md').read_text(encoding='utf-8')
+doWyt = nauka.split('## Do wytłumaczenia')[1].split('## Zasada nadrzędna')[0]
+poz = [l.strip('- ').strip() for l in doWyt.splitlines() if l.strip().startswith('-')]
+print('  ' + ('; '.join(poz) if poz else 'wszystko wytłumaczone'))
+print('  ZASADA: gracz nigdy nie przegrywa dlatego, że nie wiedział o istnieniu zasady.')
+
 naglowek('ZAKAZY — przeczytaj, zanim otworzysz scenę')
 z = (ROOT / 'ZASADY-MG.md').read_text(encoding='utf-8')
 for l in z.split('## Czego MG nie wolno')[1].split('## Co MG robi')[0].splitlines():

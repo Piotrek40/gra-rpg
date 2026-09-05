@@ -53,6 +53,16 @@ for poz in ('0', '1'):
         if w < g['wrozbiarskich']:
             blad(f"poziom {poz}: miejsce specjalisty niewypełnione czarem wróżbiarskim")
 
+# 2b. Treści spoza kanonu — muszą mieć pochodzenie w fikcji
+WLASNE = [n for n, d in czary.items() if not d.get('kanon', True)]
+for n in WLASNE:
+    if not czary[n].get('zrodlo'):
+        blad(f"czar '{n}' jest spoza kanonu, ale nie ma pola 'zrodlo' — skąd się wziął w świecie?")
+rejestr = (ROOT / 'swiat' / 'wlasne.md').read_text(encoding='utf-8')
+for n in WLASNE:
+    if n not in rejestr:
+        blad(f"czar spoza kanonu '{n}' nie jest wpisany do swiat/wlasne.md")
+
 # 3. Ekwipunek — czy wszystko ma udokumentowane pochodzenie
 for e in st.get('ekwipunek', []):
     if not e.get('skad'):
@@ -105,6 +115,7 @@ print('KONTROLA SPÓJNOŚCI KAMPANII')
 print('=' * 62)
 liczby = (len(st['ksiega']['0']) + len(st['ksiega']['1']), len(st.get('ekwipunek', [])), len(znane))
 print(f'sprawdzono: {liczby[0]} czarów, {liczby[1]} pozycji ekwipunku, {liczby[2]} postaci niezależnych')
+print(f'treści spoza kanonu: {len(WLASNE)}' + (f" ({', '.join(WLASNE)})" if WLASNE else ' — na razie czysty SRD'))
 for b in BLEDY: print('  BŁĄD:      ' + b)
 for o in OSTRZ: print('  ostrzeżenie: ' + o)
 if not BLEDY and not OSTRZ:
