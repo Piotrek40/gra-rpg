@@ -85,3 +85,13 @@ podstawą prawną całej procedury**. Aelrindel niesie w kieszeni kopię dowodow
 
 **Księga zdeponowana w Domu Cudów.** Konsekwencja mechaniczna: **żeby przygotować czary,
 trzeba tam wrócić** — czterdzieści minut w jedną stronę, codziennie.
+
+**Wieża otwarta o 11:15, na 45 minut przed spisem.** Klucz był na haczyku w latarni,
+zgodnie z treścią wezwania. Nikt nie zakazał przyjścia wcześniej.
+
+**Pracownia została wcześniej przeszukana** — starannie, z odkładaniem rzeczy na miejsce.
+Aelrindel rozpoznaje to po drobiazgach, których obcy by nie zauważył.
+*(automatycznie — dwanaście lat w tym pomieszczeniu)*
+
+**Aelrindel pamięta o niszy za atanorem** — luźna cegła, skrytka, w której Sarvin trzymał
+pieniądze na wódkę dla tragarzy. Wie o niej, bo był uczniem. Nie wie, czy coś w niej jest.

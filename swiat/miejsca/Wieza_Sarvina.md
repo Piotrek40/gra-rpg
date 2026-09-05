@@ -8,6 +8,16 @@ dwanaście lat i zna każdy skrzypiący stopień — czwarty od dołu i przedost
 **Klucz** wisi tam, gdzie zawsze: na haczyku wewnątrz obudowy latarni przy drzwiach.
 Wie o tym pięć osób w mieście, z czego dwie żyją.
 
+## Stan pracowni po trzydziestu dniach
+
+**Ktoś już tu był i szukał.** Nie plądrował — przeszukał starannie i odłożył wszystko
+na miejsce. Człowiek z ulicy nie zobaczy nic. Uczeń, który spędzał tu pół tygodnia
+przez dwanaście lat, zobaczy od progu: **rzeczy stoją tam, gdzie trzeba, ale nie tak, jak trzeba.**
+Moździerz obrócony uchem w złą stronę. Książki wyrównane do krawędzi półki, a Sarvin
+zawsze zostawiał je wysunięte na palec, żeby łatwiej chwytać. Popiół w atanorze wygarnięty.
+
+Szukający **nie znalazł niszy** — bo o niszy wie tylko uczeń.
+
 ## Co w niej jest — spisane, zanim gracz wejdzie
 
 **Rzeczy niewątpliwie Aelrindela** (zostawiane tam przez lata):

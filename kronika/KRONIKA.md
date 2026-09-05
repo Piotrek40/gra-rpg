@@ -67,6 +67,20 @@ Bez testu Dyplomacji: nastawienie życzliwe, a prośba zbiega się z jej własny
 **Konsekwencja:** księga została w Dzielnicy Morskiej. Przygotowanie czarów wymaga
 codziennego powrotu, czterdzieści minut w jedną stronę.
 
+**Ulica Cynowa, 11:15.** Aelrindel dotarł do pracowni **45 minut przed spisem** — skutek
+trzech własnych decyzji, nie układu MG. Klucz wisiał na haczyku w latarni, zgodnie z treścią
+wezwania; nikt nie zakazał przyjścia wcześniej. Wszedł.
+
+Rozpoznał **od progu, że ktoś już tu szukał** — starannie, odkładając rzeczy na miejsce:
+moździerz obrócony uchem w złą stronę, książki wyrównane do krawędzi półki (Sarvin zawsze
+zostawiał je wysunięte na palec), popiół w atanorze wygarnięty. *(automatycznie — dwanaście
+lat w tym pomieszczeniu, bez rzutu)*
+
+W zasięgu: **dziennik pracowni** otwarty na pulpicie (ostatni wpis trzy dni przed zniknięciem),
+**skrzynka komponentów** warta ok. 40 sz, **własne rzeczy** z dwunastu lat nauki
+oraz **nisza za atanorem**, o której Aelrindel wie jako uczeń i której szukający nie znalazł.
+
+**Otwarte:** 43 minuty do przyjścia Yssary Chelm i skryby. Co zabrać i czy o tym powiedzieć.
 **Otwarte przed Domem Cudów:** do południa około dwóch i pół godziny. Gdzie zabezpieczyć samą księgę
 (przy sobie / pokój / Dom Cudów / dom rodu / rozdzielić) i czy powiedzieć Zakonowi o karcie.
 **Nauczone mechaniki:** test umiejętności i ST, wykrycie magii w rundach, zużywanie sztuczek,
