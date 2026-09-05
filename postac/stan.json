@@ -19,7 +19,7 @@
   "laska": 0,
   "reputacja": 0,
   "znaki": [],
-  "zmian": 10,
+  "zmian": 11,
   "ksiega": {
     "0": [
       {
@@ -176,6 +176,11 @@
       "co": "Księga czarów po Sarvinie Alaunthar",
       "ile": 1,
       "skad": "spadek po mistrzu"
+    },
+    {
+      "co": "Luźne notatki robocze Sarvina",
+      "ile": 1,
+      "skad": "wetknięte między strony odziedziczonej księgi czarów"
     },
     {
       "co": "Kusza lekka",

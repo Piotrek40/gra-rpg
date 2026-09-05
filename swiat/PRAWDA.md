@@ -35,6 +35,21 @@ co w Zakonie oznacza status niejasny: składkę płacisz, głosu nie masz.
   że przychodzisz tam, gdy nie masz dokąd pójść. Nigdy o tym nie wspomniała.
 - Jest w mieście elfka słoneczna, która wie o twoim rodzie więcej niż ty.
 
+## Pokój Aelrindela
+
+Nad warsztatem bednarza przy Zaułku Węgorzowym, Dzielnica Portowa. Cztery kroki na sześć.
+Wynajmowany od dwunastu lat — odkąd poszedł na naukę i przestały przychodzić zaproszenia z domu.
+
+Nie ma tu nic wartościowego poza tym, co Aelrindel nosi przy sobie, i księgą.
+Dwanaście lat oszczędzania na komponenty wygląda dokładnie tak: siennik, skrzynia
+na ubranie, stół pod oknem, dwa krzesła (jedno kulawe), półka z sześcioma tanimi
+książkami bez magii, komplet szkła alchemicznego z drugiej ręki, wiadro na przeciek.
+Wilgoć w północnym kącie, której nie da się wysuszyć od jesieni.
+
+**Nikt tu nie wchodził.** Koperta została wsunięta pod drzwi i to wszystko —
+ale wepchnięto ją głęboko, czymś cienkim, tak by nie było jej widać od strony korytarza.
+Ktokolwiek ją przyniósł, nie chciał, żeby znalazł ją sąsiad albo bednarz.
+
 ## Tajemnice
 
 Pięć rzeczy, które są już prawdą, a których jeszcze nie znasz, leży w `TAJEMNICE.b64`.
