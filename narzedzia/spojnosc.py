@@ -1,0 +1,116 @@
+#!/usr/bin/env python3
+"""Kontrola spójności kampanii. Wykrywa dryf, którego człowiek nie zauważy.
+
+Sprawdza rzeczy, które w długiej kampanii cicho się rozjeżdżają:
+czy czar nie zmienił szkoły, czy nie pojawił się w ekwipunku przedmiot znikąd,
+czy postać niezależna nie mówi czegoś sprzecznego z tym, co już powiedziała.
+
+  python3 narzedzia/spojnosc.py
+"""
+import json, pathlib, unicodedata, hashlib, sys, re
+
+ROOT = pathlib.Path(__file__).resolve().parent.parent
+BLEDY, OSTRZ = [], []
+
+def k(s):
+    s = s.lower().strip().replace('ł', 'l')
+    return ''.join(c for c in unicodedata.normalize('NFKD', s) if not unicodedata.combining(c))
+
+def blad(m): BLEDY.append(m)
+def ostrz(m): OSTRZ.append(m)
+
+st = json.loads((ROOT / 'postac' / 'stan.json').read_text(encoding='utf-8'))
+czary = json.loads((ROOT / 'swiat' / 'czary.json').read_text(encoding='utf-8'))
+CZ = {k(n): (n, d) for n, d in czary.items()}
+
+# 1. Czy każdy czar w księdze istnieje w wykazie i ma tę samą szkołę
+zakazana = k(st['postac']['zakazana'])
+for poz in ('0', '1'):
+    for c in st['ksiega'][poz]:
+        wpis = CZ.get(k(c['nazwa']))
+        if not wpis:
+            blad(f"czar '{c['nazwa']}' jest w księdze, ale nie ma go w swiat/czary.json — nie znam jego działania")
+            continue
+        nazwa, d = wpis
+        if k(d['szkola']) != k(c['szkola']):
+            blad(f"czar '{c['nazwa']}': księga mówi '{c['szkola']}', wykaz mówi '{d['szkola']}'")
+        if str(d['poziom']) != poz:
+            blad(f"czar '{c['nazwa']}' leży na poziomie {poz}, a jest czarem {d['poziom']}. poziomu")
+        if k(d['szkola']) == zakazana:
+            blad(f"czar '{c['nazwa']}' należy do szkoły zakazanej ({st['postac']['zakazana']}) — nie wolno go mieć")
+
+# 2. Czy przygotowane czary pochodzą z księgi i mieszczą się w miejscach
+for poz in ('0', '1'):
+    g = st['zaklecia'][poz]
+    ksiega = {k(c['nazwa']) for c in st['ksiega'][poz]}
+    if len(g['przygotowane']) > g['miejsc']:
+        blad(f"poziom {poz}: przygotowano {len(g['przygotowane'])} czarów na {g['miejsc']} miejsc")
+    for s in g['przygotowane']:
+        if k(s['nazwa']) not in ksiega:
+            blad(f"przygotowany '{s['nazwa']}' nie występuje w księdze poziomu {poz}")
+    if g['przygotowane']:
+        w = sum(1 for s in g['przygotowane'] if k(s['szkola']) == k('wróżbiarstwo'))
+        if w < g['wrozbiarskich']:
+            blad(f"poziom {poz}: miejsce specjalisty niewypełnione czarem wróżbiarskim")
+
+# 3. Ekwipunek — czy wszystko ma udokumentowane pochodzenie
+for e in st.get('ekwipunek', []):
+    if not e.get('skad'):
+        blad(f"przedmiot '{e['co']}' nie ma zapisanego pochodzenia — skąd się wziął?")
+    if e.get('ile', 0) < 0:
+        blad(f"przedmiot '{e['co']}': ujemna ilość {e['ile']}")
+
+# 4. Punkty wytrzymałości w granicach
+pw = st['pw']
+if pw['teraz'] > pw['maks']:
+    blad(f"punkty wytrzymałości {pw['teraz']} przekraczają maksimum {pw['maks']}")
+if st['zloto'] < 0:
+    blad(f"ujemne złoto: {st['zloto']}")
+
+# 5. Łańcuch dziennika
+LOG = ROOT / 'postac' / 'dziennik.log'
+if LOG.exists():
+    linie = [l for l in LOG.read_text(encoding='utf-8').splitlines() if l.strip()]
+    for i in range(1, len(linie)):
+        ocz = hashlib.sha256(linie[i - 1].encode('utf-8')).hexdigest()[:16]
+        pod = linie[i].split('| prev:')[1].split(' |')[0]
+        if pod != ocz:
+            blad(f"dziennik: zerwany łańcuch w wierszu {i + 1}")
+    if linie:
+        biez = hashlib.sha256(json.dumps(st, ensure_ascii=False, sort_keys=True).encode('utf-8')).hexdigest()[:16]
+        if biez != linie[-1].split('| stan:')[1].split(' |')[0]:
+            blad("stan.json zmieniony poza programem — odcisk nie zgadza się z dziennikiem")
+
+# 6. Tajemnice — czy nikt ich nie podmienił
+sha = (ROOT / 'swiat' / 'TAJEMNICE.sha256').read_text(encoding='utf-8').split()[0]
+prawda = (ROOT / 'swiat' / 'PRAWDA.md').read_text(encoding='utf-8')
+if sha not in prawda:
+    blad("suma kontrolna tajemnic w PRAWDA.md nie zgadza się z TAJEMNICE.sha256")
+import base64
+tresc = base64.b64decode((ROOT / 'swiat' / 'TAJEMNICE.b64').read_text(encoding='utf-8'))
+if hashlib.sha256(tresc).hexdigest() != sha:
+    blad("TAJEMNICE.b64 zostały zmienione — treść nie odpowiada zapisanej sumie kontrolnej")
+
+# 7. Postacie niezależne — każda wymieniona w kronice musi mieć własny plik
+KAT = ROOT / 'swiat' / 'postacie'
+znane = {k(p.stem.replace('_', ' ')) for p in KAT.glob('*.md')} if KAT.exists() else set()
+kronika = (ROOT / 'kronika' / 'KRONIKA.md').read_text(encoding='utf-8')
+for m in re.findall(r'\*\*([A-ZŚŻŹĆŃŁÓĄĘ][\w\.\'-]+(?: [A-ZŚŻŹĆŃŁÓĄĘ][\w\.\'-]+)+)\*\*', kronika):
+    if k(m) not in znane and len(m.split()) == 2:
+        ostrz(f"kronika wymienia '{m}', a nie ma pliku w swiat/postacie/ — grozi utratą ciągłości")
+
+# --------------------------------------------------------------------------
+print('=' * 62)
+print('KONTROLA SPÓJNOŚCI KAMPANII')
+print('=' * 62)
+liczby = (len(st['ksiega']['0']) + len(st['ksiega']['1']), len(st.get('ekwipunek', [])), len(znane))
+print(f'sprawdzono: {liczby[0]} czarów, {liczby[1]} pozycji ekwipunku, {liczby[2]} postaci niezależnych')
+for b in BLEDY: print('  BŁĄD:      ' + b)
+for o in OSTRZ: print('  ostrzeżenie: ' + o)
+if not BLEDY and not OSTRZ:
+    print('\n  Bez zastrzeżeń. Wszystko zgadza się ze źródłami.')
+elif not BLEDY:
+    print(f'\n  Błędów brak. Ostrzeżeń: {len(OSTRZ)}.')
+else:
+    print(f'\n  BŁĘDÓW: {len(BLEDY)}. Nie zaczynaj sesji, dopóki nie znikną.')
+sys.exit(1 if BLEDY else 0)

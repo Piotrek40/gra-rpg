@@ -154,6 +154,16 @@ def liczba(st, pole, delta, powod):
     zapisz(st, f'{pole} {delta:+d} ({powod}) -> {st[pole]}')
 
 
+def korekta(st, powod):
+    """Jawne zatwierdzenie zmiany wprowadzonej poza programem.
+
+    Poprawki się zdarzają — błąd w danych, pomyłka Mistrza Gry. Mają być
+    widoczne w dzienniku z powodem, a nie po cichu przywracać zgodność."""
+    if not powod.strip():
+        blad('korekta wymaga powodu — bez niego to zacieranie śladów')
+    zapisz(st, f'KOREKTA POZA PROGRAMEM: {powod}')
+
+
 def znak(st, tresc):
     st['znaki'].append(tresc)
     zapisz(st, f'znak: {tresc}')
@@ -206,5 +216,6 @@ if __name__ == '__main__':
     elif cmd == 'odpoczynek': odpoczynek(st)
     elif cmd in ('laska', 'doswiadczenie', 'zloto', 'reputacja'): liczba(st, cmd, arg[0], ' '.join(arg[1:]) or '—')
     elif cmd == 'znak': znak(st, ' '.join(arg))
+    elif cmd == 'korekta': korekta(st, ' '.join(arg))
     elif cmd == 'eksport': eksport(arg[0] if arg else '/tmp/stan_db.json')
     else: blad(f'nieznane polecenie: {cmd}')

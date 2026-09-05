@@ -19,7 +19,7 @@
   "laska": 0,
   "reputacja": 0,
   "znaki": [],
-  "zmian": 2,
+  "zmian": 3,
   "ksiega": {
     "0": [
       {
@@ -84,7 +84,7 @@
       },
       {
         "nazwa": "Tajemny znak",
-        "szkola": "przemiana"
+        "szkola": "uniwersalne"
       },
       {
         "nazwa": "Sztuczka",
@@ -170,5 +170,77 @@
         }
       ]
     }
-  }
+  },
+  "ekwipunek": [
+    {
+      "co": "Księga czarów po Sarvinie Alaunthar",
+      "ile": 1,
+      "skad": "spadek po mistrzu"
+    },
+    {
+      "co": "Kusza lekka",
+      "ile": 1,
+      "skad": "zakup przed wyprawą"
+    },
+    {
+      "co": "Bełty",
+      "ile": 20,
+      "skad": "zakup przed wyprawą"
+    },
+    {
+      "co": "Sztylet",
+      "ile": 1,
+      "skad": "zakup przed wyprawą"
+    },
+    {
+      "co": "Sakwa na komponenty",
+      "ile": 1,
+      "skad": "zakup przed wyprawą"
+    },
+    {
+      "co": "Atrament i pióro",
+      "ile": 1,
+      "skad": "zakup przed wyprawą"
+    },
+    {
+      "co": "Pergamin (arkusze)",
+      "ile": 5,
+      "skad": "zakup przed wyprawą"
+    },
+    {
+      "co": "Plecak",
+      "ile": 1,
+      "skad": "zakup przed wyprawą"
+    },
+    {
+      "co": "Posłanie",
+      "ile": 1,
+      "skad": "zakup przed wyprawą"
+    },
+    {
+      "co": "Bukłak",
+      "ile": 1,
+      "skad": "zakup przed wyprawą"
+    },
+    {
+      "co": "Krzesiwo",
+      "ile": 1,
+      "skad": "zakup przed wyprawą"
+    },
+    {
+      "co": "Pochodnia",
+      "ile": 3,
+      "skad": "zakup przed wyprawą"
+    },
+    {
+      "co": "Racje żelazne (dni)",
+      "ile": 5,
+      "skad": "zakup przed wyprawą"
+    },
+    {
+      "co": "Ubranie podróżne",
+      "ile": 1,
+      "skad": "zakup przed wyprawą"
+    }
+  ]
 }

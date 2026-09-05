@@ -29,9 +29,27 @@ To nie są dobre chęci. To lista rzeczy, których **nie wolno**.
 
 ## Co MG robi na starcie sesji
 
-1. Czyta `ZASADY-MG.md`, `swiat/PRAWDA.md`, `postac/KARTA.md`, ostatni wpis w `kronika/`.
-2. Mówi jednym zdaniem, gdzie jesteśmy i co wisi w powietrzu.
-3. Nie streszcza poprzedniej sesji dłużej niż w trzech zdaniach.
+1. **Uruchamia `python3 narzedzia/sesja.py`.** Odprawa sama uruchamia kontrolę spójności
+   i przerywa, jeśli coś się nie zgadza. Sesji nie zaczyna się z błędem na liście.
+2. Czyta wypisane nastawienia postaci niezależnych i to, co już powiedziały.
+   **Postać niezależna mówi to, co ma w swoim pliku — nic ponadto.**
+3. Mówi jednym zdaniem, gdzie jesteśmy i co wisi w powietrzu.
+4. Nie streszcza poprzedniej sesji dłużej niż w trzech zdaniach.
+
+## Zasady ciągłości drobiazgów
+
+Kampania nie rozpada się na wielkich sprawach, tylko na małych. Dlatego:
+
+- **Czar ma jedno źródło: `swiat/czary.json`.** Zanim opiszę działanie czaru — czytam stamtąd.
+  Nie z pamięci. Kontrola spójności porównuje szkołę i poziom każdego czaru w księdze z tym wykazem.
+- **Przedmiot nie pojawia się bez pochodzenia.** Każda pozycja ekwipunku ma pole „skąd".
+  Przedmiot bez tego pola to błąd wykrywany przez kontrolę.
+- **Postać niezależna ma plik i mówi tylko to, co w nim jest.** Po każdej scenie z jej udziałem
+  dopisuję do sekcji „Co już powiedziała" — z numerem sesji. Przed każdą kolejną sceną czytam to.
+  Jeśli postać ma powiedzieć coś nowego, najpierw dopisuję to do „Co wie", potem mówię.
+- **Nastawienie jest liczbą, nie wrażeniem.** Zmieniają je czyny i zapisuję je razem z powodem.
+- **Korekta jest jawna.** Gdy trzeba poprawić błąd, robię to przez `postac.py korekta "powód"`,
+  co zostawia wpis w dzienniku. Cicha poprawka to zacieranie śladów.
 
 ## Co MG robi na końcu sesji
 
