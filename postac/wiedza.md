@@ -56,3 +56,15 @@ a wezwanie każe mu potwierdzić, że niczego z pracowni nie wyniósł.
 
 **Czego wciąż nie wie:** kto to zrobił, po co, gdzie Sarvin jest teraz
 i co właściwie robi czar *Cierpliwe Światło*.
+
+**Sporządzona kopia dowodowa karty.** Wierna transkrypcja zwykłym atramentem na dwóch
+arkuszach pergaminu — układ run, skróty komponentów i **odwzorowane drżenie liter**.
+*(Sztuka magiczna z braniem 20 = 28 przy progu 15, około 40 minut)*
+
+- **Nie da się z niej rzucać.** To dowód, nie czar.
+- Kopia działająca wymagałaby atramentów kosztujących wielokrotność jego majątku ◇
+  i oznaczałaby świadome sporządzenie drugiej karty Splotu Cienia.
+- **Karty nie wyrwał z księgi.** Zniszczenie wiedzy magicznej kosztowałoby −2 łaski Mystry
+  (tabela w `swiat/MYSTRA.md`). Za samo skopiowanie tabela nie przewiduje nic — łaska stoi na 0.
+
+◇ = dokładna stawka za stronę w księdze czarów do potwierdzenia w podręczniku Piotra.

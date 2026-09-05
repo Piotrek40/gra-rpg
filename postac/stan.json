@@ -19,7 +19,7 @@
   "laska": 0,
   "reputacja": 0,
   "znaki": [],
-  "zmian": 11,
+  "zmian": 12,
   "ksiega": {
     "0": [
       {
@@ -183,6 +183,11 @@
       "skad": "wetknięte między strony odziedziczonej księgi czarów"
     },
     {
+      "co": "Kopia dowodowa karty „Cierpliwe Światło” (2 arkusze)",
+      "ile": 1,
+      "skad": "własnoręczna transkrypcja zwykłym atramentem, sesja 1 — nie da się z niej rzucać"
+    },
+    {
       "co": "Kusza lekka",
       "ile": 1,
       "skad": "zakup przed wyprawą"
@@ -209,7 +214,7 @@
     },
     {
       "co": "Pergamin (arkusze)",
-      "ile": 5,
+      "ile": 3,
       "skad": "zakup przed wyprawą"
     },
     {

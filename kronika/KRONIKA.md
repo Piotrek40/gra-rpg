@@ -49,6 +49,12 @@ Wiedza tajemna **27** przy progu 18). Pismo jest autentyczne, ale karta ma **ró
 drżenie**, którego notatki nie mają — drżenie miarowe, nie starcze i nie ze strachu.
 Ręka prowadzona. Wniosek: karta powstała po zniknięciu Sarvina, a on **żył**, gdy powstawała.
 
-**Otwarte:** do południa około trzech i pół godziny. Aelrindel nie zdecydował, dokąd idzie.
+Sporządził **kopię dowodową** karty — wierną transkrypcję zwykłym atramentem, z odwzorowanym
+drżeniem liter (Sztuka magiczna z braniem 20 = 28 przy progu 15, dwa arkusze pergaminu, 40 minut).
+Kopii działającej nie stać go sporządzić, a byłaby to druga karta Splotu Cienia.
+**Karty nie wyrwał** — świadomie, bo zniszczenie wiedzy magicznej kosztuje −2 łaski Mystry.
+
+**Otwarte:** do południa około dwóch i pół godziny. Gdzie zabezpieczyć samą księgę
+(przy sobie / pokój / Dom Cudów / dom rodu / rozdzielić) i czy powiedzieć Zakonowi o karcie.
 **Nauczone mechaniki:** test umiejętności i ST, wykrycie magii w rundach, zużywanie sztuczek,
 branie 20, rzuty nieprzerzucalne.
