@@ -126,8 +126,10 @@ if hashlib.sha256(tresc).hexdigest() != sha:
 KAT = ROOT / 'swiat' / 'postacie'
 znane = {k(p.stem.replace('_', ' ')) for p in KAT.glob('*.md')} if KAT.exists() else set()
 kronika = (ROOT / 'kronika' / 'KRONIKA.md').read_text(encoding='utf-8')
+NIE_OSOBY = {k(l) for l in (ROOT / 'swiat' / 'niepostacie.txt').read_text(encoding='utf-8').splitlines()
+             if l.strip() and not l.startswith('#')}
 for m in re.findall(r'\*\*([A-ZŚŻŹĆŃŁÓĄĘ][\w\.\'-]+(?: [A-ZŚŻŹĆŃŁÓĄĘ][\w\.\'-]+)+)\*\*', kronika):
-    if k(m) not in znane and len(m.split()) == 2:
+    if k(m) not in znane and k(m) not in NIE_OSOBY and len(m.split()) == 2:
         ostrz(f"kronika wymienia '{m}', a nie ma pliku w swiat/postacie/ — grozi utratą ciągłości")
 
 # --------------------------------------------------------------------------

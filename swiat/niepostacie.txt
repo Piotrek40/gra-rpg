@@ -1,0 +1,22 @@
+# Nazwy własne pisane wielką literą, które NIE są postaciami.
+# Kontrola spójności pomija je, szukając osób bez pliku w swiat/postacie/.
+Splot Cienia
+Dom Cudów
+Czuwający Zakon
+Rok Dzikiej Magii
+Święto Księżyca
+Ulica Cynowa
+Ulica Diamentowa
+Zaułek Węgorzowy
+Miasto Umarłych
+Dzielnica Morska
+Dzielnica Portowa
+Dzielnica Kupiecka
+Głębia Wodna
+Wybrzeże Mieczy
+Zapomniane Krainy
+Cierpliwe Światło
+Wieża Czarnolaskiego
+Ziejący Portal
+Straż Miejska
+Rok Doliny
