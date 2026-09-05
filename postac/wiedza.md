@@ -38,3 +38,21 @@ szkice run, listy zakupów. Zwykły papier, żadnej magii.
 **Sytuacja prawna:** wszystko, co Aelrindel posiada o jakiejkolwiek wartości, pochodzi
 od Sarvina. Księgę dostał, nie wziął — ale **nie ma na to żadnego dokumentu**,
 a wezwanie każe mu potwierdzić, że niczego z pracowni nie wyniósł.
+
+**Rękę z karty *Cierpliwe Światło* porównano z luźnymi notatkami Sarvina.**
+*(Szukanie z braniem 20 = 26 przy progu 20; Wiedza tajemna 27 przy progu 18)*
+
+- **To jest pismo Sarvina.** Nie podróbka: te same kształty liter, ten sam sposób
+  domykania „a", te same skróty w notacji komponentów. Ktoś, kto by go naśladował,
+  odtworzyłby kształt, ale nie odruch.
+- **W każdym pociągnięciu w dół jest drżenie.** Na luźnych notatkach nie ma go wcale.
+- **Drżenie jest RÓWNOMIERNE.** Drżenie starcze narasta w trakcie wiersza i słabnie
+  po odpoczynku. Drżenie ze strachu albo zimna jest nierówne i skupia się miejscami.
+  To jest miarowe od pierwszej do ostatniej litery, jak metronom.
+  **Ręka, która drży, tak nie wygląda. Tak wygląda ręka prowadzona.**
+- **Wniosek:** karta powstała PÓŹNIEJ niż notatki. Sarvin ją napisał — ale nie sam z siebie.
+- **Wniosek dalszy, którego Aelrindel nie potrafi odsunąć:** jeśli ktoś prowadził jego rękę,
+  to Sarvin **żył**, kiedy ta strona powstawała. A wezwanie pisze o nim „ś.p.".
+
+**Czego wciąż nie wie:** kto to zrobił, po co, gdzie Sarvin jest teraz
+i co właściwie robi czar *Cierpliwe Światło*.

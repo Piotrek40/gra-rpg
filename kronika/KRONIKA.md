@@ -38,5 +38,17 @@ osobiście dopisała dwa słowa, których nie ma w żadnej procedurze.
 MG przypomniał doktrynę Mystry: wykrycie magii czyta Splot, więc nie wyklucza tego,
 co przez Splot nie przechodzi.
 
-**Otwarte:** do południa około pięciu godzin. Aelrindel nie zdecydował, dokąd idzie.
-**Nauczone mechaniki:** test umiejętności i ST, wykrycie magii w rundach, zużywanie sztuczek.
+Następnie przeszukał pokój (Szukanie 22) i przejrzał księgę (Sztuka magiczna 22 przy progu 17).
+Znalazł luźne notatki robocze Sarvina oraz **kartę, której nie zna** — *Cierpliwe Światło*,
+podaną jako odmiana czaru *światło*, pisaną ręką mistrza. Notacja poprawna, ale opisana
+w niej droga **nie przechodzi przez Splot**. Aelrindel podejrzewa Splot Cienia, nie potrafi
+tego sam potwierdzić i **nie rzucił tego czaru**.
+
+Porównał rękę z tej karty z notatkami (Szukanie z braniem 20 = 26 przy progu 20;
+Wiedza tajemna **27** przy progu 18). Pismo jest autentyczne, ale karta ma **równomierne
+drżenie**, którego notatki nie mają — drżenie miarowe, nie starcze i nie ze strachu.
+Ręka prowadzona. Wniosek: karta powstała po zniknięciu Sarvina, a on **żył**, gdy powstawała.
+
+**Otwarte:** do południa około trzech i pół godziny. Aelrindel nie zdecydował, dokąd idzie.
+**Nauczone mechaniki:** test umiejętności i ST, wykrycie magii w rundach, zużywanie sztuczek,
+branie 20, rzuty nieprzerzucalne.

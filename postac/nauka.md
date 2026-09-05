@@ -18,6 +18,8 @@ w trakcie sceny — nie wykładem przed nią. Po wytłumaczeniu ląduje tutaj z 
 | Test umiejętności i ST | 1 | k20 + modyfikator wobec stopnia trudności; MG zawsze podaje próg z góry |
 | Wykrycie magii w rundach | 1 | Runda 1: czy są aury. 2: ile i jak silne. 3: gdzie dokładnie |
 | Zużycie sztuczki | 1 | W 3.5 sztuczki też zajmują miejsca i znikają po użyciu |
+| Branie 20 | 1 | Gdy możesz próbować bez końca i bez kary — nie rzucasz, tylko poświęcasz 20× czasu i liczysz jak 20 |
+| Rzuty nieprzerzucalne | 1 | Wiedzy nie powtarzasz: albo skojarzyłeś, albo nie |
 
 ## Do wytłumaczenia, gdy pierwszy raz wypadnie
 
