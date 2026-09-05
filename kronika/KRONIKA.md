@@ -54,7 +54,20 @@ drżeniem liter (Sztuka magiczna z braniem 20 = 28 przy progu 15, dwa arkusze pe
 Kopii działającej nie stać go sporządzić, a byłaby to druga karta Splotu Cienia.
 **Karty nie wyrwał** — świadomie, bo zniszczenie wiedzy magicznej kosztuje −2 łaski Mystry.
 
-**Otwarte:** do południa około dwóch i pół godziny. Gdzie zabezpieczyć samą księgę
+**Dom Cudów.** Aelrindel zaniósł księgę Naerys Vaeril. Kapłanka rozpoznała **Splot Cienia**
+bez wahania i przyjęła księgę na przechowanie — nie z uprzejmości, lecz dlatego, że nie wie,
+kto w Zakonie włożył tam kartę. Wyznała, że od pół roku szuka źródła szarpania Splotu nad
+Dzielnicą Morską i że to jej pierwszy twardy dowód. Wskazała **lukę prawną**: Zakon może
+spisać pracownię zmarłego, nad zaginionym władzy nie ma — stąd „ś.p." w wezwaniu.
+
+Bez testu Dyplomacji: nastawienie życzliwe, a prośba zbiega się z jej własnym celem
+(zasada z `swiat/rozmowy.md`). **Łaska Mystry +1** z wiersza „uratować wiedzę magiczną";
+świadomie NIE +2, bo księga poszła na przechowanie, nie do użytku.
+
+**Konsekwencja:** księga została w Dzielnicy Morskiej. Przygotowanie czarów wymaga
+codziennego powrotu, czterdzieści minut w jedną stronę.
+
+**Otwarte przed Domem Cudów:** do południa około dwóch i pół godziny. Gdzie zabezpieczyć samą księgę
 (przy sobie / pokój / Dom Cudów / dom rodu / rozdzielić) i czy powiedzieć Zakonowi o karcie.
 **Nauczone mechaniki:** test umiejętności i ST, wykrycie magii w rundach, zużywanie sztuczek,
 branie 20, rzuty nieprzerzucalne.

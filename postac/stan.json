@@ -16,10 +16,10 @@
   },
   "zloto": 19,
   "doswiadczenie": 0,
-  "laska": 0,
+  "laska": 1,
   "reputacja": 0,
   "znaki": [],
-  "zmian": 12,
+  "zmian": 14,
   "ksiega": {
     "0": [
       {
@@ -173,9 +173,9 @@
   },
   "ekwipunek": [
     {
-      "co": "Księga czarów po Sarvinie Alaunthar",
+      "co": "Księga czarów po Sarvinie — ZDEPONOWANA w Domu Cudów",
       "ile": 1,
-      "skad": "spadek po mistrzu"
+      "skad": "spadek po mistrzu; oddana Naerys Vaeril na przechowanie, sesja 1"
     },
     {
       "co": "Luźne notatki robocze Sarvina",

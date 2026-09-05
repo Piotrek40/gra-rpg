@@ -42,6 +42,17 @@ Straż jest skuteczna i nieprzekupna w stopniu, który przybyszów zaskakuje.
 - **Czuwający Zakon Magistrów i Obrońców** — cech czarodziejów. Kto rzuca czary w Głębi Wodnej
   zarobkowo, płaci Zakonowi składkę i podlega jego regułom. Kto nie płaci, dowiaduje się,
   po co Zakonowi „Obrońcy" w nazwie.
+  **Ulica Cynowa** leży w Dzielnicy Kupieckiej — wąska, warsztatowa, mieszkają przy niej
+  ludzie zamożni na tyle, żeby mieć wieżę, i nie na tyle, żeby mieć ją w Dzielnicy Morskiej.
+  Tam stała pracownia Sarvina.
+
+  **Prawo cechowe o inwentarzu.** Gdy członek Zakonu umiera, jego pracownię spisuje się
+  i dzieli między wierzycieli, cech i spadkobierców. Zwyczaj mówi, że **księga czarów mistrza
+  przechodzi na zapisanego ucznia** — inaczej rzemiosło by wygasło. Ale zwyczaj działa
+  po śmierci. Nad **zaginionym** członkiem Zakon nie ma władzy inwentarzowej, dopóki
+  nie uzna go za zmarłego. Dlatego wezwanie pisze „ś.p." przy nazwisku, którego ciała
+  nikt nie widział: **te dwie litery są podstawą prawną całej procedury.**
+
   **Pisma Zakonu noszą pieczęć odciskaną magicznie** — słaba aura odrzucania, zabezpieczenie
   przed podrobieniem. Rzecz całkowicie rutynowa: każdy list z siedziby ją ma. Brak pieczęci
   na piśmie Zakonu znaczyłby fałszerstwo; obecność nie znaczy nic poza tym, że list jest prawdziwy.

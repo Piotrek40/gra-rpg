@@ -68,3 +68,20 @@ arkuszach pergaminu — układ run, skróty komponentów i **odwzorowane drżeni
   (tabela w `swiat/MYSTRA.md`). Za samo skopiowanie tabela nie przewiduje nic — łaska stoi na 0.
 
 ◇ = dokładna stawka za stronę w księdze czarów do potwierdzenia w podręczniku Piotra.
+
+**POTWIERDZONE: karta jest Splotem Cienia.** Naerys Vaeril orzekła to bez wahania,
+oglądając oryginał. *(bez rzutu — jej własny cel od pół roku; zasada „nie rzuca się,
+gdy postać i tak by to zrobiła", `swiat/rozmowy.md`)*
+
+- **Ona też nie wie, co ten czar robi.** Zakazała sprawdzania tego przez rzucenie.
+- Nad Dzielnicą Morską **coś szarpie Splot od sześciu miesięcy**. Zgłaszała trzy razy,
+  trzy razy odesłano ją z Rokiem Dzikiej Magii. Ta karta to jej pierwszy twardy dowód.
+- **Ktoś z Zakonu** włożył kartę do księgi — tak to rozumie Naerys i dlatego nie odda jej cechowi.
+
+**DŹWIGNIA PRAWNA.** Zakon ma władzę inwentarzową nad pracownią **zmarłego**, nie zaginionego.
+Wezwanie pisze „ś.p." przy człowieku, którego ciała nikt nie widział — **te dwie litery są
+podstawą prawną całej procedury**. Aelrindel niesie w kieszeni kopię dowodową wskazującą,
+że Sarvin żył po dacie zniknięcia.
+
+**Księga zdeponowana w Domu Cudów.** Konsekwencja mechaniczna: **żeby przygotować czary,
+trzeba tam wrócić** — czterdzieści minut w jedną stronę, codziennie.
