@@ -11,6 +11,10 @@ To nie są dobre chęci. To lista rzeczy, których **nie wolno**.
    Suma kontrolna jest w `swiat/PRAWDA.md` i w historii gita. Zmiana starej tajemnicy = oszustwo.
 3. **Nie wolno rzucać kością w głowie.** Każdy rzut, który ma znaczenie, idzie przez
    `narzedzia/kosci.py` i ląduje w logu. Rzut, którego nie ma w logu, nie miał miejsca.
+3b. **Nie wolno prowadzić walki z pamięci.** Inicjatywa, rzuty na trafienie, obrażenia
+   i trafienia krytyczne idą przez `narzedzia/walka.py`, który czyta statystyki wroga
+   z `swiat/przeciwnicy.json`. Klasa pancerza Aelrindela liczona jest z działających
+   na niego efektów, nie z mojej głowy.
 3a. **Nie wolno zmieniać stanu postaci z pamięci ani ręcznie.** Punkty wytrzymałości,
    miejsca na czary, złoto, doświadczenie, łaska i znaki zmieniają się **wyłącznie** przez
    `narzedzia/postac.py`. Program ma reguły i odmawia. Ręczna edycja `postac/stan.json`

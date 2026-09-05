@@ -1,3 +1,8 @@
 2026-09-05 12:59:05 | 0001 | prev:---------------- | stan:32970781ea949381 | przygotowano poziom 0: Wykrycie magii, Odczytanie magii, Światło, Promień mrozu
 2026-09-05 12:59:05 | 0002 | prev:7823e944a18e0a7d | stan:d8e34b9285b49f59 | przygotowano poziom 1: Zbroja maga, Sen, Zrozumienie języków
 2026-09-05 13:08:05 | 0003 | prev:1fb98820c24d5845 | stan:d0e527c54c78ac1a | KOREKTA POZA PROGRAMEM: poprawiona szkola czaru Tajemny znak (przemiana -> uniwersalne, blad MG wykryty audytem); ekwipunek przeniesiony z prozy karty do stanu
+2026-09-05 13:24:46 | 0004 | prev:018fbfa9e25ea6c8 | stan:70f0ad316688ff59 | rzucono: Zbroja maga (poziom 1)
+2026-09-05 13:24:46 | 0005 | prev:2153a8b8c2801500 | stan:f89fa4239f45cfbc | rzucono: Sen (poziom 1)
+2026-09-05 13:25:40 | 0006 | prev:52d4f06413563f58 | stan:703391cf47f6a658 | przygotowano poziom 1: Zbroja maga, Sen, Zrozumienie języków
+2026-09-05 13:25:40 | 0007 | prev:441ffc8ea3de624a | stan:220ede447df16dd4 | przygotowano poziom 0: Wykrycie magii, Odczytanie magii, Światło, Promień mrozu
+2026-09-05 13:25:41 | 0008 | prev:244c9bfc1faa63ea | stan:7746048bc25f2917 | KOREKTA POZA PROGRAMEM: proba generalna silnika walki poza fikcja - odtworzone czary i pelne PW przed startem kampanii

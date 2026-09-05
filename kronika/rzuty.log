@@ -8,3 +8,10 @@
 2026-09-05 11:49:28  10k6       [1, 3, 4, 4, 1, 6, 2, 4, 2, 1]  =  28   wiek ponad dorosłość (110)
 2026-09-05 11:49:28  2k8        [4, 1]  =  5   wzrost ponad 137 cm
 2026-09-05 11:49:28  1k6        [4]  =  4   waga
+2026-09-05 13:24:46  1k20+6     [4] +6  =  10   inicjatywa: Aelrindel
+2026-09-05 13:24:46  1k20+1     [17] +1  =  18   inicjatywa: Zbir 1
+2026-09-05 13:24:46  1k20+1     [10] +1  =  11   inicjatywa: Zbir 2
+2026-09-05 13:24:46  1k20       [11]  =  11   atak: Zbir 1 -> Aelrindel
+2026-09-05 13:24:46  1k20       [20]  =  20   atak: Aelrindel -> Zbir 1
+2026-09-05 13:24:46  1k20       [1]  =  1   potwierdzenie krytyka: Aelrindel
+2026-09-05 13:24:46  1k8        [2]  =  2   obrażenia: Aelrindel -> Zbir 1
