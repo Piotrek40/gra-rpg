@@ -14,3 +14,29 @@ Ustalone: elf słoneczny, czarodziej, wyznawca Mystry, urodzony w Głębi Wodnej
 Zapisano prawdę o świecie i pięć tajemnic (`swiat/TAJEMNICE.b64`, suma kontrolna w `PRAWDA.md`).
 
 **Otwarte:** imię postaci, przydział cech, szkoła specjalizacji, pierwsze czary, atuty.
+
+---
+
+## Sesja 1 — List spod drzwi
+**Data rzeczywista:** 2026-09-05 · **W świecie:** Uktar 1372 DR, dzień 1, przed świtem
+**Miejsce:** wynajęty pokój nad warsztatem bednarza, Zaułek Węgorzowy, Dzielnica Portowa
+
+Aelrindel przygotował czary z księgi po Sarvinie i znalazł pod drzwiami kopertę
+z pieczęcią Czuwającego Zakonu, wsuniętą w nocy. Wezwanie na spisanie inwentarza
+pracowni Sarvina — Ulica Cynowa, południe, klucz na miejscu. Podpisała **Yssara Chelm**.
+Pod podpisem dopisek innym atramentem: *„Przyjdźcie sam"*.
+
+Rzucił **wykrycie magii** na list (zużyta sztuczka).
+- Sztuka magiczna 19+8 = **27** (próg 16): jedna słaba aura **odrzucania**, wyłącznie w wosku —
+  rutynowa pieczęć Zakonu przeciw fałszerstwu. Papier, atrament i dopisek bez aury.
+- Szukanie 19+6 = **25** (próg 12): treść ręką skryby Zakonu; **podpis i dopisek tą samą,
+  inną ręką**, ciemniejszym atramentem, dodane po zamknięciu pisma przez skrybę.
+
+Wniosek Aelrindela: list jest prawdziwy, nie niesie śledzenia ani przymusu, a magistra
+osobiście dopisała dwa słowa, których nie ma w żadnej procedurze.
+
+MG przypomniał doktrynę Mystry: wykrycie magii czyta Splot, więc nie wyklucza tego,
+co przez Splot nie przechodzi.
+
+**Otwarte:** do południa około pięciu godzin. Aelrindel nie zdecydował, dokąd idzie.
+**Nauczone mechaniki:** test umiejętności i ST, wykrycie magii w rundach, zużywanie sztuczek.

@@ -15,10 +15,12 @@ w trakcie sceny — nie wykładem przed nią. Po wytłumaczeniu ląduje tutaj z 
 | Przygotowanie czarów | 0 | Czarodziej wybiera rano z księgi, ile ma miejsc |
 | Miejsce specjalisty | 0 | Wróżbiarz ma jedno dodatkowe, tylko na czar swojej szkoły |
 | Szkoła zakazana | 0 | Nekromancji nie rzucisz nigdy, nawet ze zwoju |
+| Test umiejętności i ST | 1 | k20 + modyfikator wobec stopnia trudności; MG zawsze podaje próg z góry |
+| Wykrycie magii w rundach | 1 | Runda 1: czy są aury. 2: ile i jak silne. 3: gdzie dokładnie |
+| Zużycie sztuczki | 1 | W 3.5 sztuczki też zajmują miejsca i znikają po użyciu |
 
 ## Do wytłumaczenia, gdy pierwszy raz wypadnie
 
-- Test umiejętności i stopień trudności (ST)
 - Rzuty obronne: Wytrwałość, Refleks, Wola
 - Klasa pancerza i rzut na trafienie
 - Inicjatywa i tura w walce

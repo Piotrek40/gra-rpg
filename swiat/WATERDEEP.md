@@ -42,6 +42,9 @@ Straż jest skuteczna i nieprzekupna w stopniu, który przybyszów zaskakuje.
 - **Czuwający Zakon Magistrów i Obrońców** — cech czarodziejów. Kto rzuca czary w Głębi Wodnej
   zarobkowo, płaci Zakonowi składkę i podlega jego regułom. Kto nie płaci, dowiaduje się,
   po co Zakonowi „Obrońcy" w nazwie.
+  **Pisma Zakonu noszą pieczęć odciskaną magicznie** — słaba aura odrzucania, zabezpieczenie
+  przed podrobieniem. Rzecz całkowicie rutynowa: każdy list z siedziby ją ma. Brak pieczęci
+  na piśmie Zakonu znaczyłby fałszerstwo; obecność nie znaczy nic poza tym, że list jest prawdziwy.
 - **Ziejący Portal** — gospoda w Dzielnicy Portowej, prowadzona przez Durnana. Na środku sali
   studnia. Studnia prowadzi do Podgórza. Wchodzi się za opłatą, wychodzi rzadziej.
 - **Podgórze** — labirynt pod miastem, dzieło szalonego maga Halastera. Nie ma dna.

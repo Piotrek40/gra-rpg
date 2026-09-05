@@ -19,7 +19,7 @@
   "laska": 0,
   "reputacja": 0,
   "znaki": [],
-  "zmian": 9,
+  "zmian": 10,
   "ksiega": {
     "0": [
       {
@@ -130,7 +130,7 @@
         {
           "nazwa": "Wykrycie magii",
           "szkola": "wróżbiarstwo",
-          "zuzyty": false
+          "zuzyty": true
         },
         {
           "nazwa": "Odczytanie magii",

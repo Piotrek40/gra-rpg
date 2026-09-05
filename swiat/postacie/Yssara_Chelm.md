@@ -19,6 +19,10 @@ Jawnie: uporządkować sprawy po zaginionym członku Zakonu.
 
 ## Co już powiedziała Aelrindelowi
 - *(nic osobiście — podpisała wezwanie, które czeka w skrzynce)*
+- **Sesja 1, wezwanie** — treść urzędowa spisana ręką skryby Zakonu: inwentarz pracowni
+  po „ś.p." Sarvinie, Ulica Cynowa, południe, klucz na miejscu, nieobecność zostanie odnotowana.
+  Pod podpisem dopisek **jej własną ręką**, innym atramentem: „Przyjdźcie sam".
+  Dopisek nie jest magiczny — to zwykłe pióro i zwykły atrament.
 
 ## Jak mówi
 Rzeczowo, urzędowo, bez cienia groźby. Używa liczby mnogiej: „potrzebujemy", „Zakon oczekuje".
