@@ -1,8 +1,8 @@
-# Aelrindel — karta postaci
+# Aelrindel Ilphaeryl — karta postaci
 
-> **Aelrindel** · elf słoneczny (Ar-tel-quessir) · **czarodziej 1 — wróżbiarz**
-> **Bóstwo:** Mystra, Pani Tajemnic · **Pochodzenie:** Głębia Wodna, Dzielnica Morska
-> **Wiek:** 138 lat · **Wzrost:** 147 cm · **Waga:** 48 kg · **Charakter:** *(do wyboru)*
+> **Aelrindel Ilphaeryl** · elf słoneczny (Ar-tel-quessir) · **czarodziej 1 — wróżbiarz**
+> **Ród:** Ilphaeryl, Dzielnica Morska · **Bóstwo:** Mystra, Pani Tajemnic · **Pochodzenie:** Głębia Wodna, Dzielnica Morska
+> **Wiek:** 138 lat · **Wzrost:** 147 cm · **Waga:** 48 kg · **Charakter:** neutralny dobry
 
 Drobny nawet jak na elfa, złotoskóry, z włosami koloru starej miedzi.
 Wygląda na dwudziestolatka i jest starszy niż większość budynków, które mija.
@@ -65,7 +65,7 @@ i tak nie ogląda przychylnie w rękach nowicjusza.
 ## Księga czarów
 
 **Wszystkie sztuczki** poza nekromanckimi. Do przygotowania cztery, w tym jedna wróżbiarska —
-w praktyce zawsze **wykrycie magii**, plus **odczytanie magii**, **światło**, **iskra mocy**.
+w praktyce zawsze **wykrycie magii**, plus **odczytanie magii**, **światło** i **promień mrozu**.
 
 **Siedem czarów 1. poziomu:**
 

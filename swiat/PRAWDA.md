@@ -28,8 +28,9 @@ co w Zakonie oznacza status niejasny: składkę płacisz, głosu nie masz.
 ## Rzeczy, które są prawdą, choć nikt ci ich nie powiedział
 
 - Sarvin miał jedenastu kolegów po fachu i żaden nie przyszedł na jego stypę.
-- Twoja rodzina mieszka w Dzielnicy Morskiej i nie rozmawia z tobą od czasu,
-  gdy poszedłeś na naukę do człowieka.
+- Twój ród — **Ilphaeryl** — mieszka przy Ulicy Diamentowej w Dzielnicy Morskiej
+  i nie rozmawia z tobą od dwunastu lat, odkąd poszedłeś na naukę do człowieka.
+  Szczegóły w `ROD.md`.
 - W Domu Cudów kapłanka o imieniu **Naerys Vaeril** zna cię z widzenia i wie,
   że przychodzisz tam, gdy nie masz dokąd pójść. Nigdy o tym nie wspomniała.
 - Jest w mieście elfka słoneczna, która wie o twoim rodzie więcej niż ty.
