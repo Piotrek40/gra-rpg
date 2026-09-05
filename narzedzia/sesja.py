@@ -58,6 +58,15 @@ for f in sorted((ROOT / 'swiat' / 'postacie').glob('*.md')):
     for l in linie[-3:]:
         print(f"    · {l}")
 
+naglowek('OBIETNICE — to wraca')
+import re as _re
+obietnice = []
+for f in sorted((ROOT / 'swiat' / 'postacie').glob('*.md')):
+    for l in f.read_text(encoding='utf-8').splitlines():
+        if 'obiecał' in l or 'obiecała' in l or 'Obiecał' in l:
+            obietnice.append(f'{f.stem.replace("_", " ")}: ' + _re.sub(r'\*+', '', l).strip('- ').strip())
+print('  ' + ('\n  '.join(obietnice) if obietnice else 'żadnych'))
+
 naglowek('CO POSTAĆ JUŻ WIE — nie zakładaj więcej, nie zapominaj mniej')
 w = (ROOT / 'postac' / 'wiedza.md')
 if w.exists():

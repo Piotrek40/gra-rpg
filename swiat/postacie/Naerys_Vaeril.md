@@ -28,6 +28,8 @@ Podejrzewa, ale nie wie.
   pierwszym twardym dowodem.**
 - **Sesja 1** — przyjęła księgę na przechowanie. Uzasadnienie: „Dom Cudów nie wydaje ksiąg
   czarów cechom. To nie jest uprzejmość wobec ciebie. **Nie wiem, kto w Zakonie ją tam włożył.**"
+- **Sesja 1, przy wyjściu** — Aelrindel **obiecał, że wróci jeszcze dziś, jeśli zdąży.**
+  Naerys to zapamiętała. Jeśli nie wróci, nie zrobi mu wymówki — po prostu wyciągnie wniosek.
 - **Sesja 1** — wskazała lukę prawną: Zakon może spisać pracownię **zmarłego**, nad zaginionym
   władzy nie ma. Stąd „ś.p." przy człowieku, którego ciała nikt nie widział.
 

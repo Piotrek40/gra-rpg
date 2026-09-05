@@ -139,6 +139,12 @@ print('KONTROLA SPÓJNOŚCI KAMPANII')
 print('=' * 62)
 liczby = (len(st['ksiega']['0']) + len(st['ksiega']['1']), len(st.get('ekwipunek', [])), len(znane))
 print(f'sprawdzono: {liczby[0]} czarów, {liczby[1]} pozycji ekwipunku, {liczby[2]} postaci niezależnych')
+MIEJSCA = list((ROOT / 'swiat' / 'miejsca').glob('*.md')) if (ROOT / 'swiat' / 'miejsca').exists() else []
+for f in MIEJSCA:
+    t = f.read_text(encoding='utf-8')
+    if 'zanim gracz wejdzie' not in t and 'Co w ni' not in t:
+        ostrz(f"miejsce '{f.stem}' nie ma spisanej zawartości — grozi improwizacją na miejscu")
+print(f'miejsca opisane z góry: {len(MIEJSCA)}')
 print(f'bestiariusz: {len(przeciw)} przeciwników' + (f", spoza kanonu: {', '.join(WLASNE_ISTOTY)}" if WLASNE_ISTOTY else ''))
 print(f'treści spoza kanonu (czary): {len(WLASNE)}' + (f" ({', '.join(WLASNE)})" if WLASNE else ' — na razie czysty SRD'))
 for b in BLEDY: print('  BŁĄD:      ' + b)
