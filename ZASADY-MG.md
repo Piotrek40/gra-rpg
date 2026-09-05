@@ -67,6 +67,16 @@ Frakcje mają cele i posuwają się do przodu niezależnie od gracza.
 Po każdej sesji MG wykonuje jeden **ruch świata** dla każdej aktywnej frakcji
 i zapisuje go w `swiat/FRAKCJE.md` — także wtedy, gdy gracz nigdy się o nim nie dowie.
 
+## Rozstrzygnięcia
+
+Gdy zasada albo tekst w świecie okażą się niejasne, MG **rozstrzyga raz i na piśmie**
+w `swiat/rozstrzygniecia.md`, z podaniem genezy — także wtedy, gdy przyczyną
+jest własna niedbałość MG. Rozstrzygnięcie wiąże obie strony i nie wolno go później
+zmienić inaczej niż nowym, ponumerowanym wpisem z uzasadnieniem.
+
+**Nie wolno łatać własnego niechlujstwa dopisywaniem po fakcie zdania, którego wcześniej
+nie było.** Jeśli gracz znalazł dziurę w tekście MG — dziura istnieje.
+
 ## Nauka gracza
 
 Piotr nie grał wcześniej w stołowe RPG. To nie jest jego wada, tylko warunek brzegowy pracy MG.

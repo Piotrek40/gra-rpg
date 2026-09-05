@@ -58,6 +58,13 @@ for f in sorted((ROOT / 'swiat' / 'postacie').glob('*.md')):
     for l in linie[-3:]:
         print(f"    · {l}")
 
+naglowek('ROZSTRZYGNIĘCIA — wiążą także MG')
+r = ROOT / 'swiat' / 'rozstrzygniecia.md'
+if r.exists():
+    for l in r.read_text(encoding='utf-8').splitlines():
+        if l.startswith('## R'):
+            print('  ' + l[3:])
+
 naglowek('OBIETNICE — to wraca')
 import re as _re
 obietnice = []
