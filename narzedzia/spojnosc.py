@@ -126,6 +126,11 @@ if hashlib.sha256(tresc).hexdigest() != sha:
 KAT = ROOT / 'swiat' / 'postacie'
 znane = {k(p.stem.replace('_', ' ')) for p in KAT.glob('*.md')} if KAT.exists() else set()
 kronika = (ROOT / 'kronika' / 'KRONIKA.md').read_text(encoding='utf-8')
+NIE_OSOBY = set()
+nf = ROOT / 'swiat' / 'nie_postacie.txt'
+if nf.exists():
+    NIE_OSOBY = {k(l) for l in nf.read_text(encoding='utf-8').splitlines()
+                 if l.strip() and not l.startswith('#')}
 NIE_OSOBY = {k(l) for l in (ROOT / 'swiat' / 'niepostacie.txt').read_text(encoding='utf-8').splitlines()
              if l.strip() and not l.startswith('#')}
 for m in re.findall(r'\*\*([A-ZŚŻŹĆŃŁÓĄĘ][\w\.\'-]+(?: [A-ZŚŻŹĆŃŁÓĄĘ][\w\.\'-]+)+)\*\*', kronika):
