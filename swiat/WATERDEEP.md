@@ -1,5 +1,10 @@
 # Głębia Wodna (Waterdeep) — 1372 DR, Rok Dzikiej Magii
 
+**Kalendarz Harptosa:** dwanaście miesięcy po trzydzieści dni, między nimi pięć świąt.
+Jesteśmy w **Uktarze** (Gnicie), ostatnim miesiącu jesieni. Zaraz po nim wypada
+**Święto Księżyca** — dzień, w którym Faerûn czci zmarłych i przodków.
+Wszyscy odwiedzają groby. W Głębi Wodnej otwiera się wtedy Miasto Umarłych.
+
 Największe wolne miasto Wybrzeża Mieczy. Sto tysięcy ludzi, elfów, krasnoludów i wszystkiego,
 co przypłynęło i zostało. Nazywają je Koroną Północy i mówią to bez ironii, co w Faerûnie rzadkie.
 

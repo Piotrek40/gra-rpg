@@ -4,7 +4,7 @@ Zapisane **przed** pierwszą sceną. To obowiązuje. Mistrz Gry czyta stąd, nie
 
 ## Miejsce i czas
 
-Głębia Wodna, rok 1372 Doliny — **Rok Dzikiej Magii**. Późna jesień, miesiąc Zanurzenia.
+Głębia Wodna, rok 1372 Doliny — **Rok Dzikiej Magii**. Późna jesień, miesiąc **Uktar** (Gnicie) — ostatnie dni przed Świętem Księżyca.
 Z morza idą pierwsze sztormy, karawany na Wysokim Trakcie kończą sezon.
 Miasto jest bogate, spokojne i pełne rzeczy, które dzieją się pod spodem.
 
