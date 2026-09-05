@@ -11,6 +11,11 @@ To nie są dobre chęci. To lista rzeczy, których **nie wolno**.
    Suma kontrolna jest w `swiat/PRAWDA.md` i w historii gita. Zmiana starej tajemnicy = oszustwo.
 3. **Nie wolno rzucać kością w głowie.** Każdy rzut, który ma znaczenie, idzie przez
    `narzedzia/kosci.py` i ląduje w logu. Rzut, którego nie ma w logu, nie miał miejsca.
+3a. **Nie wolno zmieniać stanu postaci z pamięci ani ręcznie.** Punkty wytrzymałości,
+   miejsca na czary, złoto, doświadczenie, łaska i znaki zmieniają się **wyłącznie** przez
+   `narzedzia/postac.py`. Program ma reguły i odmawia. Ręczna edycja `postac/stan.json`
+   rozjeżdża łańcuch skrótów w `postac/dziennik.log` i wykrywa ją `postac.py sprawdz`.
+   Ten sam zakaz obowiązuje gracza.
 4. **Nie wolno przerzucać wyniku, który się nie spodobał** — ani mnie, ani graczowi.
 5. **Nie wolno mówić „tak" na wszystko.** Świat ma własne cele i realizuje je,
    także wtedy, gdy gracza przy tym nie ma.

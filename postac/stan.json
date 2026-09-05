@@ -1,0 +1,174 @@
+{
+  "postac": {
+    "imie": "Aelrindel Ilphaeryl",
+    "rasa": "elf słoneczny",
+    "klasa": "czarodziej",
+    "poziom": 1,
+    "specjalizacja": "wróżbiarz",
+    "zakazana": "nekromancja",
+    "charakter": "neutralny dobry",
+    "bostwo": "Mystra"
+  },
+  "dzien": 1,
+  "pw": {
+    "teraz": 4,
+    "maks": 4
+  },
+  "zloto": 19,
+  "doswiadczenie": 0,
+  "laska": 0,
+  "reputacja": 0,
+  "znaki": [],
+  "zmian": 2,
+  "ksiega": {
+    "0": [
+      {
+        "nazwa": "Wykrycie magii",
+        "szkola": "wróżbiarstwo"
+      },
+      {
+        "nazwa": "Odczytanie magii",
+        "szkola": "wróżbiarstwo"
+      },
+      {
+        "nazwa": "Wykrycie trucizny",
+        "szkola": "wróżbiarstwo"
+      },
+      {
+        "nazwa": "Światło",
+        "szkola": "wywoływanie"
+      },
+      {
+        "nazwa": "Promień mrozu",
+        "szkola": "wywoływanie"
+      },
+      {
+        "nazwa": "Tańczące światła",
+        "szkola": "wywoływanie"
+      },
+      {
+        "nazwa": "Rozbłysk",
+        "szkola": "wywoływanie"
+      },
+      {
+        "nazwa": "Odporność",
+        "szkola": "odrzucanie"
+      },
+      {
+        "nazwa": "Plama kwasu",
+        "szkola": "przywoływanie"
+      },
+      {
+        "nazwa": "Oszołomienie",
+        "szkola": "zaklinanie"
+      },
+      {
+        "nazwa": "Upiorny dźwięk",
+        "szkola": "iluzja"
+      },
+      {
+        "nazwa": "Magiczna dłoń",
+        "szkola": "przemiana"
+      },
+      {
+        "nazwa": "Naprawa",
+        "szkola": "przemiana"
+      },
+      {
+        "nazwa": "Wiadomość",
+        "szkola": "przemiana"
+      },
+      {
+        "nazwa": "Otwórz-zamknij",
+        "szkola": "przemiana"
+      },
+      {
+        "nazwa": "Tajemny znak",
+        "szkola": "przemiana"
+      },
+      {
+        "nazwa": "Sztuczka",
+        "szkola": "uniwersalne"
+      }
+    ],
+    "1": [
+      {
+        "nazwa": "Zbroja maga",
+        "szkola": "przywoływanie"
+      },
+      {
+        "nazwa": "Sen",
+        "szkola": "zaklinanie"
+      },
+      {
+        "nazwa": "Magiczny pocisk",
+        "szkola": "wywoływanie"
+      },
+      {
+        "nazwa": "Tarcza",
+        "szkola": "odrzucanie"
+      },
+      {
+        "nazwa": "Tłuszcz",
+        "szkola": "przywoływanie"
+      },
+      {
+        "nazwa": "Zrozumienie języków",
+        "szkola": "wróżbiarstwo"
+      },
+      {
+        "nazwa": "Identyfikacja",
+        "szkola": "wróżbiarstwo"
+      }
+    ]
+  },
+  "zaklecia": {
+    "0": {
+      "miejsc": 4,
+      "wrozbiarskich": 1,
+      "przygotowane": [
+        {
+          "nazwa": "Wykrycie magii",
+          "szkola": "wróżbiarstwo",
+          "zuzyty": false
+        },
+        {
+          "nazwa": "Odczytanie magii",
+          "szkola": "wróżbiarstwo",
+          "zuzyty": false
+        },
+        {
+          "nazwa": "Światło",
+          "szkola": "wywoływanie",
+          "zuzyty": false
+        },
+        {
+          "nazwa": "Promień mrozu",
+          "szkola": "wywoływanie",
+          "zuzyty": false
+        }
+      ]
+    },
+    "1": {
+      "miejsc": 3,
+      "wrozbiarskich": 1,
+      "przygotowane": [
+        {
+          "nazwa": "Zbroja maga",
+          "szkola": "przywoływanie",
+          "zuzyty": false
+        },
+        {
+          "nazwa": "Sen",
+          "szkola": "zaklinanie",
+          "zuzyty": false
+        },
+        {
+          "nazwa": "Zrozumienie języków",
+          "szkola": "wróżbiarstwo",
+          "zuzyty": false
+        }
+      ]
+    }
+  }
+}
