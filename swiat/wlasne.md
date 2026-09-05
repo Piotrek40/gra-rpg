@@ -27,6 +27,10 @@ w tej kampanii. Jeden rejestr, żeby zawsze było wiadomo, co jest cudze, a co n
 
 *(jeszcze żadnych)*
 
+## Istoty spoza kanonu
+
+*(jeszcze żadnych)*
+
 ## Przedmioty spoza kanonu
 
 *(jeszcze żadnych)*
