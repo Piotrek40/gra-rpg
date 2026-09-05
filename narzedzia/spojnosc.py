@@ -129,8 +129,9 @@ kronika = (ROOT / 'kronika' / 'KRONIKA.md').read_text(encoding='utf-8')
 NIE_OSOBY = {k(l) for l in (ROOT / 'swiat' / 'niepostacie.txt').read_text(encoding='utf-8').splitlines()
              if l.strip() and not l.startswith('#')}
 for m in re.findall(r'\*\*([A-ZŚŻŹĆŃŁÓĄĘ][\w\.\'-]+(?: [A-ZŚŻŹĆŃŁÓĄĘ][\w\.\'-]+)+)\*\*', kronika):
-    if k(m) not in znane and k(m) not in NIE_OSOBY and len(m.split()) == 2:
-        ostrz(f"kronika wymienia '{m}', a nie ma pliku w swiat/postacie/ — grozi utratą ciągłości")
+    mm = m.rstrip('.,:;!?')
+    if k(mm) not in znane and k(mm) not in NIE_OSOBY and len(mm.split()) == 2:
+        ostrz(f"kronika wymienia '{mm}', a nie ma pliku w swiat/postacie/ — grozi utratą ciągłości")
 
 # --------------------------------------------------------------------------
 print('=' * 62)
