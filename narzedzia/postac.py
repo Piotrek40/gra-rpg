@@ -178,6 +178,19 @@ def sprawdz():
     print(f'{len(linie)} wpisów — ' + ('łańcuch spójny, stan zgodny z dziennikiem' if ok else 'WYKRYTO ZMIANY'))
 
 
+# --- eksport do bazy artefaktu (karta na telefonie) -------------------------
+def eksport(sciezka='/tmp/stan_db.json'):
+    """Zapisuje zmienną część stanu do pliku, który MG wysyła do bazy artefaktu."""
+    st = wczytaj()
+    zm = {'dzien': st['dzien'], 'pw': st['pw'], 'zloto': st['zloto'],
+          'doswiadczenie': st['doswiadczenie'], 'laska': st['laska'],
+          'reputacja': st['reputacja'], 'znaki': st['znaki'], 'zmian': st['zmian'],
+          'zaklecia': {p: {'miejsc': g['miejsc'], 'wrozbiarskich': g['wrozbiarskich'],
+                           'przygotowane': g['przygotowane']} for p, g in st['zaklecia'].items()},
+          'ksiega': st['ksiega']}
+    pathlib.Path(sciezka).write_text(json.dumps(zm, ensure_ascii=False, indent=1), encoding='utf-8')
+    print(sciezka)
+
 if __name__ == '__main__':
     if len(sys.argv) < 2:
         raise SystemExit(__doc__)
@@ -195,16 +208,3 @@ if __name__ == '__main__':
     elif cmd == 'znak': znak(st, ' '.join(arg))
     elif cmd == 'eksport': eksport(arg[0] if arg else '/tmp/stan_db.json')
     else: blad(f'nieznane polecenie: {cmd}')
-
-# --- eksport do bazy artefaktu (karta na telefonie) -------------------------
-def eksport(sciezka='/tmp/stan_db.json'):
-    """Zapisuje zmienną część stanu do pliku, który MG wysyła do bazy artefaktu."""
-    st = wczytaj()
-    zm = {'dzien': st['dzien'], 'pw': st['pw'], 'zloto': st['zloto'],
-          'doswiadczenie': st['doswiadczenie'], 'laska': st['laska'],
-          'reputacja': st['reputacja'], 'znaki': st['znaki'], 'zmian': st['zmian'],
-          'zaklecia': {p: {'miejsc': g['miejsc'], 'wrozbiarskich': g['wrozbiarskich'],
-                           'przygotowane': g['przygotowane']} for p, g in st['zaklecia'].items()},
-          'ksiega': st['ksiega']}
-    pathlib.Path(sciezka).write_text(json.dumps(zm, ensure_ascii=False, indent=1), encoding='utf-8')
-    print(sciezka)
