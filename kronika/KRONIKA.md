@@ -105,5 +105,20 @@ za atanorem — jedynej skrytki, o której wie tylko uczeń — i znalazł **lis
 nowicjuszy Zakonu** pisaną równą ręką Sarvina, z datami. Jest na niej **ósmy**.
 Ostatnia data to **dzień przed zniknięciem mistrza**.
 
-**Otwarte:** 11:21, trzydzieści dziewięć minut do przyjścia Yssary Chelm.
-Aelrindel trzyma listę, której nie ma w żadnym inwentarzu.
+Następnie przeczytał **dziennik pracowni** (kwadrans, bez rzutu — zwykły zapis, nic ukrytego).
+Okazało się, że od Eleinta Sarvin prowadził „spis kontrolny ksiąg nowicjuszy" — obowiązek
+cechowy, do którego zgłosił się na ochotnika — i że **daty tych wpisów pokrywają się co do dnia
+z listą z niszy**. Lista jest jego rejestrem sprawdzonych ksiąg, a „spis kontrolny" był
+pretekstem dającym prawo do zajrzenia do każdej.
+
+Dwa wpisy kluczowe: **9 Marpenoth** — wniosek do archiwum Zakonu o pełny wykaz nowicjuszy,
+**odmowa bez uzasadnienia**, bez podania kto odmówił. **15 Marpenoth** — ostatni wpis
+w całym dzienniku, „T. Loakh, A. Ilphaeryl", potem trzy puste wersy i czysty zeszyt.
+
+Wniosek: jawny dziennik urywa się w dniu, w którym Sarvin otworzył księgę własnego ucznia,
+ale ukryta lista biegnie dalej, do 17 Marpenotha. Pracował jeszcze dwa dni, w ukryciu.
+Zniknął osiemnastego.
+
+**Otwarte:** 11:36, dwadzieścia cztery minuty do przyjścia Yssary Chelm.
+Aelrindel ma kopię karty, listę jedenastu nazwisk i nowy trop: **ktoś w archiwum Zakonu
+odmówił mistrzowi wykazu nowicjuszy.** Na stole wciąż dziennik i skrzynka komponentów.

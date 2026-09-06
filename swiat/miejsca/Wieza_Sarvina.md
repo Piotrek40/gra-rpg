@@ -26,8 +26,28 @@ Szukający **nie znalazł niszy** — bo o niszy wie tylko uczeń.
 
 **Rzeczy sporne — cenne i przypisywalne obu stronom:**
 - **skrzynka komponentów** Sarvina: siarka, sproszkowany bursztyn, srebrny pył (wartość ok. 40 sz)
-- **dziennik pracowni** — datowany zapis prac, leży otwarty na pulpicie, ostatni wpis
-  na trzy dni przed zniknięciem. Zwykły papier, żadnej magii.
+- **dziennik pracowni** — datowany zapis prac, leży otwarty na pulpicie.
+  Zwykły papier, żadnej magii. Prowadzony od lat, sucho i urzędowo.
+
+  **Treść istotna, spisana zanim gracz przeczyta:**
+
+  Od Eleinta wśród rutynowych wpisów (zakupy, wyniki prób, rachunki) powtarza się
+  jedna pozycja o identycznym brzmieniu: **„spis kontrolny ksiąg nowicjuszy"**,
+  z inicjałem i nazwiskiem. Sarvin zgłosił się na ochotnika do tego obowiązku
+  w Eleincie — nudnej roboty, o którą nikt się nie bije.
+
+  **Daty tych wpisów pokrywają się co do dnia z datami na liście z niszy.**
+
+  - **9 Marpenoth**, osobny wpis: *„wniosek do archiwum o pełny wykaz nowicjuszy
+    Zakonu — odmowa, bez uzasadnienia."* Nie podano, kto odmówił.
+  - **15 Marpenoth**, ostatni wpis w całym dzienniku: *„spis kontrolny ksiąg
+    nowicjuszy — T. Loakh, A. Ilphaeryl."* Nic więcej. Bez komentarza.
+  - Dalej **trzy puste, liniowane wersy** i reszta zeszytu czysta.
+
+  **Wniosek dostępny graczowi:** oficjalny dziennik urywa się 15 Marpenotha,
+  ale lista z niszy biegnie dalej — 16 i 17. Sarvin przestał zapisywać to jawnie
+  dokładnie w dniu, w którym sprawdził księgę własnego ucznia, i prowadził rzecz
+  dalej wyłącznie w ukryciu. Zniknął dzień po ostatnim nazwisku.
 
 **Rzecz, której zabranie zostanie zauważone:**
 - W **niszy za atanorem**, przysłoniętej luźną cegłą, leży kartka.

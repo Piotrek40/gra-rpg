@@ -107,3 +107,19 @@ Bez tytułu, bez wyjaśnienia.
 
 **Czego nie wie:** co ta lista znaczy, dlaczego jest na niej, czy pozostała dziesiątka
 też ma coś w księgach, i dlaczego mistrz nigdy o tym nie wspomniał.
+
+**Dziennik pracowni przeczytany** (18 Uktar, ok. 15 minut).
+
+- Od Eleinta Sarvin prowadził **„spis kontrolny ksiąg nowicjuszy"** — obowiązek cechowy,
+  do którego zgłosił się na ochotnika. Nudna robota, o którą nikt się nie bije.
+- **Daty tych wpisów pokrywają się co do dnia z listą z niszy.** Lista to nie zagadka:
+  to jego rejestr sprawdzonych ksiąg.
+- **9 Marpenoth:** wniosek do archiwum Zakonu o pełny wykaz nowicjuszy — **odmowa,
+  bez uzasadnienia.** Nie zapisano, kto odmówił.
+- **15 Marpenoth:** ostatni wpis w dzienniku — „T. Loakh, A. Ilphaeryl". Potem trzy puste
+  wersy i czysty zeszyt.
+- **Ale lista z niszy biegnie do 17 Marpenotha.** Sarvin przestał pisać jawnie dokładnie
+  w dniu, w którym sprawdził księgę Aelrindela — i pracował dalej w ukryciu.
+  Zniknął dzień po ostatnim nazwisku.
+
+**Nowy trop:** ktoś w archiwum Zakonu odmówił mistrzowi wykazu nowicjuszy.
