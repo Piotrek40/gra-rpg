@@ -1,0 +1,283 @@
+{
+  "postac": {
+    "imie": "Aelrindel Ilphaeryl",
+    "rasa": "elf słoneczny",
+    "klasa": "czarodziej",
+    "poziom": 1,
+    "specjalizacja": "wróżbiarz",
+    "zakazana": "nekromancja",
+    "charakter": "neutralny dobry",
+    "bostwo": "Mystra"
+  },
+  "dzien": 1,
+  "pw": {
+    "teraz": 4,
+    "maks": 4
+  },
+  "zloto": 19,
+  "doswiadczenie": 0,
+  "laska": 1,
+  "reputacja": 0,
+  "znaki": [
+    "Na wprost zadane pytanie o wyniesione rzeczy padło słowo TYLKO — pył i bursztyn. Lista z niszy leżała wtedy w kieszeni. Skryba zapisał odpowiedź."
+  ],
+  "zmian": 19,
+  "ksiega": {
+    "0": [
+      {
+        "nazwa": "Wykrycie magii",
+        "szkola": "wróżbiarstwo"
+      },
+      {
+        "nazwa": "Odczytanie magii",
+        "szkola": "wróżbiarstwo"
+      },
+      {
+        "nazwa": "Wykrycie trucizny",
+        "szkola": "wróżbiarstwo"
+      },
+      {
+        "nazwa": "Światło",
+        "szkola": "wywoływanie"
+      },
+      {
+        "nazwa": "Promień mrozu",
+        "szkola": "wywoływanie"
+      },
+      {
+        "nazwa": "Tańczące światła",
+        "szkola": "wywoływanie"
+      },
+      {
+        "nazwa": "Rozbłysk",
+        "szkola": "wywoływanie"
+      },
+      {
+        "nazwa": "Odporność",
+        "szkola": "odrzucanie"
+      },
+      {
+        "nazwa": "Plama kwasu",
+        "szkola": "przywoływanie"
+      },
+      {
+        "nazwa": "Oszołomienie",
+        "szkola": "zaklinanie"
+      },
+      {
+        "nazwa": "Upiorny dźwięk",
+        "szkola": "iluzja"
+      },
+      {
+        "nazwa": "Magiczna dłoń",
+        "szkola": "przemiana"
+      },
+      {
+        "nazwa": "Naprawa",
+        "szkola": "przemiana"
+      },
+      {
+        "nazwa": "Wiadomość",
+        "szkola": "przemiana"
+      },
+      {
+        "nazwa": "Otwórz-zamknij",
+        "szkola": "przemiana"
+      },
+      {
+        "nazwa": "Tajemny znak",
+        "szkola": "uniwersalne"
+      },
+      {
+        "nazwa": "Sztuczka",
+        "szkola": "uniwersalne"
+      }
+    ],
+    "1": [
+      {
+        "nazwa": "Zbroja maga",
+        "szkola": "przywoływanie"
+      },
+      {
+        "nazwa": "Sen",
+        "szkola": "zaklinanie"
+      },
+      {
+        "nazwa": "Magiczny pocisk",
+        "szkola": "wywoływanie"
+      },
+      {
+        "nazwa": "Tarcza",
+        "szkola": "odrzucanie"
+      },
+      {
+        "nazwa": "Tłuszcz",
+        "szkola": "przywoływanie"
+      },
+      {
+        "nazwa": "Zrozumienie języków",
+        "szkola": "wróżbiarstwo"
+      },
+      {
+        "nazwa": "Identyfikacja",
+        "szkola": "wróżbiarstwo"
+      }
+    ]
+  },
+  "zaklecia": {
+    "0": {
+      "miejsc": 4,
+      "wrozbiarskich": 1,
+      "przygotowane": [
+        {
+          "nazwa": "Wykrycie magii",
+          "szkola": "wróżbiarstwo",
+          "zuzyty": true
+        },
+        {
+          "nazwa": "Odczytanie magii",
+          "szkola": "wróżbiarstwo",
+          "zuzyty": false
+        },
+        {
+          "nazwa": "Światło",
+          "szkola": "wywoływanie",
+          "zuzyty": false
+        },
+        {
+          "nazwa": "Promień mrozu",
+          "szkola": "wywoływanie",
+          "zuzyty": false
+        }
+      ]
+    },
+    "1": {
+      "miejsc": 3,
+      "wrozbiarskich": 1,
+      "przygotowane": [
+        {
+          "nazwa": "Zbroja maga",
+          "szkola": "przywoływanie",
+          "zuzyty": false
+        },
+        {
+          "nazwa": "Sen",
+          "szkola": "zaklinanie",
+          "zuzyty": false
+        },
+        {
+          "nazwa": "Zrozumienie języków",
+          "szkola": "wróżbiarstwo",
+          "zuzyty": false
+        }
+      ]
+    }
+  },
+  "ekwipunek": [
+    {
+      "co": "Księga czarów po Sarvinie — ZDEPONOWANA w Domu Cudów",
+      "ile": 1,
+      "skad": "spadek po mistrzu; oddana Naerys Vaeril na przechowanie, sesja 1"
+    },
+    {
+      "co": "Luźne notatki robocze Sarvina",
+      "ile": 1,
+      "skad": "wetknięte między strony odziedziczonej księgi czarów"
+    },
+    {
+      "co": "Kopia dowodowa karty „Cierpliwe Światło” (2 arkusze)",
+      "ile": 1,
+      "skad": "własnoręczna transkrypcja zwykłym atramentem, sesja 1 — nie da się z niej rzucać"
+    },
+    {
+      "co": "Lista jedenastu imion ręką Sarvina",
+      "ile": 1,
+      "skad": "nisza za atanorem w pracowni przy Ulicy Cynowej, 18 Uktar — nie figuruje w żadnym inwentarzu"
+    },
+    {
+      "co": "Kusza lekka",
+      "ile": 1,
+      "skad": "zakup przed wyprawą"
+    },
+    {
+      "co": "Bełty",
+      "ile": 20,
+      "skad": "zakup przed wyprawą"
+    },
+    {
+      "co": "Sztylet",
+      "ile": 1,
+      "skad": "zakup przed wyprawą"
+    },
+    {
+      "co": "Sakwa na komponenty",
+      "ile": 1,
+      "skad": "zakup przed wyprawą"
+    },
+    {
+      "co": "Atrament i pióro",
+      "ile": 1,
+      "skad": "zakup przed wyprawą"
+    },
+    {
+      "co": "Pergamin (arkusze)",
+      "ile": 3,
+      "skad": "zakup przed wyprawą"
+    },
+    {
+      "co": "Plecak",
+      "ile": 1,
+      "skad": "zakup przed wyprawą"
+    },
+    {
+      "co": "Posłanie",
+      "ile": 1,
+      "skad": "zakup przed wyprawą"
+    },
+    {
+      "co": "Bukłak",
+      "ile": 1,
+      "skad": "zakup przed wyprawą"
+    },
+    {
+      "co": "Krzesiwo",
+      "ile": 1,
+      "skad": "zakup przed wyprawą"
+    },
+    {
+      "co": "Pochodnia",
+      "ile": 3,
+      "skad": "zakup przed wyprawą"
+    },
+    {
+      "co": "Racje żelazne (dni)",
+      "ile": 5,
+      "skad": "zakup przed wyprawą"
+    },
+    {
+      "co": "Ubranie podróżne",
+      "ile": 1,
+      "skad": "zakup przed wyprawą"
+    },
+    {
+      "co": "Własne notatki i wypracowania z dwunastu lat nauki",
+      "ile": 1,
+      "skad": "pracownia Sarvina — własność Aelrindela, nigdy nie była przedmiotem spisu"
+    },
+    {
+      "co": "Przybory: cyrkiel, liniał runiczny, dwa pędzle do złoceń, moździerz",
+      "ile": 1,
+      "skad": "pracownia Sarvina — własność Aelrindela, nigdy nie była przedmiotem spisu"
+    },
+    {
+      "co": "Sakiewka srebrnego pyłu",
+      "ile": 1,
+      "skad": "ze skrzynki Sarvina, 18 Uktar przed spisem — składnik atramentu do zapisu czarów w księdze"
+    },
+    {
+      "co": "Sproszkowany bursztyn (garść)",
+      "ile": 1,
+      "skad": "ze skrzynki Sarvina, 18 Uktar przed spisem"
+    }
+  ]
+}

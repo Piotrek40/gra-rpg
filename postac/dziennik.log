@@ -1,0 +1,19 @@
+2026-09-05 12:59:05 | 0001 | prev:---------------- | stan:32970781ea949381 | przygotowano poziom 0: Wykrycie magii, Odczytanie magii, Światło, Promień mrozu
+2026-09-05 12:59:05 | 0002 | prev:7823e944a18e0a7d | stan:d8e34b9285b49f59 | przygotowano poziom 1: Zbroja maga, Sen, Zrozumienie języków
+2026-09-05 13:08:05 | 0003 | prev:1fb98820c24d5845 | stan:d0e527c54c78ac1a | KOREKTA POZA PROGRAMEM: poprawiona szkola czaru Tajemny znak (przemiana -> uniwersalne, blad MG wykryty audytem); ekwipunek przeniesiony z prozy karty do stanu
+2026-09-05 13:24:46 | 0004 | prev:018fbfa9e25ea6c8 | stan:70f0ad316688ff59 | rzucono: Zbroja maga (poziom 1)
+2026-09-05 13:24:46 | 0005 | prev:2153a8b8c2801500 | stan:f89fa4239f45cfbc | rzucono: Sen (poziom 1)
+2026-09-05 13:25:40 | 0006 | prev:52d4f06413563f58 | stan:703391cf47f6a658 | przygotowano poziom 1: Zbroja maga, Sen, Zrozumienie języków
+2026-09-05 13:25:40 | 0007 | prev:441ffc8ea3de624a | stan:220ede447df16dd4 | przygotowano poziom 0: Wykrycie magii, Odczytanie magii, Światło, Promień mrozu
+2026-09-05 13:25:41 | 0008 | prev:244c9bfc1faa63ea | stan:7746048bc25f2917 | KOREKTA POZA PROGRAMEM: proba generalna silnika walki poza fikcja - odtworzone czary i pelne PW przed startem kampanii
+2026-09-05 13:42:53 | 0009 | prev:41b813ce6eac3418 | stan:b8d6e474fcfe843f | KOREKTA POZA PROGRAMEM: kalendarz: wymyslony miesiac Zanurzenia zastapiony kanonicznym Uktarem (Gnicie), tuz przed Swietem Ksiezyca
+2026-09-05 13:48:13 | 0010 | prev:9d42eee502b27d98 | stan:1527ff81fda45153 | rzucono: Wykrycie magii (poziom 0)
+2026-09-05 13:56:35 | 0011 | prev:5d0fbc9728a57ab6 | stan:c6c6988a82ddf902 | KOREKTA POZA PROGRAMEM: dopisano do ekwipunku luzne notatki Sarvina znalezione miedzy stronami ksiegi - scena 1
+2026-09-05 14:07:07 | 0012 | prev:8d701d5df471daa6 | stan:11cdeb36eeb4e2e8 | KOREKTA POZA PROGRAMEM: kopia dowodowa karty Cierpliwe Swiatlo sporzadzona zwyklym atramentem; zuzyte 2 arkusze pergaminu - sesja 1
+2026-09-05 14:14:56 | 0013 | prev:770635dbae0a9b26 | stan:f6998ae1371d3947 | laska +1 (oddanie ksiegi Sarvina pod opieke Domu Cudow zamiast Zakonowi - uratowanie wiedzy magicznej) -> 1
+2026-09-05 14:14:56 | 0014 | prev:cd020ebb6009cc6d | stan:04231ebd67d304fa | KOREKTA POZA PROGRAMEM: ksiega zdeponowana w Domu Cudow - opuszcza plecak, przygotowanie czarow wymaga powrotu
+2026-09-05 14:38:56 | 0015 | prev:f89b607ef07a0a03 | stan:7b2c6a3a6fbcab38 | KOREKTA POZA PROGRAMEM: wzieta lista jedenastu imion z niszy za atanorem - sesja 1, 11:21
+2026-09-06 02:16:16 | 0016 | prev:70d22f202d28c549 | stan:c0053f438614a926 | KOREKTA POZA PROGRAMEM: zabrane z pracowni: skrzynka komponentow (SPORNA) oraz wlasne notatki i przybory (bezsporne) - 18 Uktar, 11:46
+2026-09-06 02:19:59 | 0017 | prev:31cd82463dbaebf7 | stan:457ffff554e9e9e9 | KOREKTA POZA PROGRAMEM: ze skrzynki wziete tylko srebrny pyl i bursztyn; skrzynka z siarka odlozona na polke - 18 Uktar 11:49
+2026-09-06 02:30:00 | 0018 | prev:e0029edd6d216ba1 | stan:0f10e86bd0efeebc | KOREKTA POZA PROGRAMEM: nastawienie Yssary 0 -> -1 po probie nacisku; dopisany znak o slowie 'tylko' w odpowiedzi o wyniesione rzeczy
+2026-09-06 02:30:40 | 0019 | prev:0ffb6343350e59a2 | stan:086bb55d80f137ba | KOREKTA POZA PROGRAMEM: poprzednia korekta 0018 byla przedwczesna - skrypt padl na polskim cudzyslowie i zmiany nie weszly; teraz wprowadzone naprawde

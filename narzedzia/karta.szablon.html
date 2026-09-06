@@ -1,0 +1,425 @@
+<title>Aelrindel Ilphaeryl</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Spectral:ital,wght@0,300;0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --ground:#f2eff5; --panel:#fbf9fc; --sunk:#e8e3ee;
+  --ink:#1c1826; --dim:#5d5670; --faint:#8b849c;
+  --edge:#d6cfe0; --edge-soft:#e6e0ec;
+  --gold:#8a6413; --gold-lit:#b8892a;
+  --weave:#5b47a8; --weave-lit:#7a66c9;
+  --wound:#9c3050;
+  --tile:0 1px 2px rgba(28,24,38,.08);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ground:#14121f; --panel:#1e1b2c; --sunk:#171525;
+    --ink:#eae5f3; --dim:#a8a0bf; --faint:#7b7392;
+    --edge:#302b44; --edge-soft:#262236;
+    --gold:#d9a94e; --gold-lit:#f0c98a;
+    --weave:#9d8fe0; --weave-lit:#b3a7ea;
+    --wound:#d4657f;
+    --tile:0 1px 3px rgba(0,0,0,.45);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#14121f; --panel:#1e1b2c; --sunk:#171525;
+  --ink:#eae5f3; --dim:#a8a0bf; --faint:#7b7392;
+  --edge:#302b44; --edge-soft:#262236;
+  --gold:#d9a94e; --gold-lit:#f0c98a;
+  --weave:#9d8fe0; --weave-lit:#b3a7ea;
+  --wound:#d4657f;
+  --tile:0 1px 3px rgba(0,0,0,.45);
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--ground); color:var(--ink);
+  font-family:"Spectral",Georgia,serif; font-size:16.5px; line-height:1.55;
+  -webkit-text-size-adjust:100%;
+}
+.sheet{max-width:800px; margin:0 auto; padding:0 16px 64px}
+
+/* nagłówek */
+header{padding:32px 0 20px; border-bottom:2px solid var(--gold)}
+.house{
+  font-family:"IBM Plex Mono",monospace; font-size:11px; letter-spacing:.24em;
+  text-transform:uppercase; color:var(--gold); margin:0 0 10px;
+}
+h1{
+  font-family:"Cormorant Garamond",Georgia,serif; font-weight:500;
+  font-size:clamp(34px,8.5vw,54px); line-height:1; margin:0; letter-spacing:.01em;
+  text-wrap:balance;
+}
+.styling{margin:8px 0 0; color:var(--dim); font-size:17px; font-style:italic}
+.vitals{
+  display:flex; flex-wrap:wrap; gap:6px 18px; margin:14px 0 0;
+  font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--faint);
+  letter-spacing:.04em;
+}
+
+h2{
+  font-family:"Cormorant Garamond",Georgia,serif; font-weight:600; font-size:15px;
+  letter-spacing:.2em; text-transform:uppercase; color:var(--gold);
+  margin:34px 0 12px; padding-bottom:6px; border-bottom:1px solid var(--edge);
+}
+h3{
+  font-family:"Spectral",Georgia,serif; font-weight:600; font-size:15px;
+  margin:20px 0 8px; color:var(--dim); letter-spacing:.02em;
+}
+p{margin:0 0 12px; max-width:62ch}
+.hint{color:var(--faint); font-size:14.5px; font-style:italic; margin:6px 0 0}
+
+/* cechy */
+.abilities{display:grid; grid-template-columns:repeat(3,1fr); gap:8px}
+.ab{
+  background:var(--panel); border:1px solid var(--edge-soft); border-radius:4px;
+  padding:11px 8px 9px; text-align:center; box-shadow:var(--tile);
+}
+.ab .lbl{
+  font-family:"IBM Plex Mono",monospace; font-size:10px; letter-spacing:.16em;
+  text-transform:uppercase; color:var(--faint); display:block;
+}
+.ab .val{
+  font-family:"Cormorant Garamond",Georgia,serif; font-size:34px; font-weight:500;
+  line-height:1.05; display:block; margin:2px 0 0; font-variant-numeric:tabular-nums;
+}
+.ab .mod{
+  font-family:"IBM Plex Mono",monospace; font-size:14px; font-weight:500;
+  display:block; color:var(--weave);
+}
+.ab.key{border-color:var(--gold); box-shadow:inset 0 0 0 1px rgba(138,100,19,.25),var(--tile)}
+.ab.key .val{color:var(--gold)}
+.ab.low .mod{color:var(--wound)}
+@media (max-width:400px){.abilities{grid-template-columns:repeat(2,1fr)}}
+
+/* bloki liczbowe */
+.stats{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:8px; margin-bottom:14px}
+.stat{
+  background:var(--panel); border:1px solid var(--edge-soft); border-radius:4px;
+  padding:10px 12px; box-shadow:var(--tile);
+}
+.stat .lbl{
+  font-family:"IBM Plex Mono",monospace; font-size:10px; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--faint); display:block; margin-bottom:2px;
+}
+.stat .big{
+  font-family:"Cormorant Garamond",Georgia,serif; font-size:29px; font-weight:500;
+  line-height:1.1; font-variant-numeric:tabular-nums;
+}
+.stat .sub{font-size:13.5px; color:var(--dim); display:block; margin-top:1px}
+
+/* licznik ran */
+.hp{grid-column:1/-1; display:flex; align-items:center; gap:12px}
+.hp .grow{flex:1}
+.hp .big{color:var(--wound)}
+button{
+  font:inherit; font-family:"IBM Plex Mono",monospace; font-size:19px;
+  min-width:48px; min-height:48px; border-radius:4px; cursor:pointer;
+  background:var(--sunk); color:var(--ink); border:1px solid var(--edge);
+}
+button:active{background:var(--edge)}
+button:focus-visible{outline:2px solid var(--weave); outline-offset:2px}
+.mini{font-size:12px; min-height:44px; min-width:auto; padding:0 12px; letter-spacing:.08em; text-transform:uppercase}
+
+/* tabele */
+.scroller{overflow-x:auto; -webkit-overflow-scrolling:touch; border:1px solid var(--edge-soft); border-radius:4px; margin-bottom:12px}
+table{border-collapse:collapse; width:100%; min-width:480px; background:var(--panel); font-size:15.5px}
+th,td{padding:8px 11px; text-align:left; border-bottom:1px solid var(--edge-soft); vertical-align:top}
+thead th{
+  font-family:"IBM Plex Mono",monospace; font-size:10px; letter-spacing:.13em;
+  text-transform:uppercase; color:var(--faint); background:var(--sunk);
+}
+tbody tr:last-child td{border-bottom:none}
+td.n{font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums; white-space:nowrap; font-size:14px}
+td.name{font-weight:600; white-space:nowrap}
+.school{
+  font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--faint); display:block; font-weight:400;
+}
+.school.div{color:var(--weave)}
+
+/* czary — zużycie miejsc */
+.slots{display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin:0 0 14px}
+.slotgroup{
+  display:flex; align-items:center; gap:8px; background:var(--panel);
+  border:1px solid var(--edge-soft); border-radius:4px; padding:9px 13px; box-shadow:var(--tile);
+}
+.slotgroup .lbl{
+  font-family:"IBM Plex Mono",monospace; font-size:10px; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--faint);
+}
+.pips{display:flex; gap:5px}
+.pip{
+  width:24px; height:24px; min-width:24px; min-height:24px; padding:0;
+  border-radius:50%; border:1.5px solid var(--weave); background:transparent;
+}
+.pip[data-used="1"]{background:var(--weave); border-color:var(--weave)}
+.pip.div{border-color:var(--gold)}
+.pip.div[data-used="1"]{background:var(--gold); border-color:var(--gold)}
+
+/* listy cech */
+.feats{background:var(--panel); border:1px solid var(--edge-soft); border-radius:4px; padding:12px 16px; box-shadow:var(--tile); margin-bottom:12px}
+.feats ul{margin:0; padding-left:18px}
+.feats li{margin:0 0 5px}
+.feats li b{font-weight:600}
+.feats li:last-child{margin-bottom:0}
+
+/* stan */
+.state{display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:8px}
+.state .stat .big{font-size:22px}
+.empty{color:var(--faint); font-style:italic}
+
+.note{
+  border-left:2px solid var(--weave); padding:10px 14px; margin:16px 0;
+  background:color-mix(in srgb,var(--weave) 8%,transparent); font-size:15.5px;
+}
+.note strong{font-family:"Cormorant Garamond",Georgia,serif; font-size:17px; letter-spacing:.02em}
+.note p:last-child{margin-bottom:0}
+footer{margin-top:36px; padding-top:16px; border-top:1px solid var(--edge); color:var(--faint); font-size:14px}
+.flag{color:var(--gold)}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition:none!important}}
+</style>
+
+<div class="sheet">
+<header>
+  <p class="house">Ród Ilphaeryl · Dzielnica Morska · Głębia Wodna</p>
+  <h1>Aelrindel Ilphaeryl</h1>
+  <p class="styling">Elf słoneczny · czarodziej 1 — wróżbiarz · neutralny dobry · wyznawca Mystry</p>
+  <div class="vitals">
+    <span>138 lat</span><span>147 cm</span><span>48 kg</span>
+    <span>złota skóra</span><span>włosy koloru starej miedzi</span>
+  </div>
+</header>
+
+<h2>Cechy</h2>
+<div class="abilities">
+  <div class="ab low"><span class="lbl">Siła</span><span class="val">6</span><span class="mod">−2</span></div>
+  <div class="ab"><span class="lbl">Zręczność</span><span class="val">15</span><span class="mod">+2</span></div>
+  <div class="ab"><span class="lbl">Budowa</span><span class="val">11</span><span class="mod">+0</span></div>
+  <div class="ab key"><span class="lbl">Inteligencja</span><span class="val">19</span><span class="mod">+4</span></div>
+  <div class="ab"><span class="lbl">Mądrość</span><span class="val">11</span><span class="mod">+0</span></div>
+  <div class="ab low"><span class="lbl">Charyzma</span><span class="val">8</span><span class="mod">−1</span></div>
+</div>
+<p class="hint">Rzut 4k6 z odrzuceniem najniższej: 17 · 15 · 13 · 11 · 8 · 6. Elf słoneczny: +2 Int, −2 Bud. <span class="flag">◇</span></p>
+
+<h2>Walka i obrona</h2>
+<div class="stats">
+  <div class="stat hp">
+    <div class="grow">
+      <span class="lbl">Punkty wytrzymałości</span>
+      <span class="big"><span id="hp">—</span></span>
+      <span class="sub" id="hpSub">k4 na poziom · Budowa +0</span>
+    </div>
+  </div>
+  <div class="stat">
+    <span class="lbl">Klasa pancerza</span>
+    <span class="big">12</span>
+    <span class="sub">ze <i>zbroją maga</i> <b>16</b> · + <i>tarcza</i> <b>20</b></span>
+  </div>
+  <div class="stat">
+    <span class="lbl">Inicjatywa</span>
+    <span class="big">+6</span>
+    <span class="sub">Zręczność +2 · atut +4</span>
+  </div>
+  <div class="stat">
+    <span class="lbl">ST twoich czarów</span>
+    <span class="big">15</span>
+    <span class="sub">10 + poziom czaru + 4</span>
+  </div>
+  <div class="stat">
+    <span class="lbl">Rzuty obronne</span>
+    <span class="big">+0 / +2 / +2</span>
+    <span class="sub">Wytrwałość · Refleks · Wola — <b>+4</b> przeciw zaklinaniu</span>
+  </div>
+  <div class="stat">
+    <span class="lbl">Ataki</span>
+    <span class="big">+2 / −2</span>
+    <span class="sub">kusza lekka 1k8 (10/20 m) · sztylet 1k4</span>
+  </div>
+</div>
+<div class="note">
+  <p><strong>Cztery punkty wytrzymałości.</strong> Bełt z kuszy to 1k8. Twoim planem obrony nie jest wytrzymanie ciosu, tylko zakończenie walki, zanim ktokolwiek do ciebie podejdzie — stąd inicjatywa +6 i <i>sen</i> w pierwszej rundzie. Rzucaj <i>zbroję maga</i> co rano, zanim wyjdziesz z domu.</p>
+</div>
+
+<h2>Zaklęcia na dziś</h2>
+<p class="hint">Stan prowadzi silnik gry. Miejsce zużywa się w chwili rzucenia czaru przy stole,
+nie kliknięciem tutaj — na tej stronie nie ma czego kliknąć.</p>
+<div class="slots">
+  <div class="slotgroup"><span class="lbl">Sztuczki</span><div class="pips" id="p0"></div></div>
+  <div class="slotgroup"><span class="lbl">1. poziom</span><div class="pips" id="p1"></div></div>
+  <span class="lbl" id="zywo" style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint)"></span>
+</div>
+<div class="scroller">
+<table>
+  <thead><tr><th>Przygotowane</th><th>Poziom</th><th>Szkoła</th><th>Stan</th></tr></thead>
+  <tbody id="przyg"></tbody>
+</table>
+</div>
+
+<h2>Księga czarów</h2>
+<p>Odziedziczona po <b>magistrze Sarvinie Alaunthar</b> — jedyna rzecz, jaką po nim dostałeś oprócz długów.
+Zawiera wszystkie sztuczki poza nekromanckimi oraz siedem czarów pierwszego poziomu.</p>
+<div class="scroller">
+<table>
+  <thead><tr><th>Czar 1. poziomu</th><th>Szkoła</th><th>Po co go masz</th></tr></thead>
+  <tbody>
+    <tr><td class="name">Zbroja maga</td><td class="n">przywoływanie</td><td>Klasa pancerza z 12 na 16, na cały dzień</td></tr>
+    <tr><td class="name">Sen</td><td class="n">zaklinanie</td><td>Najsilniejszy czar 1. poziomu w grze</td></tr>
+    <tr><td class="name">Magiczny pocisk</td><td class="n">wywoływanie</td><td>1k4+1 bez rzutu na trafienie i bez uniku. Zawsze działa</td></tr>
+    <tr><td class="name">Tarcza</td><td class="n">odrzucanie</td><td>+4 KP i pełna odporność na cudze magiczne pociski</td></tr>
+    <tr><td class="name">Tłuszcz</td><td class="n">przywoływanie</td><td>Refleks albo przeciwnik leży. Leżący do ciebie nie dobiegnie</td></tr>
+    <tr><td class="name">Zrozumienie języków</td><td class="n"><span class="school div" style="display:inline">wróżbiarstwo</span></td><td>Codzienne wypełnienie miejsca specjalisty</td></tr>
+    <tr><td class="name">Identyfikacja</td><td class="n"><span class="school div" style="display:inline">wróżbiarstwo</span></td><td>Rozpoznaje przedmioty magiczne — <b>wymaga perły za 100 sz</b>, której nie masz</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2>Zdolności</h2>
+<div class="feats">
+  <h3 style="margin-top:0">Wróżbiarz</h3>
+  <ul>
+    <li>Dodatkowe zaklęcie <b>wróżbiarskie</b> na każdym poziomie czarów, co dzień</li>
+    <li>Zakazuje tylko <b>jednej</b> szkoły zamiast dwóch — przywilej wyłącznie wróżbiarzy</li>
+    <li><b>Szkoła zakazana: nekromancja.</b> Nie rzucisz jej nigdy, z żadnego zwoju ani różdżki</li>
+  </ul>
+</div>
+<div class="feats">
+  <h3 style="margin-top:0">Atuty</h3>
+  <ul>
+    <li><b>Wzmocniona inicjatywa</b> — +4 do inicjatywy. Twój plan przetrwania</li>
+    <li><b>Zapisywanie zwojów</b> — darmowy atut klasowy czarodzieja</li>
+  </ul>
+</div>
+<div class="feats">
+  <h3 style="margin-top:0">Elf słoneczny</h3>
+  <ul>
+    <li>Odporność na czar <i>sen</i>; <b>+2</b> do rzutów obronnych przeciw zaklinaniu</li>
+    <li>Widzenie przy słabym świetle</li>
+    <li><b>+2</b> do Nasłuchiwania, Szukania i Wypatrywania</li>
+    <li>Darmowy test Szukania przy mijaniu ukrytych drzwi w promieniu 1,5 m</li>
+    <li>Biegłość: długi miecz, rapier, długi łuk, krótki łuk — przy Sile 6 raczej teoretyczna</li>
+  </ul>
+</div>
+
+<h2>Umiejętności</h2>
+<div class="scroller">
+<table>
+  <thead><tr><th>Umiejętność</th><th>Rangi</th><th>Mod.</th><th>Suma</th></tr></thead>
+  <tbody>
+    <tr><td class="name">Sztuka magiczna</td><td class="n">4</td><td class="n">Int +4</td><td class="n"><b>+8</b></td></tr>
+    <tr><td class="name">Wiedza (tajemna)</td><td class="n">4</td><td class="n">Int +4</td><td class="n"><b>+8</b></td></tr>
+    <tr><td class="name">Odczytywanie zapisów</td><td class="n">4</td><td class="n">Int +4</td><td class="n"><b>+8</b></td></tr>
+    <tr><td class="name">Wiedza (historia)</td><td class="n">4</td><td class="n">Int +4</td><td class="n"><b>+8</b></td></tr>
+    <tr><td class="name">Wiedza (Wybrzeże Mieczy)</td><td class="n">4</td><td class="n">Int +4</td><td class="n"><b>+8</b></td></tr>
+    <tr><td class="name">Koncentracja</td><td class="n">4</td><td class="n">Bud +0</td><td class="n"><b>+4</b></td></tr>
+    <tr><td class="name">Szukanie</td><td class="n">—</td><td class="n">Int +4, rasa +2</td><td class="n"><b>+6</b></td></tr>
+    <tr><td class="name">Nasłuchiwanie / Wypatrywanie</td><td class="n">—</td><td class="n">rasa +2</td><td class="n"><b>+2</b></td></tr>
+  </tbody>
+</table>
+</div>
+<p class="hint">24 punkty do rozdania, wszystkie wydane. Maksimum rang na 1. poziomie: 4.</p>
+
+<h2>Ekwipunek</h2>
+<div class="scroller">
+<table>
+  <thead><tr><th>Przedmiot</th><th>Koszt</th></tr></thead>
+  <tbody>
+    <tr><td class="name">Księga czarów po Sarvinie</td><td class="n">spadek</td></tr>
+    <tr><td>Kusza lekka i 20 bełtów</td><td class="n">37 sz</td></tr>
+    <tr><td>Sztylet</td><td class="n">2 sz</td></tr>
+    <tr><td>Sakwa na komponenty</td><td class="n">5 sz</td></tr>
+    <tr><td>Atrament, pióro, 5 arkuszy pergaminu</td><td class="n">9,1 sz</td></tr>
+    <tr><td>Plecak, posłanie, bukłak, krzesiwo, 3 pochodnie</td><td class="n">4,2 sz</td></tr>
+    <tr><td>Racje na 5 dni, ubranie podróżne</td><td class="n">3,5 sz</td></tr>
+  </tbody>
+</table>
+</div>
+<div class="stats">
+  <div class="stat"><span class="lbl">Wydane</span><span class="big">61 sz</span><span class="sub">z 80 wylosowanych (3k4 × 10)</span></div>
+  <div class="stat"><span class="lbl">Przy sobie</span><span class="big"><span id="zloto">—</span> sz</span><span class="sub">perła do <i>identyfikacji</i> kosztuje 100</span></div>
+</div>
+
+<h2>Stan</h2>
+<div class="state">
+  <div class="stat"><span class="lbl">Łaska Mystry</span><span class="big" id="laska">—</span><span class="sub" id="laskaSub"></span></div>
+  <div class="stat"><span class="lbl">Czuwający Zakon</span><span class="big" id="rep">—</span><span class="sub">nowicjusz bez mistrza: płacisz, nie głosujesz</span></div>
+  <div class="stat"><span class="lbl">Doświadczenie</span><span class="big" id="xp">—</span><span class="sub">2000 do 2. poziomu</span></div>
+  <div class="stat"><span class="lbl">Dzień wyprawy</span><span class="big" id="dzien">—</span><span class="sub" id="zmian"></span></div>
+</div>
+<div class="stat" style="margin-top:8px"><span class="lbl">Znaki — co za tobą idzie</span><div id="znaki"></div></div>
+
+<footer>
+  <p>Wszystkie liczby policzone z SRD 3.5. Oznaczone <span class="flag">◇</span> pochodzą z Opisu Świata Zapomnianych Krain — modyfikatory cech elfa słonecznego — i warto je potwierdzić w książce. Rzuty na cechy, złoto i wiek padły naprawdę; pełny zapis w <b>kronika/rzuty.log</b>. Liczby zmienne pochodzą z <b>postac/stan.json</b>, którym steruje wyłącznie <b>narzedzia/postac.py</b> — każda zmiana zostawia wpis w łańcuchu skrótów w <b>postac/dziennik.log</b>.</p>
+</footer>
+</div>
+
+<script>
+(function () {
+  var S = /*__STAN__*/null;
+  var $ = function (id) { return document.getElementById(id); };
+
+  function render(st) {
+    $('hp').textContent = st.pw.teraz + ' / ' + st.pw.maks;
+    $('hp').style.color = st.pw.teraz <= 0 ? 'var(--wound)' : '';
+    $('hpSub').textContent = st.pw.teraz <= -10 ? 'martwy'
+      : st.pw.teraz < 0 ? 'nieprzytomny — wykrwawia się'
+      : st.pw.teraz === 0 ? 'nieprzytomny, stabilny'
+      : 'k4 na poziom · Budowa +0';
+
+    ['0', '1'].forEach(function (poz) {
+      var g = st.zaklecia[poz], box = $('p' + poz);
+      box.innerHTML = '';
+      for (var i = 0; i < g.miejsc; i++) {
+        var s = g.przygotowane[i];
+        var d = document.createElement('span');
+        d.className = 'pip' + (i >= g.miejsc - g.wrozbiarskich ? ' div' : '');
+        d.setAttribute('data-used', s && s.zuzyty ? '1' : '0');
+        if (!g.przygotowane.length) d.style.opacity = '.35';
+        d.title = s ? s.nazwa + (s.zuzyty ? ' — zużyty' : ' — wolny') : 'nieprzygotowane';
+        box.appendChild(d);
+      }
+    });
+
+    var tb = $('przyg'); tb.innerHTML = '';
+    var pusto = true;
+    ['0', '1'].forEach(function (poz) {
+      st.zaklecia[poz].przygotowane.forEach(function (s) {
+        pusto = false;
+        var tr = document.createElement('tr');
+        tr.innerHTML = '<td class="name">' + s.nazwa + '</td><td class="n">' + poz + '</td>'
+          + '<td class="n">' + s.szkola + '</td>'
+          + '<td class="n">' + (s.zuzyty ? '<span style="color:var(--faint)">zużyty</span>' : '<b>wolny</b>') + '</td>';
+        tb.appendChild(tr);
+      });
+    });
+    if (pusto) tb.innerHTML = '<tr><td colspan="4" class="empty">Czary nieprzygotowane — potrzebny odpoczynek i godzina nauki.</td></tr>';
+
+    $('laska').textContent = st.laska;
+    $('laskaSub').textContent = st.laska >= 2 ? 'łaskawość — modlitwa pomaga'
+      : st.laska >= 0 ? 'obojętność — modlitwa nie zaszkodzi ani nie pomoże'
+      : 'gniew — modlitwa odpowiada, i to źle';
+    $('rep').textContent = st.reputacja;
+    $('xp').textContent = st.doswiadczenie;
+    $('zloto').textContent = st.zloto;
+    $('dzien').textContent = st.dzien;
+    $('zmian').textContent = st.zmian + ' zmian stanu w dzienniku';
+
+    var zn = $('znaki');
+    zn.innerHTML = st.znaki.length
+      ? st.znaki.map(function (z) { return '<div style="margin:4px 0">◆ ' + z + '</div>'; }).join('')
+      : '<div class="empty" style="margin-top:4px">jeszcze nic za tobą nie idzie</div>';
+  }
+
+  render(S);
+
+  // Podgląd na żywo, jeśli przeglądarka dostanie zdolność `db`.
+  // Brak zdolności = strona i tak pokazuje stan wbudowany przy publikacji.
+  claude.use('db').then(function (db) {
+    if (!db) return;
+    $('zywo').textContent = '● na żywo';
+    db.doc('stan/postac').onSnapshot(function (snap) {
+      var d = snap && (snap.data ? (typeof snap.data === 'function' ? snap.data() : snap.data) : null);
+      if (d && d.pw) render(d);
+    });
+  }).catch(function () {});
+})();
+</script>

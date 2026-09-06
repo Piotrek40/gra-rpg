@@ -1,0 +1,160 @@
+# Co Aelrindel wie
+
+Rejestr **wiedzy postaci**, nie prawdy o świecie. Prawda leży w `swiat/`.
+Tutaj jest wyłącznie to, co gracz odkrył — z numerem sesji i sposobem odkrycia.
+
+Sens: MG nie może przypadkiem założyć, że Aelrindel wie coś, czego nie odkrył,
+ani zapomnieć o czymś, co odkrył trzy sesje temu.
+
+---
+
+## Sesja 1
+
+**Wezwanie Zakonu jest prawdziwe.** Aura odrzucania wyłącznie w wosku — rutynowa
+pieczęć cechowa przeciw fałszerstwu. Ani śledzenia, ani przymusu.
+*(wykrycie magii + Sztuka magiczna 27 przy progu 16)*
+
+**Dopisek „Przyjdźcie sam" napisała osobiście Yssara Chelm**, innym atramentem,
+po tym jak skryba zamknął pismo. Nie ma go w żadnej procedurze Zakonu.
+*(Szukanie 25 przy progu 12)*
+
+**Kopertę wepchnięto głęboko pod drzwi**, czymś cienkim, żeby nie było jej widać
+z korytarza. Do pokoju nikt nie wchodził. *(Szukanie 22 przy progu 12)*
+
+**W księdze po Sarvinie jest zapis, którego Aelrindel nie zna.**
+Nosi tytuł *Cierpliwe Światło*, podany jako odmiana czaru *światło*, i jest pisany
+ręką Sarvina. Aelrindel nie pamięta, żeby go tam kiedykolwiek widział.
+Notacja jest poprawna, ale **droga, którą opisuje, nie przechodzi tamtędy, gdzie jest Splot.**
+*(Sztuka magiczna 22 przy progu 17)*
+
+- **Podejrzenie, nie pewność:** doktryna Mystry mówi o mocy, która Splot omija.
+  Aelrindel zna słowa „Splot Cienia" i wie, co znaczą. **Nie ma jak tego sam potwierdzić.**
+- **Nie rzucił tego czaru.** Nie zna jego skutków.
+
+**Notatki robocze Sarvina** — luźne kartki między stronami księgi: rachunki za komponenty,
+szkice run, listy zakupów. Zwykły papier, żadnej magii.
+**Aelrindel zdaje sobie sprawę, że to próbka jego pisma.**
+
+**Sytuacja prawna:** wszystko, co Aelrindel posiada o jakiejkolwiek wartości, pochodzi
+od Sarvina. Księgę dostał, nie wziął — ale **nie ma na to żadnego dokumentu**,
+a wezwanie każe mu potwierdzić, że niczego z pracowni nie wyniósł.
+
+**Rękę z karty *Cierpliwe Światło* porównano z luźnymi notatkami Sarvina.**
+*(Szukanie z braniem 20 = 26 przy progu 20; Wiedza tajemna 27 przy progu 18)*
+
+- **To jest pismo Sarvina.** Nie podróbka: te same kształty liter, ten sam sposób
+  domykania „a", te same skróty w notacji komponentów. Ktoś, kto by go naśladował,
+  odtworzyłby kształt, ale nie odruch.
+- **W każdym pociągnięciu w dół jest drżenie.** Na luźnych notatkach nie ma go wcale.
+- **Drżenie jest RÓWNOMIERNE.** Drżenie starcze narasta w trakcie wiersza i słabnie
+  po odpoczynku. Drżenie ze strachu albo zimna jest nierówne i skupia się miejscami.
+  To jest miarowe od pierwszej do ostatniej litery, jak metronom.
+  **Ręka, która drży, tak nie wygląda. Tak wygląda ręka prowadzona.**
+- **Wniosek:** karta powstała PÓŹNIEJ niż notatki. Sarvin ją napisał — ale nie sam z siebie.
+- **Wniosek dalszy, którego Aelrindel nie potrafi odsunąć:** jeśli ktoś prowadził jego rękę,
+  to Sarvin **żył**, kiedy ta strona powstawała. A wezwanie pisze o nim „ś.p.".
+
+**Czego wciąż nie wie:** kto to zrobił, po co, gdzie Sarvin jest teraz
+i co właściwie robi czar *Cierpliwe Światło*.
+
+**Sporządzona kopia dowodowa karty.** Wierna transkrypcja zwykłym atramentem na dwóch
+arkuszach pergaminu — układ run, skróty komponentów i **odwzorowane drżenie liter**.
+*(Sztuka magiczna z braniem 20 = 28 przy progu 15, około 40 minut)*
+
+- **Nie da się z niej rzucać.** To dowód, nie czar.
+- Kopia działająca wymagałaby atramentów kosztujących wielokrotność jego majątku ◇
+  i oznaczałaby świadome sporządzenie drugiej karty Splotu Cienia.
+- **Karty nie wyrwał z księgi.** Zniszczenie wiedzy magicznej kosztowałoby −2 łaski Mystry
+  (tabela w `swiat/MYSTRA.md`). Za samo skopiowanie tabela nie przewiduje nic — łaska stoi na 0.
+
+◇ = dokładna stawka za stronę w księdze czarów do potwierdzenia w podręczniku Piotra.
+
+**POTWIERDZONE: karta jest Splotem Cienia.** Naerys Vaeril orzekła to bez wahania,
+oglądając oryginał. *(bez rzutu — jej własny cel od pół roku; zasada „nie rzuca się,
+gdy postać i tak by to zrobiła", `swiat/rozmowy.md`)*
+
+- **Ona też nie wie, co ten czar robi.** Zakazała sprawdzania tego przez rzucenie.
+- Nad Dzielnicą Morską **coś szarpie Splot od sześciu miesięcy**. Zgłaszała trzy razy,
+  trzy razy odesłano ją z Rokiem Dzikiej Magii. Ta karta to jej pierwszy twardy dowód.
+- **Ktoś z Zakonu** włożył kartę do księgi — tak to rozumie Naerys i dlatego nie odda jej cechowi.
+
+**DŹWIGNIA PRAWNA.** Zakon ma władzę inwentarzową nad pracownią **zmarłego**, nie zaginionego.
+Wezwanie pisze „ś.p." przy człowieku, którego ciała nikt nie widział — **te dwie litery są
+podstawą prawną całej procedury**. Aelrindel niesie w kieszeni kopię dowodową wskazującą,
+że Sarvin żył po dacie zniknięcia.
+
+**Księga zdeponowana w Domu Cudów.** Konsekwencja mechaniczna: **żeby przygotować czary,
+trzeba tam wrócić** — czterdzieści minut w jedną stronę, codziennie.
+
+**Wieża otwarta o 11:15, na 45 minut przed spisem.** Klucz był na haczyku w latarni,
+zgodnie z treścią wezwania. Nikt nie zakazał przyjścia wcześniej.
+
+**Pracownia została wcześniej przeszukana** — starannie, z odkładaniem rzeczy na miejsce.
+Aelrindel rozpoznaje to po drobiazgach, których obcy by nie zauważył.
+*(automatycznie — dwanaście lat w tym pomieszczeniu)*
+
+**Aelrindel pamięta o niszy za atanorem** — luźna cegła, skrytka, w której Sarvin trzymał
+pieniądze na wódkę dla tragarzy. Wie o niej, bo był uczniem. Nie wie, czy coś w niej jest.
+
+**W niszy za atanorem leżała lista jedenastu nowicjuszy Zakonu**, ręką Sarvina,
+**równą — bez drżenia**, więc pisaną przed zniknięciem. Każde imię z datą, w kolejności.
+Bez tytułu, bez wyjaśnienia.
+
+- **Aelrindel jest ósmy**, data 15 Marpenoth.
+- Ostatnie imię, Vaeril Anstruth, ma datę **17 Marpenoth — dzień przed zniknięciem Sarvina.**
+- Dwa imiona dzielą tę samą datę: Aelrindel i Tesmyra Loakh, 15 Marpenoth.
+- Aelrindel kojarzy z widzenia mniej więcej połowę tych osób. Z żadną nie rozmawiał.
+
+**Czego nie wie:** co ta lista znaczy, dlaczego jest na niej, czy pozostała dziesiątka
+też ma coś w księgach, i dlaczego mistrz nigdy o tym nie wspomniał.
+
+**Dziennik pracowni przeczytany** (18 Uktar, ok. 15 minut).
+
+- Od Eleinta Sarvin prowadził **„spis kontrolny ksiąg nowicjuszy"** — obowiązek cechowy,
+  do którego zgłosił się na ochotnika. Nudna robota, o którą nikt się nie bije.
+- **Daty tych wpisów pokrywają się co do dnia z listą z niszy.** Lista to nie zagadka:
+  to jego rejestr sprawdzonych ksiąg.
+- **9 Marpenoth:** wniosek do archiwum Zakonu o pełny wykaz nowicjuszy — **odmowa,
+  bez uzasadnienia.** Nie zapisano, kto odmówił.
+- **15 Marpenoth:** ostatni wpis w dzienniku — „T. Loakh, A. Ilphaeryl". Potem trzy puste
+  wersy i czysty zeszyt.
+- **Ale lista z niszy biegnie do 17 Marpenotha.** Sarvin przestał pisać jawnie dokładnie
+  w dniu, w którym sprawdził księgę Aelrindela — i pracował dalej w ukryciu.
+  Zniknął dzień po ostatnim nazwisku.
+
+**Nowy trop:** ktoś w archiwum Zakonu odmówił mistrzowi wykazu nowicjuszy.
+
+**Zabrane z pracowni o 11:46**, przed rozpoczęciem spisu:
+- **skrzynka komponentów** Sarvina (siarka, bursztyn, srebrny pył, ok. 40 sz) — **rzecz sporna**;
+  zgodnie z R1 nie łamie litery wezwania, ale przy pytaniu wprost trzeba będzie wybrać
+  między prawdą a kłamstwem;
+- **własne notatki i wypracowania z dwunastu lat** oraz **przybory** (cyrkiel, liniał runiczny,
+  dwa pędzle, moździerz) — bezsporne, nigdy nie były przedmiotem spisu.
+
+**Dziennik pracowni zostawiony** na pulpicie, otwarty na ostatnim wpisie.
+
+**Korekta o 11:49:** Aelrindel odłożył skrzynkę na półkę i wziął z niej tylko
+**srebrny pył** (składnik atramentu do zapisywania czarów w księdze — rano nie było go
+na to stać) oraz **garść bursztynu**. Siarkę zostawił: tania, ciężka, do kupienia wszędzie.
+Nikt nie spisał zawartości skrzynki przed jego przyjściem, więc nie ma z czym porównać.
+
+**Obciążenie:** z 51 funtów zeszedł na 39 — **średnie** zamiast ciężkiego,
+kara −3, klasa pancerza z powrotem **12**.
+
+**Spotkani osobiście, 12:00 (a właściwie 11:50):** **magistra Yssara Chelm**
+i skryba **Corlys Thend**. Yssara zaczęła od położenia dwóch palców na dzienniku,
+otwartym na wpisie z nazwiskiem Aelrindela, i od pytania:
+*„Czy jest coś, co powinniśmy wiedzieć?"*
+
+**Rozmowa z Yssarą, 11:52.** Aelrindel zgłosił kartę, przemilczał listę i zapytał wprost
+o ciało mistrza.
+
+- **Podstawą spisu jest uchwała przyspieszona rady Zakonu z 12 Uktara**, na wniosek
+  **dwóch magistrów**, których nazwisk nie podano. Ciała nigdy nie znaleziono.
+- **Test Wiedzy (lokalnej) 13 przy progu 15 — NIEUDANY.** Aelrindel **nie wie**,
+  jaki jest zwyczajowy okres oczekiwania przed uznaniem zaginionego za zmarłego,
+  więc nie potrafi ocenić, czy dwadzieścia cztery dni to dużo, czy mało.
+  Ma tylko wrażenie, że szybko — bez niczego, na czym mógłby je oprzeć.
+- **Yssara zażądała okazania księgi.** Wie teraz, że leży w Domu Cudów.
+- **Trop:** nazwiska wnioskodawców uchwały są jawne, ale trzeba o nie poprosić w archiwum —
+  tym samym archiwum, które odmówiło Sarvinowi wykazu nowicjuszy.

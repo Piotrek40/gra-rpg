@@ -1,0 +1,165 @@
+{
+ "zbir": {
+  "nazwa": "Zbir",
+  "opis": "Portowy najemnik. Bierze pieniądze, nie zadaje pytań, ucieka, gdy przestaje się opłacać.",
+  "kw": 1,
+  "pw": 6,
+  "kp": 15,
+  "kp_dotykowa": 11,
+  "inicjatywa": 1,
+  "atak": 2,
+  "bron": "pałka",
+  "obrazenia": "1k6+1",
+  "krytyk": "20/×2",
+  "ruch": 9,
+  "rzuty": {
+   "wytrwalosc": 3,
+   "refleks": 1,
+   "wola": -1
+  },
+  "umiejetnosci": {
+   "Zastraszanie": 4
+  },
+  "pd": 300,
+  "taktyka": "Bije najbliższego. Poddaje się albo ucieka poniżej 2 PW — to najemnik, nie fanatyk.",
+  "kanon": true,
+  "zrodlo": "SRD 3.5"
+ },
+ "rzezimieszek": {
+  "nazwa": "Rzezimieszek",
+  "opis": "Kieszonkowiec z Dzielnicy Portowej. Woli uciec z sakwą niż walczyć.",
+  "kw": 1,
+  "pw": 4,
+  "kp": 14,
+  "kp_dotykowa": 13,
+  "inicjatywa": 3,
+  "atak": 1,
+  "bron": "sztylet",
+  "obrazenia": "1k4",
+  "krytyk": "19-20/×2",
+  "ruch": 9,
+  "rzuty": {
+   "wytrwalosc": 0,
+   "refleks": 5,
+   "wola": 0
+  },
+  "umiejetnosci": {
+   "Ukrywanie": 6,
+   "Ciche poruszanie się": 6,
+   "Zwinne palce": 6
+  },
+  "pd": 300,
+  "taktyka": "Atak z zaskoczenia +1k6, jeśli cel jest zaskoczony albo pozbawiony premii ze Zręczności. Po jednym ataku ucieka. Nie umiera za cudze pieniądze.",
+  "kanon": true,
+  "zrodlo": "SRD 3.5"
+ },
+ "straznik": {
+  "nazwa": "Strażnik Straży Miejskiej",
+  "opis": "Zawodowy. W Głębi Wodnej Straż jest skuteczna i nieprzekupna.",
+  "kw": 2,
+  "pw": 13,
+  "kp": 16,
+  "kp_dotykowa": 11,
+  "inicjatywa": 1,
+  "atak": 4,
+  "bron": "pałka",
+  "obrazenia": "1k6+2",
+  "krytyk": "20/×2",
+  "ruch": 6,
+  "rzuty": {
+   "wytrwalosc": 4,
+   "refleks": 1,
+   "wola": 0
+  },
+  "umiejetnosci": {
+   "Wypatrywanie": 4,
+   "Nasłuchiwanie": 4
+  },
+  "pd": 600,
+  "taktyka": "Wzywa wsparcie w pierwszej rundzie. Woli obezwładnić niż zabić — Straż odpowiada za trupy.",
+  "kanon": true,
+  "zrodlo": "SRD 3.5"
+ },
+ "szczur_olbrzymi": {
+  "nazwa": "Szczur olbrzymi",
+  "opis": "Wielkości psa. W kanałach i piwnicach Głębi Wodnej całe kolonie.",
+  "kw": "1/4",
+  "pw": 5,
+  "kp": 15,
+  "kp_dotykowa": 13,
+  "inicjatywa": 3,
+  "atak": 4,
+  "bron": "ugryzienie",
+  "obrazenia": "1k4",
+  "krytyk": "20/×2",
+  "ruch": 12,
+  "rzuty": {
+   "wytrwalosc": 3,
+   "refleks": 5,
+   "wola": 1
+  },
+  "umiejetnosci": {
+   "Ukrywanie": 11,
+   "Wspinaczka": 11,
+   "Pływanie": 11
+  },
+  "pd": 100,
+  "taktyka": "Atakuje w grupie. Ugryzienie przenosi chorobę: Wytrwałość ST 11 albo gorączka błotna. Nie odróżnia silnego przeciwnika od słabego.",
+  "kanon": true,
+  "zrodlo": "SRD 3.5"
+ },
+ "pies_obronny": {
+  "nazwa": "Pies obronny",
+  "opis": "Trzymany na łańcuchu przy składach i bramach.",
+  "kw": 1,
+  "pw": 13,
+  "kp": 15,
+  "kp_dotykowa": 12,
+  "inicjatywa": 2,
+  "atak": 3,
+  "bron": "ugryzienie",
+  "obrazenia": "1k6+3",
+  "krytyk": "20/×2",
+  "ruch": 12,
+  "rzuty": {
+   "wytrwalosc": 5,
+   "refleks": 5,
+   "wola": 1
+  },
+  "umiejetnosci": {
+   "Nasłuchiwanie": 5,
+   "Wypatrywanie": 5,
+   "Tropienie": 5
+  },
+  "pd": 200,
+  "taktyka": "Rzuca się na tego, kto pierwszy się poruszy. Nie ucieka.",
+  "kanon": true,
+  "zrodlo": "SRD 3.5"
+ },
+ "cien_pomniejszy": {
+  "nazwa": "Pomniejszy cień",
+  "opis": "Rzecz utkana ze Splotu Cienia. Nie ma jej w bestiariuszach.",
+  "kw": 2,
+  "pw": 9,
+  "kp": 13,
+  "kp_dotykowa": 13,
+  "inicjatywa": 2,
+  "atak": 3,
+  "bron": "dotyk chłodu",
+  "obrazenia": "1k4 + 1 Siły",
+  "krytyk": "20/×2",
+  "ruch": 12,
+  "rzuty": {
+   "wytrwalosc": 0,
+   "refleks": 3,
+   "wola": 3
+  },
+  "umiejetnosci": {
+   "Ukrywanie": 8
+  },
+  "pd": 600,
+  "taktyka": "BEZCIELESNY: broń zwykła ma 50% szans chybienia; magiczna trafia normalnie. Zbroja maga jest efektem SIŁOWYM i chroni przed nim w pełni. Wrażliwy na jasne światło: w promieniu czaru światło ma −2 do ataku. Nie ściga poza zasięg cienia, z którego wyszedł.",
+  "kanon": true,
+  "zrodlo": "SRD 3.5"
+ }
+}

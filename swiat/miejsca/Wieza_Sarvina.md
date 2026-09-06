@@ -1,0 +1,80 @@
+# Pracownia Sarvina Alaunthara — Ulica Cynowa, Dzielnica Kupiecka
+
+Nie wieża w sensie baśniowym: wąski, czterokondygnacyjny dom wciśnięty między warsztat
+konwisarza a skład sukna. Na dole sień, wyżej pracownia, wyżej biblioteka, na górze sypialnia,
+w której Sarvin sypiał może raz w tygodniu. Aelrindel przechodził przez te schody przez
+dwanaście lat i zna każdy skrzypiący stopień — czwarty od dołu i przedostatni.
+
+**Klucz** wisi tam, gdzie zawsze: na haczyku wewnątrz obudowy latarni przy drzwiach.
+Wie o tym pięć osób w mieście, z czego dwie żyją.
+
+## Stan pracowni po trzydziestu dniach
+
+**Ktoś już tu był i szukał.** Nie plądrował — przeszukał starannie i odłożył wszystko
+na miejsce. Człowiek z ulicy nie zobaczy nic. Uczeń, który spędzał tu pół tygodnia
+przez dwanaście lat, zobaczy od progu: **rzeczy stoją tam, gdzie trzeba, ale nie tak, jak trzeba.**
+Moździerz obrócony uchem w złą stronę. Książki wyrównane do krawędzi półki, a Sarvin
+zawsze zostawiał je wysunięte na palec, żeby łatwiej chwytać. Popiół w atanorze wygarnięty.
+
+Szukający **nie znalazł niszy** — bo o niszy wie tylko uczeń.
+
+## Co w niej jest — spisane, zanim gracz wejdzie
+
+**Rzeczy niewątpliwie Aelrindela** (zostawiane tam przez lata):
+- jego własne notatki, szkice i wypracowania z dwunastu lat nauki
+- przybory: cyrkiel, liniał runiczny, dwa pędzle do złoceń, jego własny moździerz
+
+**Rzeczy sporne — cenne i przypisywalne obu stronom:**
+- **skrzynka komponentów** Sarvina: siarka, sproszkowany bursztyn, srebrny pył (wartość ok. 40 sz)
+- **dziennik pracowni** — datowany zapis prac, leży otwarty na pulpicie.
+  Zwykły papier, żadnej magii. Prowadzony od lat, sucho i urzędowo.
+
+  **Treść istotna, spisana zanim gracz przeczyta:**
+
+  Od Eleinta wśród rutynowych wpisów (zakupy, wyniki prób, rachunki) powtarza się
+  jedna pozycja o identycznym brzmieniu: **„spis kontrolny ksiąg nowicjuszy"**,
+  z inicjałem i nazwiskiem. Sarvin zgłosił się na ochotnika do tego obowiązku
+  w Eleincie — nudnej roboty, o którą nikt się nie bije.
+
+  **Daty tych wpisów pokrywają się co do dnia z datami na liście z niszy.**
+
+  - **9 Marpenoth**, osobny wpis: *„wniosek do archiwum o pełny wykaz nowicjuszy
+    Zakonu — odmowa, bez uzasadnienia."* Nie podano, kto odmówił.
+  - **15 Marpenoth**, ostatni wpis w całym dzienniku: *„spis kontrolny ksiąg
+    nowicjuszy — T. Loakh, A. Ilphaeryl."* Nic więcej. Bez komentarza.
+  - Dalej **trzy puste, liniowane wersy** i reszta zeszytu czysta.
+
+  **Wniosek dostępny graczowi:** oficjalny dziennik urywa się 15 Marpenotha,
+  ale lista z niszy biegnie dalej — 16 i 17. Sarvin przestał zapisywać to jawnie
+  dokładnie w dniu, w którym sprawdził księgę własnego ucznia, i prowadził rzecz
+  dalej wyłącznie w ukryciu. Zniknął dzień po ostatnim nazwisku.
+
+**Rzecz, której zabranie zostanie zauważone:**
+- W **niszy za atanorem**, przysłoniętej luźną cegłą, leży kartka.
+  O niszy wie tylko uczeń — Sarvin trzymał tam pieniądze na wódkę dla tragarzy.
+  Dziś leży tam **lista jedenastu imion**, ręką Sarvina, **równą, bez drżenia**,
+  z datami przy każdym. Bez tytułu, bez wyjaśnienia. Pełna treść:
+
+      Perendra Milgrast .......  3 Eleint
+      Onthar Vess ............. 11 Eleint
+      Ilmeth Cazrik ........... 19 Eleint
+      Sabra Yorrun ............ 27 Eleint
+      Dalvath Renn ............  4 Marpenoth
+      Nienna Sarwood ..........  9 Marpenoth
+      Krell Ondamar ........... 12 Marpenoth
+      Aelrindel Ilphaeryl ..... 15 Marpenoth
+      Tesmyra Loakh ........... 15 Marpenoth
+      Bel Corthyn ............. 16 Marpenoth
+      Vaeril Anstruth ......... 17 Marpenoth
+
+  **Sarvin zniknął 18 Marpenoth.** Dziś jest **18 Uktar** — równo trzydzieści dni później.
+  Ostatnie imię na liście nosi datę **dnia poprzedzającego jego zniknięcie.**
+
+  Wszystkie jedenaście osób to nowicjusze Czuwającego Zakonu. Aelrindel kojarzy
+  z widzenia mniej więcej połowę; z nikim z nich nie rozmawiał dłużej niż o pogodzie.
+
+  *(związane z TAJEMNICE T4 — gracz nie ma jak wiedzieć, CO ta lista znaczy)*
+
+## Kto tam będzie w południe
+Magistra **Yssara Chelm** i skryba Zakonu, **Corlys Thend**. Nikt więcej — dopisek
+„Przyjdźcie sam" dotyczył Aelrindela, nie jej.
