@@ -19,7 +19,7 @@
   "laska": 1,
   "reputacja": 0,
   "znaki": [],
-  "zmian": 16,
+  "zmian": 17,
   "ksiega": {
     "0": [
       {
@@ -258,11 +258,6 @@
       "skad": "zakup przed wyprawą"
     },
     {
-      "co": "Skrzynka komponentów Sarvina (siarka, bursztyn, srebrny pył)",
-      "ile": 1,
-      "skad": "pracownia przy Ulicy Cynowej, 18 Uktar, PRZED rozpoczęciem spisu — rzecz SPORNA, wartość ok. 40 sz"
-    },
-    {
       "co": "Własne notatki i wypracowania z dwunastu lat nauki",
       "ile": 1,
       "skad": "pracownia Sarvina — własność Aelrindela, nigdy nie była przedmiotem spisu"
@@ -271,6 +266,16 @@
       "co": "Przybory: cyrkiel, liniał runiczny, dwa pędzle do złoceń, moździerz",
       "ile": 1,
       "skad": "pracownia Sarvina — własność Aelrindela, nigdy nie była przedmiotem spisu"
+    },
+    {
+      "co": "Sakiewka srebrnego pyłu",
+      "ile": 1,
+      "skad": "ze skrzynki Sarvina, 18 Uktar przed spisem — składnik atramentu do zapisu czarów w księdze"
+    },
+    {
+      "co": "Sproszkowany bursztyn (garść)",
+      "ile": 1,
+      "skad": "ze skrzynki Sarvina, 18 Uktar przed spisem"
     }
   ]
 }

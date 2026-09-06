@@ -19,7 +19,9 @@ co wymagałoby zeznawania.
 - Niczego o Splocie Cienia, o Sharze ani o tym, co robi Yssara.
 
 ## Co już powiedział Aelrindelowi
-- *(nic — nie poznali się)*
+- **Sesja 1, wieża** — nie odezwał się. Zatrzymał się w progu na widok Aelrindela,
+  po czym natychmiast usiadł, rozłożył pulpit i zanurzył pióro. Zaczął pisać, zanim
+  ktokolwiek cokolwiek powiedział.
 
 ## Jak mówi
 Urzędowo i szybko, cytując paragrafy. Pod presją milknie i pisze.

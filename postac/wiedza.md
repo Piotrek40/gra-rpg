@@ -133,6 +133,15 @@ też ma coś w księgach, i dlaczego mistrz nigdy o tym nie wspomniał.
 
 **Dziennik pracowni zostawiony** na pulpicie, otwarty na ostatnim wpisie.
 
-**Skutek uboczny:** Aelrindel niesie 51 funtów przy Sile 6, czyli **ciężkie obciążenie** —
-kara −6 do zwinnych testów, ruch 6 m, premia ze Zręczności do KP ograniczona do +1,
-więc **klasa pancerza spada z 12 na 11**, dopóki tego nie odłoży.
+**Korekta o 11:49:** Aelrindel odłożył skrzynkę na półkę i wziął z niej tylko
+**srebrny pył** (składnik atramentu do zapisywania czarów w księdze — rano nie było go
+na to stać) oraz **garść bursztynu**. Siarkę zostawił: tania, ciężka, do kupienia wszędzie.
+Nikt nie spisał zawartości skrzynki przed jego przyjściem, więc nie ma z czym porównać.
+
+**Obciążenie:** z 51 funtów zeszedł na 39 — **średnie** zamiast ciężkiego,
+kara −3, klasa pancerza z powrotem **12**.
+
+**Spotkani osobiście, 12:00 (a właściwie 11:50):** **magistra Yssara Chelm**
+i skryba **Corlys Thend**. Yssara zaczęła od położenia dwóch palców na dzienniku,
+otwartym na wpisie z nazwiskiem Aelrindela, i od pytania:
+*„Czy jest coś, co powinniśmy wiedzieć?"*
