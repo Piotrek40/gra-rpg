@@ -18,8 +18,10 @@
   "doswiadczenie": 0,
   "laska": 1,
   "reputacja": 0,
-  "znaki": [],
-  "zmian": 17,
+  "znaki": [
+    "Na wprost zadane pytanie o wyniesione rzeczy padło słowo TYLKO — pył i bursztyn. Lista z niszy leżała wtedy w kieszeni. Skryba zapisał odpowiedź."
+  ],
+  "zmian": 19,
   "ksiega": {
     "0": [
       {

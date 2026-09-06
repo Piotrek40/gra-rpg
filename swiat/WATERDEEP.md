@@ -60,6 +60,7 @@ Straż jest skuteczna i nieprzekupna w stopniu, który przybyszów zaskakuje.
   W sprawie Sarvina Alaunthara uchwałę przyspieszoną podjęto **12 Uktara**, po dwudziestu
   czterech dniach. To jest jawny zapis w rejestrze Zakonu; nazwiska wnioskodawców
   **też są jawne**, ale trzeba o nie poprosić w archiwum.
+  Wniosek w sprawie Sarvina złożyli **magister Ilbrand Roskyn** i **magistra Yssara Chelm**.
 
   **Pisma Zakonu noszą pieczęć odciskaną magicznie** — słaba aura odrzucania, zabezpieczenie
   przed podrobieniem. Rzecz całkowicie rutynowa: każdy list z siedziby ją ma. Brak pieczęci

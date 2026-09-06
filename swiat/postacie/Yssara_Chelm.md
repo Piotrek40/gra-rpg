@@ -1,7 +1,7 @@
 # Magistra Yssara Chelm
 
 **Kim jest:** człowiek, magistra Czuwającego Zakonu Magistrów i Obrońców, około sześćdziesiątki.
-**Gdzie ją spotkasz:** siedziba Zakonu, Dzielnica Kupiecka. **Nastawienie:** 0
+**Gdzie ją spotkasz:** siedziba Zakonu, Dzielnica Kupiecka. **Nastawienie:** −1
 
 W Zakonie od czterdziestu lat. Awansowała powoli i nie robiła sobie wrogów.
 
@@ -32,6 +32,12 @@ Jawnie: uporządkować sprawy po zaginionym członku Zakonu.
 - **Na pytanie Aelrindela o ciało** odpowiedziała wprost i bez wykrętu: ciała nie znaleziono,
   a podstawą jest **uchwała przyspieszona rady Zakonu z 12 Uktara**, podjęta na wniosek
   dwóch magistrów. Nie podała ich nazwisk i nie została o nie zapytana.
+- **Sesja 1, po naciśnięciu** — Aelrindel przyznał się do wzięcia srebrnego pyłu
+  i bursztynu (prawda), po czym zasugerował, że nagłośnienie sprawy byłoby dla Zakonu
+  niewygodne. **Podała nazwiska wnioskodawców bez oporu** — magister Ilbrand Roskyn
+  i ona sama — bo rejestr jest jawny, a zatajanie byłoby głupie.
+  **Nastawienie spadło z 0 na −1:** nie ze strachu, tylko dlatego, że przestała go
+  traktować jak nowicjusza, a zaczęła jak stronę.
 - **Sesja 1, wezwanie** — treść urzędowa spisana ręką skryby Zakonu: inwentarz pracowni
   po „ś.p." Sarvinie, Ulica Cynowa, południe, klucz na miejscu, nieobecność zostanie odnotowana.
   Pod podpisem dopisek **jej własną ręką**, innym atramentem: „Przyjdźcie sam".
