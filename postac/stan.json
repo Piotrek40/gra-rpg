@@ -19,7 +19,7 @@
   "laska": 1,
   "reputacja": 0,
   "znaki": [],
-  "zmian": 15,
+  "zmian": 16,
   "ksiega": {
     "0": [
       {
@@ -256,6 +256,21 @@
       "co": "Ubranie podróżne",
       "ile": 1,
       "skad": "zakup przed wyprawą"
+    },
+    {
+      "co": "Skrzynka komponentów Sarvina (siarka, bursztyn, srebrny pył)",
+      "ile": 1,
+      "skad": "pracownia przy Ulicy Cynowej, 18 Uktar, PRZED rozpoczęciem spisu — rzecz SPORNA, wartość ok. 40 sz"
+    },
+    {
+      "co": "Własne notatki i wypracowania z dwunastu lat nauki",
+      "ile": 1,
+      "skad": "pracownia Sarvina — własność Aelrindela, nigdy nie była przedmiotem spisu"
+    },
+    {
+      "co": "Przybory: cyrkiel, liniał runiczny, dwa pędzle do złoceń, moździerz",
+      "ile": 1,
+      "skad": "pracownia Sarvina — własność Aelrindela, nigdy nie była przedmiotem spisu"
     }
   ]
 }

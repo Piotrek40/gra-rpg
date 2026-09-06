@@ -119,6 +119,12 @@ Wniosek: jawny dziennik urywa się w dniu, w którym Sarvin otworzył księgę w
 ale ukryta lista biegnie dalej, do 17 Marpenotha. Pracował jeszcze dwa dni, w ukryciu.
 Zniknął osiemnastego.
 
-**Otwarte:** 11:36, dwadzieścia cztery minuty do przyjścia Yssary Chelm.
-Aelrindel ma kopię karty, listę jedenastu nazwisk i nowy trop: **ktoś w archiwum Zakonu
-odmówił mistrzowi wykazu nowicjuszy.** Na stole wciąż dziennik i skrzynka komponentów.
+O **11:46** zabrał **skrzynkę komponentów** (sporna, ok. 40 sz) oraz **własne notatki
+i przybory** (bezsporne). Dziennik zostawił na pulpicie. Wskutek tego niesie 51 funtów
+przy Sile 6 — **ciężkie obciążenie**, klasa pancerza spada z 12 na 11.
+Nauczona mechanika: udźwig.
+
+**Otwarte:** 11:46, czternaście minut do przyjścia Yssary Chelm.
+Aelrindel ma kopię karty, listę jedenastu nazwisk, skrzynkę komponentów, swoje rzeczy
+i nowy trop: **ktoś w archiwum Zakonu odmówił mistrzowi wykazu nowicjuszy.**
+Na ulicy zwalnia wóz.

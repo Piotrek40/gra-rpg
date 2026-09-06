@@ -123,3 +123,16 @@ też ma coś w księgach, i dlaczego mistrz nigdy o tym nie wspomniał.
   Zniknął dzień po ostatnim nazwisku.
 
 **Nowy trop:** ktoś w archiwum Zakonu odmówił mistrzowi wykazu nowicjuszy.
+
+**Zabrane z pracowni o 11:46**, przed rozpoczęciem spisu:
+- **skrzynka komponentów** Sarvina (siarka, bursztyn, srebrny pył, ok. 40 sz) — **rzecz sporna**;
+  zgodnie z R1 nie łamie litery wezwania, ale przy pytaniu wprost trzeba będzie wybrać
+  między prawdą a kłamstwem;
+- **własne notatki i wypracowania z dwunastu lat** oraz **przybory** (cyrkiel, liniał runiczny,
+  dwa pędzle, moździerz) — bezsporne, nigdy nie były przedmiotem spisu.
+
+**Dziennik pracowni zostawiony** na pulpicie, otwarty na ostatnim wpisie.
+
+**Skutek uboczny:** Aelrindel niesie 51 funtów przy Sile 6, czyli **ciężkie obciążenie** —
+kara −6 do zwinnych testów, ruch 6 m, premia ze Zręczności do KP ograniczona do +1,
+więc **klasa pancerza spada z 12 na 11**, dopóki tego nie odłoży.

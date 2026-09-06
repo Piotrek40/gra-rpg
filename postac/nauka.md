@@ -20,6 +20,7 @@ w trakcie sceny — nie wykładem przed nią. Po wytłumaczeniu ląduje tutaj z 
 | Zużycie sztuczki | 1 | W 3.5 sztuczki też zajmują miejsca i znikają po użyciu |
 | Branie 20 | 1 | Gdy możesz próbować bez końca i bez kary — nie rzucasz, tylko poświęcasz 20× czasu i liczysz jak 20 |
 | Rzuty nieprzerzucalne | 1 | Wiedzy nie powtarzasz: albo skojarzyłeś, albo nie |
+| Udźwig i obciążenie | 1 | Progi zależne od Siły; ciężkie obciążenie tnie ruch, testy zwinności i premię ze Zręczności do KP |
 
 ## Do wytłumaczenia, gdy pierwszy raz wypadnie
 
