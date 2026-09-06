@@ -53,6 +53,14 @@ Straż jest skuteczna i nieprzekupna w stopniu, który przybyszów zaskakuje.
   nie uzna go za zmarłego. Dlatego wezwanie pisze „ś.p." przy nazwisku, którego ciała
   nikt nie widział: **te dwie litery są podstawą prawną całej procedury.**
 
+  **Uznanie zaginionego za zmarłego.** Zakon może to zrobić uchwałą rady, bez ciała.
+  Zwyczajowy okres oczekiwania wynosi **rok i dzień**. Radzie wolno go skrócić
+  **uchwałą przyspieszoną**, jeśli za wnioskiem stoi dwóch magistrów — rzecz stosowaną
+  przy rozbitkach i zawalonych sztolniach, gdzie nie ma czego szukać.
+  W sprawie Sarvina Alaunthara uchwałę przyspieszoną podjęto **12 Uktara**, po dwudziestu
+  czterech dniach. To jest jawny zapis w rejestrze Zakonu; nazwiska wnioskodawców
+  **też są jawne**, ale trzeba o nie poprosić w archiwum.
+
   **Pisma Zakonu noszą pieczęć odciskaną magicznie** — słaba aura odrzucania, zabezpieczenie
   przed podrobieniem. Rzecz całkowicie rutynowa: każdy list z siedziby ją ma. Brak pieczęci
   na piśmie Zakonu znaczyłby fałszerstwo; obecność nie znaczy nic poza tym, że list jest prawdziwy.

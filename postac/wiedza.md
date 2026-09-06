@@ -145,3 +145,16 @@ kara −3, klasa pancerza z powrotem **12**.
 i skryba **Corlys Thend**. Yssara zaczęła od położenia dwóch palców na dzienniku,
 otwartym na wpisie z nazwiskiem Aelrindela, i od pytania:
 *„Czy jest coś, co powinniśmy wiedzieć?"*
+
+**Rozmowa z Yssarą, 11:52.** Aelrindel zgłosił kartę, przemilczał listę i zapytał wprost
+o ciało mistrza.
+
+- **Podstawą spisu jest uchwała przyspieszona rady Zakonu z 12 Uktara**, na wniosek
+  **dwóch magistrów**, których nazwisk nie podano. Ciała nigdy nie znaleziono.
+- **Test Wiedzy (lokalnej) 13 przy progu 15 — NIEUDANY.** Aelrindel **nie wie**,
+  jaki jest zwyczajowy okres oczekiwania przed uznaniem zaginionego za zmarłego,
+  więc nie potrafi ocenić, czy dwadzieścia cztery dni to dużo, czy mało.
+  Ma tylko wrażenie, że szybko — bez niczego, na czym mógłby je oprzeć.
+- **Yssara zażądała okazania księgi.** Wie teraz, że leży w Domu Cudów.
+- **Trop:** nazwiska wnioskodawców uchwały są jawne, ale trzeba o nie poprosić w archiwum —
+  tym samym archiwum, które odmówiło Sarvinowi wykazu nowicjuszy.

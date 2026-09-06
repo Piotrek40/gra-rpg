@@ -24,6 +24,14 @@ Jawnie: uporządkować sprawy po zaginionym członku Zakonu.
   Przedstawiła siebie i skrybę, położyła dwa palce na dzienniku otwartym na ostatnim wpisie
   (z nazwiskiem Aelrindela) i **zapytała: „Czy jest coś, co powinniśmy wiedzieć?"** —
   zanim spis się zaczął. Pytanie otwarte, zadane przed protokołem.
+- **Sesja 1, wieża, po pytaniu otwartym** — Aelrindel powiedział jej o obcej karcie
+  w księdze Sarvina (o liście z niszy **nie wspomniał**). Yssara przyjęła to bez emocji,
+  kazała skrybie zapisać zgłoszenie i **zażądała okazania księgi do spisu**.
+  Usłyszawszy, że księga leży w Domu Cudów, nie podniosła głosu — zauważyła tylko,
+  że nowicjusz, który oddaje księgę mistrza do świątyni **przed** spisem, przewidywał spór.
+- **Na pytanie Aelrindela o ciało** odpowiedziała wprost i bez wykrętu: ciała nie znaleziono,
+  a podstawą jest **uchwała przyspieszona rady Zakonu z 12 Uktara**, podjęta na wniosek
+  dwóch magistrów. Nie podała ich nazwisk i nie została o nie zapytana.
 - **Sesja 1, wezwanie** — treść urzędowa spisana ręką skryby Zakonu: inwentarz pracowni
   po „ś.p." Sarvinie, Ulica Cynowa, południe, klucz na miejscu, nieobecność zostanie odnotowana.
   Pod podpisem dopisek **jej własną ręką**, innym atramentem: „Przyjdźcie sam".
